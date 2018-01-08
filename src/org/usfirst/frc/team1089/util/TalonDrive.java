@@ -98,6 +98,6 @@ public class TalonDrive {
 		
 		// Apply speeds to motors
 		T_FRONT_LEFT.set(ControlMode.Velocity, leftPercent * maxOutput);
-		T_FRONT_LEFT.set(ControlMode.Velocity, rightPercent * maxOutput);
+		T_FRONT_RIGHT.set(ControlMode.Velocity, rightPercent * maxOutput);
 	}
 }

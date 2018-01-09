@@ -19,23 +19,16 @@ public class TalonDrive {
 	 * Creates a drive train, assuming it has four Talons, 
 	 * two for the front, two for the back. 
 	 * 
-	 * The back talons are set to follow their respective front talons,
-	 * i.e.: backLeft follows frontLeft, backRight follows frontRight.
-	 * 
-	 * @param frontLeft  Front-left Talon ID
-	 * @param frontRight Front-right Talon ID
-	 * @param backLeft   Back-left Talon ID
-	 * @param backRight  Back-right Talon ID
+	 * @param frontLeft  Front-left Talon
+	 * @param frontRight Front-right Talon
+	 * @param backLeft   Back-left Talon
+	 * @param backRight  Back-right Talon
 	 */
-	public TalonDrive(int frontLeft, int frontRight, int backLeft, int backRight) {
-		T_FRONT_LEFT = new TalonSRX(frontLeft);
-		T_FRONT_RIGHT = new TalonSRX(frontRight);
-		T_BACK_LEFT = new TalonSRX(backLeft);
-		T_BACK_RIGHT = new TalonSRX(backRight);
-		
-		// Set follower control on back talons.
-		T_BACK_LEFT.set(ControlMode.Follower, frontLeft);
-		T_BACK_LEFT.set(ControlMode.Follower, frontRight);
+	public TalonDrive(TalonSRX frontLeft, TalonSRX frontRight, TalonSRX backLeft, TalonSRX backRight) {
+		T_FRONT_LEFT = frontLeft;
+		T_FRONT_RIGHT = frontRight;
+		T_BACK_LEFT = backLeft;
+		T_BACK_RIGHT = backRight;
 	}
 	
 	/**
@@ -51,7 +44,7 @@ public class TalonDrive {
 	/**
 	 * Single stick driving. This is done by using one axis for forwards/backwards,
 	 * and another for turning right/left. This method allows direct input from any joystick
-	 * value.
+	 * value. This assumes that the control mode for the back has been properly set 
 	 * 
 	 * @param moveVal      Value for forwards/backwards
 	 * @param rotateVal    Value for rotation right/left
@@ -96,7 +89,9 @@ public class TalonDrive {
 		leftPercent = MercMath.clamp(leftPercent, -1.0, 1.0);
 		rightPercent = MercMath.clamp(rightPercent, -1.0, 1.0);
 		
-		// Apply speeds to motors
+		// Apply speeds to motors.
+		// This assumes that the proper follower control mode has been set,
+		// with the front Talons as the masters.
 		T_FRONT_LEFT.set(ControlMode.Velocity, leftPercent * maxOutput);
 		T_FRONT_RIGHT.set(ControlMode.Velocity, rightPercent * maxOutput);
 	}

@@ -12,23 +12,19 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * 
  */
 public class TalonDrive {
-	private final TalonSRX T_FRONT_LEFT, T_FRONT_RIGHT, T_BACK_LEFT, T_BACK_RIGHT;
+	private final TalonSRX TALON_LEFT, TALON_RIGHT;
 	private double maxOutput = 1.0;
 
 	/**
-	 * Creates a drive train, assuming it has four Talons, 
-	 * two for the front, two for the back. 
+	 * Creates a drive train, assuming there is one Talon for the left side
+	 * and another one for the right side.
 	 * 
-	 * @param frontLeft  Front-left Talon
-	 * @param frontRight Front-right Talon
-	 * @param backLeft   Back-left Talon
-	 * @param backRight  Back-right Talon
+	 * @param left  Left-side Talon
+	 * @param right Right-side Talon
 	 */
-	public TalonDrive(TalonSRX frontLeft, TalonSRX frontRight, TalonSRX backLeft, TalonSRX backRight) {
-		T_FRONT_LEFT = frontLeft;
-		T_FRONT_RIGHT = frontRight;
-		T_BACK_LEFT = backLeft;
-		T_BACK_RIGHT = backRight;
+	public TalonDrive(TalonSRX left, TalonSRX right) {
+		TALON_LEFT = left;
+		TALON_RIGHT = right;
 	}
 	
 	/**
@@ -90,9 +86,8 @@ public class TalonDrive {
 		rightPercent = MercMath.clamp(rightPercent, -1.0, 1.0);
 		
 		// Apply speeds to motors.
-		// This assumes that the proper follower control mode has been set,
-		// with the front Talons as the masters.
-		T_FRONT_LEFT.set(ControlMode.Velocity, leftPercent * maxOutput);
-		T_FRONT_RIGHT.set(ControlMode.Velocity, rightPercent * maxOutput);
+		// This assumes that the Talons have been set properly.
+		TALON_LEFT.set(ControlMode.Velocity, leftPercent * maxOutput);
+		TALON_RIGHT.set(ControlMode.Velocity, rightPercent * maxOutput);
 	}
 }

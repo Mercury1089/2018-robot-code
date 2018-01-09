@@ -20,7 +20,7 @@ public class PDPLoggingCommand extends Command {
 	private static final double MILLIS_BETWEEN_LOGS = 1_000;
 	
 	private PDPSubsystem pdpSubsystem;
-	private File outputDir = new File("");
+	private File outputDir = new File(System.getProperty("user.home") + "/logs");
 	private PrintWriter writer;
 	private long lastLogTime;
 	

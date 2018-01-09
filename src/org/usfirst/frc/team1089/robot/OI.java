@@ -65,7 +65,7 @@ public class OI {
 	 * @return X-axis of right joystick.
 	 */
 	public double getRotateValue() {
-		return applyDeadzone(leftStick.getX());
+		return applyDeadzone(rightStick.getX());
 	}
 	
 	/**

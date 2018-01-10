@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.robot.subsystems.PDPSubsystem;
+import org.usfirst.frc.team1089.robot.subsystems.PDP;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
 
 	public static DriveTrain driveTrain;
 	public static OI oi;
-	public static PDPSubsystem pdp;
+	public static PDP pdp;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
 		
 		oi = new OI();
 		
-		pdp = new PDPSubsystem();
+		pdp = new PDP();
 	}
 
 	/**

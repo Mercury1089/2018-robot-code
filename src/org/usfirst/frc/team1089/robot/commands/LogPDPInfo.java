@@ -9,22 +9,32 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.subsystems.PDPSubsystem;
+import org.usfirst.frc.team1089.robot.subsystems.PDP;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class PDPLoggingCommand extends Command {
+public class LogPDPInfo extends Command {
 	private static final DateTimeFormatter fileTimestampFormat = DateTimeFormatter.ofPattern("MMdd_HHmmss");
 	private static final DateTimeFormatter statusTimestampFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 	private static final double MILLIS_BETWEEN_LOGS = 1_000;
 	
-	private PDPSubsystem pdpSubsystem;
+	private PDP pdpSubsystem;
 	private File outputDir = new File(System.getProperty("user.home") + "/logs");
 	private PrintWriter writer;
 	private long lastLogTime;
 	
-	public PDPLoggingCommand() {
+	private static final String CSV_HEADER;
+	
+	static {
+		StringBuilder sb = new StringBuilder("Time,TotalCurrent,Temperature,TotalEnergy,TotalPower,Voltage");
+		for(int i = 0; i < 16; i++) {
+			sb.append(",Channel ").append(i);
+		}
+		CSV_HEADER = sb.toString();
+	}
+	
+	public LogPDPInfo() {
 		requires(Robot.pdp);
 	}
 	
@@ -61,15 +71,6 @@ public class PDPLoggingCommand extends Command {
 			writer.println(getCSVStatusLine());
 			lastLogTime = currentMillis;
 		}
-	}
-	
-	private static final String CSV_HEADER;
-	static {
-		StringBuilder sb = new StringBuilder("Time,TotalCurrent,Temperature,TotalEnergy,TotalPower,Voltage");
-		for(int i = 0; i < 16; i++) {
-			sb.append(",Channel ").append(i);
-		}
-		CSV_HEADER = sb.toString();
 	}
 	
 	//Gets PDP status in CSV format.

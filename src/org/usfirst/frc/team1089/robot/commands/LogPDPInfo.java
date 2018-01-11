@@ -68,7 +68,8 @@ public class LogPDPInfo extends Command {
 		//Checks if MILLIS_BETWEEN_LOGS milliseconds has passed since last line
 		if (currentMillis >= lastLogTime + MILLIS_BETWEEN_LOGS) {
 //		initializeLogFile();
-			writer.println(getCSVStatusLine());
+			if(writer != null)
+				writer.println(getCSVStatusLine());
 			lastLogTime = currentMillis;
 		}
 	}

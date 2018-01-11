@@ -40,7 +40,7 @@ public class TalonDrive {
 	/**
 	 * Single stick driving. This is done by using one axis for forwards/backwards,
 	 * and another for turning right/left. This method allows direct input from any joystick
-	 * value. This assumes that the control mode for the back has been properly set 
+	 * value. This assumes that the control mode for the back has been properly set.
 	 * 
 	 * @param moveVal      Value for forwards/backwards
 	 * @param rotateVal    Value for rotation right/left
@@ -89,5 +89,21 @@ public class TalonDrive {
 		// This assumes that the Talons have been set properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftPercent * maxOutput);
 		TALON_RIGHT.set(ControlMode.PercentOutput, -rightPercent * maxOutput);
+	}
+	
+	/**
+	 * Double stick driving. Each joystick has their y-axes set to control one side
+	 * of the robot, like a tank. his method allows direct input from any joystick
+	 * value. This assumes that the control mode for the back has been properly set.
+	 * 
+	 * @param leftVal  Value for left forwards/backwards
+	 * @param rightVal Value for right forwards/backwards
+	 */
+	public void tankDrive(double leftVal, double rightVal) {
+
+		// Apply speeds to motors.
+		// This assumes that the Talons have been set properly.
+		TALON_LEFT.set(ControlMode.PercentOutput, leftVal * maxOutput);
+		TALON_RIGHT.set(ControlMode.PercentOutput, -rightVal * maxOutput);
 	}
 }

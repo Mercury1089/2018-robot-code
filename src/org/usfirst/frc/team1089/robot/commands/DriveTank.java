@@ -1,17 +1,19 @@
 package org.usfirst.frc.team1089.robot.commands;
 
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Command that puts the drive train into a manual control mode.
+ * This puts the robot in tank drive.
  */
-public class DriveWithJoysticks extends Command {
+public class DriveTank extends Command {
 	private TalonDrive tDrive;
 	
-	public DriveWithJoysticks() {
+	public DriveTank() {
 		requires(Robot.driveTrain);
 	}
 
@@ -24,7 +26,7 @@ public class DriveWithJoysticks extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.arcadeDrive(Robot.oi.getMoveValue(), Robot.oi.getRotateValue(), true);
+		tDrive.tankDrive(-Robot.oi.getMoveValue(DS_USB.LEFT_STICK), -Robot.oi.getMoveValue(DS_USB.RIGHT_STICK));
 		System.out.println("driving");
 	}
 

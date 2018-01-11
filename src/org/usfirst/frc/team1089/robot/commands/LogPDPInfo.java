@@ -77,6 +77,7 @@ public class LogPDPInfo extends Command {
 				writer.println(getCSVStatusLine());
 				
 			lastLogTime = currentMillis;
+		}
 
 	}
 	

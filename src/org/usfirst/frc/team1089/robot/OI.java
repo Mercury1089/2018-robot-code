@@ -67,20 +67,48 @@ public class OI {
 	 * Gets the move value for driving forwards/backwards.
 	 * A deadzone is applied to this value.
 	 * 
-	 * @return Y-axis of left joystick.
+	 * @param id the device ID of the axis.
+	 * @return Y-axis of joystick, deadzone applied.
 	 */
-	public double getMoveValue() {
-		return applyDeadzone(leftStick.getY());
+	public double getMoveValue(int id) {
+		double val;
+		
+		switch(id) {
+			case DS_USB.LEFT_STICK:
+				val = leftStick.getY();
+				break;
+			case DS_USB.RIGHT_STICK:
+				val = rightStick.getY();
+				break;
+			default:
+				val = -1;
+		}
+		
+		return applyDeadzone(val);
 	}
 	
 	/**
 	 * Gets the move value for rotating right/left.
 	 * A deadzone is applied to this value.
 	 * 
-	 * @return X-axis of right joystick.
+	 * @param id the device ID of the axis.
+	 * @return X-axis of joystick, deadzone applied.
 	 */
-	public double getRotateValue() {
-		return applyDeadzone(rightStick.getX());
+	public double getRotateValue(int id) {
+		double val;
+		
+		switch(id) {
+			case DS_USB.LEFT_STICK:
+				val = leftStick.getX();
+				break;
+			case DS_USB.RIGHT_STICK:
+				val = rightStick.getX();
+				break;
+			default:
+				val = -1;
+		}
+		
+		return applyDeadzone(val);
 	}
 	
 	/**

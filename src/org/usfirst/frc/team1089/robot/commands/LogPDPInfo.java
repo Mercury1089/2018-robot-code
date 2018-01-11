@@ -20,10 +20,10 @@ public class LogPDPInfo extends Command {
 	private static final double MILLIS_BETWEEN_LOGS = 1_000;
 	
 	private PDP pdpSubsystem;
-	private File outputDir = new File(System.getProperty("user.home") + "/logs");
 	private PrintWriter writer;
 	private long lastLogTime;
 	
+	private static final File OUTPUT_DIR = new File("/home/lvuser/logs");
 	private static final String CSV_HEADER;
 	
 	static {
@@ -32,6 +32,9 @@ public class LogPDPInfo extends Command {
 			sb.append(",Channel ").append(i);
 		}
 		CSV_HEADER = sb.toString();
+		
+		if (!OUTPUT_DIR.exists())
+			OUTPUT_DIR.mkdirs();
 	}
 	
 	public LogPDPInfo() {
@@ -50,7 +53,8 @@ public class LogPDPInfo extends Command {
 	private void initializeLogFile() {
 		if (writer == null) {
 			String fileName = "pdp-" + fileTimestampFormat.format(LocalDateTime.now()) + ".csv";
-			File logFile = new File(outputDir, fileName);
+			File logFile = new File(OUTPUT_DIR, fileName);
+				
 			try {
 				writer = new PrintWriter(new BufferedWriter(new FileWriter(logFile)));
 				writer.println(CSV_HEADER);
@@ -67,10 +71,13 @@ public class LogPDPInfo extends Command {
 		long currentMillis = System.currentTimeMillis();
 		//Checks if MILLIS_BETWEEN_LOGS milliseconds has passed since last line
 		if (currentMillis >= lastLogTime + MILLIS_BETWEEN_LOGS) {
-//		initializeLogFile();
-			writer.println(getCSVStatusLine());
+		//initializeLogFile();
+			
+			if (writer != null)		
+				writer.println(getCSVStatusLine());
+				
 			lastLogTime = currentMillis;
-		}
+
 	}
 	
 	//Gets PDP status in CSV format.

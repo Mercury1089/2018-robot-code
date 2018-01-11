@@ -15,6 +15,9 @@ tmp/
 .loadpath
 /.idea
 
+# Ant
+lib/*.properties
+
 # Toast/GradleRIO
 run/
 .gradle/

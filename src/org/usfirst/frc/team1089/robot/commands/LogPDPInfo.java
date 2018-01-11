@@ -68,17 +68,16 @@ public class LogPDPInfo extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		boolean canWrite = writer != null;
-		
-		if (canWrite) {
-			long currentMillis = System.currentTimeMillis();
-			//Checks if MILLIS_BETWEEN_LOGS milliseconds has passed since last line
-			if (currentMillis >= lastLogTime + MILLIS_BETWEEN_LOGS) {
-				// initializeLogFile();
+		long currentMillis = System.currentTimeMillis();
+		//Checks if MILLIS_BETWEEN_LOGS milliseconds has passed since last line
+		if (currentMillis >= lastLogTime + MILLIS_BETWEEN_LOGS) {
+		//initializeLogFile();
+			
+			if (writer != null)		
 				writer.println(getCSVStatusLine());
-				lastLogTime = currentMillis;
-			}
-		}
+				
+			lastLogTime = currentMillis;
+
 	}
 	
 	//Gets PDP status in CSV format.

@@ -25,6 +25,7 @@ public class DriveWithJoysticks extends Command {
 	@Override
 	protected void execute() {
 		tDrive.arcadeDrive(Robot.oi.getMoveValue(), Robot.oi.getRotateValue(), true);
+		System.out.println("driving");
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

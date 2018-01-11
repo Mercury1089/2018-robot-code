@@ -22,9 +22,9 @@ public class RobotMap {
 	 */
 	public static class CAN {
 		public static final int 
-			TALON_DRIVETRAIN_FL = 0,
-			TALON_DRIVETRAIN_FR = 1,
-			TALON_DRIVETRAIN_BR = 2,
+			TALON_DRIVETRAIN_FL = 4,
+			TALON_DRIVETRAIN_FR = 2,
+			TALON_DRIVETRAIN_BR = 1,
 			TALON_DRIVETRAIN_BL = 3;
 		
 		private CAN() { } // Should never be constructed.

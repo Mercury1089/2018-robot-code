@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public class TalonDrive {
 	private final TalonSRX TALON_LEFT, TALON_RIGHT;
-	private double maxOutput = 1.0;
+	private double maxOutput = 0.5;
 
 	/**
 	 * Creates a drive train, assuming there is one Talon for the left side
@@ -87,7 +87,7 @@ public class TalonDrive {
 		
 		// Apply speeds to motors.
 		// This assumes that the Talons have been set properly.
-		TALON_LEFT.set(ControlMode.Velocity, leftPercent * maxOutput);
-		TALON_RIGHT.set(ControlMode.Velocity, rightPercent * maxOutput);
+		TALON_LEFT.set(ControlMode.PercentOutput, leftPercent * maxOutput);
+		TALON_RIGHT.set(ControlMode.PercentOutput, -rightPercent * maxOutput);
 	}
 }

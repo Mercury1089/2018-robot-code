@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
@@ -57,6 +58,8 @@ public class OI {
 		startingPosition.addObject("Left", AutonPosition.LEFT);
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
+		SmartDashboard.putData("Auton Starting Position", startingPosition);
+		
 		
 	}
 	

@@ -1,13 +1,19 @@
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
+import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	private SendableChooser<AutonPosition> startingPosition;
+	
+	
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.
@@ -46,6 +52,12 @@ public class OI {
 		gamepad = new Joystick(DS_USB.GAMEPAD);
 		
 		// Gamepad binds
+		
+		startingPosition = new SendableChooser<AutonPosition>();
+		startingPosition.addObject("Left", AutonPosition.LEFT);
+		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
+		startingPosition.addObject("Right", AutonPosition.RIGHT);
+		
 	}
 	
 	/**

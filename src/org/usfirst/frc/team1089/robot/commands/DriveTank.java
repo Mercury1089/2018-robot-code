@@ -1,31 +1,43 @@
 package org.usfirst.frc.team1089.robot.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
+import org.usfirst.frc.team1089.util.InfrequentLogger;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
-import edu.wpi.first.wpilibj.command.Command;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Command that puts the drive train into a manual control mode.
+ * This puts the robot in tank drive.
  */
-public class DriveWithJoysticks extends Command {
+public class DriveTank extends Command {
 	private TalonDrive tDrive;
-	
-	public DriveWithJoysticks() {
+	private Logger log = LogManager.getLogger();
+	private InfrequentLogger everySecond = new InfrequentLogger(log, 1_000, TimeUnit.MILLISECONDS);
+	//TODO: think of better naming convention for InfrequentLogger
+
+	public DriveTank() {
 		requires(Robot.driveTrain);
+		setName("DriveTank Command");
+		log.debug(getName() + " command created");
 	}
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
+		log.info(getName() + " command initialized");
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.arcadeDrive(Robot.oi.getMoveValue(), Robot.oi.getRotateValue(), true);
-		System.out.println("driving");
+		tDrive.tankDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), Robot.oi.getMoveValue(DS_USB.RIGHT_STICK));
+		everySecond.run(log -> log.info("tank driving"));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -44,6 +56,7 @@ public class DriveWithJoysticks extends Command {
 	// subsystems is scheduled to run
 	@Override
 	protected void interrupted() {
+		log.info("interrupted");
 		end();
 	}
 }

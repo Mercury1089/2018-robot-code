@@ -3,7 +3,8 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 
@@ -44,7 +45,8 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 	
 	private final double DEADZONE = 0.1;
-	
+	private Logger log = LogManager.getLogger(OI.class);
+
 	private Joystick leftStick, rightStick, gamepad;
 
 	public OI() {
@@ -54,7 +56,7 @@ public class OI {
 		
 		// Gamepad binds
 		
-		startingPosition = new SendableChooser<AutonPosition>();
+		startingPosition = new SendableChooser<>();
 		startingPosition.addObject("Left", AutonPosition.LEFT);
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
@@ -62,27 +64,55 @@ public class OI {
 		SmartDashboard.putNumber("NavX Angle", Robot.ahrs.getAngle());
 			
 		
-		
+		log.info("OI initialized");
 	}
 	
 	/**
 	 * Gets the move value for driving forwards/backwards.
 	 * A deadzone is applied to this value.
 	 * 
-	 * @return Y-axis of left joystick.
+	 * @param id the device ID of the axis.
+	 * @return Y-axis of joystick, deadzone applied.
 	 */
-	public double getMoveValue() {
-		return applyDeadzone(leftStick.getY());
+	public double getMoveValue(int id) {
+		double val;
+		
+		switch(id) {
+			case DS_USB.LEFT_STICK:
+				val = leftStick.getY();
+				break;
+			case DS_USB.RIGHT_STICK:
+				val = rightStick.getY();
+				break;
+			default:
+				val = -1;
+		}
+		
+		return applyDeadzone(val);
 	}
 	
 	/**
 	 * Gets the move value for rotating right/left.
 	 * A deadzone is applied to this value.
 	 * 
-	 * @return X-axis of right joystick.
+	 * @param id the device ID of the axis.
+	 * @return X-axis of joystick, deadzone applied.
 	 */
-	public double getRotateValue() {
-		return applyDeadzone(rightStick.getX());
+	public double getRotateValue(int id) {
+		double val;
+		
+		switch(id) {
+			case DS_USB.LEFT_STICK:
+				val = leftStick.getX();
+				break;
+			case DS_USB.RIGHT_STICK:
+				val = rightStick.getX();
+				break;
+			default:
+				val = -1;
+		}
+		
+		return applyDeadzone(val);
 	}
 	
 	/**

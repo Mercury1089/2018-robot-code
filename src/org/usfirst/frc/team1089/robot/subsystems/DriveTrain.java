@@ -1,13 +1,12 @@
 package org.usfirst.frc.team1089.robot.subsystems;
 
-import org.usfirst.frc.team1089.robot.RobotMap.CAN;
-import org.usfirst.frc.team1089.robot.commands.DriveWithJoysticks;
-import org.usfirst.frc.team1089.util.TalonDrive;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team1089.robot.RobotMap.CAN;
+import org.usfirst.frc.team1089.robot.commands.DriveArcade;
+import org.usfirst.frc.team1089.robot.commands.DriveTank;
+import org.usfirst.frc.team1089.util.TalonDrive;
 
 /**
  * Subsystem that encapsulates the drive train.
@@ -76,7 +75,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveWithJoysticks());
+		setDefaultCommand(new DriveTank());
 	}
 	
 	

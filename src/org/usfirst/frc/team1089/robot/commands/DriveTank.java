@@ -36,7 +36,7 @@ public class DriveTank extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.tankDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), Robot.oi.getMoveValue(DS_USB.RIGHT_STICK));
+		tDrive.tankDrive(Robot.oi.getMoveValue(DS_USB.RIGHT_STICK), Robot.oi.getMoveValue(DS_USB.LEFT_STICK));
 		everySecond.run(log -> log.info("tank driving"));
 	}
 

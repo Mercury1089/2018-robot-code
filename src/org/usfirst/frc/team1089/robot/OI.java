@@ -1,12 +1,16 @@
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
+import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
+import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -44,15 +48,22 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	
-	private final double DEADZONE = 0.1;
+	private final double DEADZONE = 0.15;
 	private Logger log = LogManager.getLogger(OI.class);
 
 	private Joystick leftStick, rightStick, gamepad;
+	
+	private JoystickButton left_1;
+	
+	private ShuffleDash shuffleboard;
 
 	public OI() {
 		leftStick = new Joystick(DS_USB.LEFT_STICK);
 		rightStick = new Joystick(DS_USB.RIGHT_STICK);
 		gamepad = new Joystick(DS_USB.GAMEPAD);
+		
+		left_1 = new JoystickButton(leftStick, 1);
+		left_1.whenPressed(new DegreeRotate(60));
 		
 		// Gamepad binds
 		
@@ -63,8 +74,11 @@ public class OI {
 		SmartDashboard.putData("Auton Starting Position", startingPosition);
 		SmartDashboard.putNumber("NavX Angle", Robot.ahrs.getAngle());
 			
-		
 		log.info("OI initialized");
+		
+		shuffleboard = new ShuffleDash();
+		
+		new Notifier(() -> shuffleboard.updateDash()).startPeriodic(0.050);
 	}
 	
 	/**
@@ -122,6 +136,6 @@ public class OI {
 	 * @return {@code val} if |{@code val}| >= 0.1, 0 otherwise.
 	 */
 	private double applyDeadzone(double val) {
-		return Math.abs(val) >= 0.1 ? val : 0;
+		return Math.abs(val) >= DEADZONE ? val : 0;
 	}
 }

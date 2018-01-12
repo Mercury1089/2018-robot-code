@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class DriveArcade extends Command {
 	private TalonDrive tDrive;
 	private Logger log = LogManager.getLogger();
-	private InfrequentLogger everySencond = new InfrequentLogger(log, 1_000, TimeUnit.MILLISECONDS);
+	private InfrequentLogger everySecond = new InfrequentLogger(log, 1_000, TimeUnit.MILLISECONDS);
 	//TODO: think of better naming convention for InfrequentLogger
 
 
@@ -37,8 +37,8 @@ public class DriveArcade extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.arcadeDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), Robot.oi.getRotateValue(DS_USB.RIGHT_STICK), true);
-		everySencond.run(log -> log.info("arcade driving"));
+		tDrive.arcadeDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), -Robot.oi.getRotateValue(DS_USB.RIGHT_STICK), true);
+		everySecond.run(log -> log.info("arcade driving"));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

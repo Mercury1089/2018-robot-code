@@ -11,6 +11,14 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Logs various information about the PDP to a CSV file
+ * on the rio. Logs are done every second.
+ * 
+ * This helps to debug info such as brownouts as it prints
+ * info about power, voltage, amps, current, etc.
+ *
+ */
 public class LogPDPInfo extends Command {
 	private static final DateTimeFormatter fileTimestampFormat = DateTimeFormatter.ofPattern("MMdd_HHmmss");
 	private static final DateTimeFormatter statusTimestampFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS a");
@@ -108,13 +116,6 @@ public class LogPDPInfo extends Command {
 		return sb.toString();
 	}
 	
-
-	// Make this return true when this Command no longer needs to run execute()
-	@Override
-	protected boolean isFinished() {
-		return false;
-	}
-
 	private void closeLogFile() {
 		if (writer != null) {
 			writer.flush();
@@ -128,7 +129,8 @@ public class LogPDPInfo extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return writer == null; //prevent execute being called when we don't have a file to write to
+		// prevent execute being called when we don't have a file to write to
+		return writer == null; 
 	}
 
 	// Called once after isFinished returns true

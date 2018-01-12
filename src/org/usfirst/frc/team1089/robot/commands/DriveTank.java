@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class DriveTank extends Command {
 	private TalonDrive tDrive;
 	private Logger log = LogManager.getLogger();
-	private InfrequentLogger everySencond = new InfrequentLogger(log, 1_000, TimeUnit.MILLISECONDS);
+	private InfrequentLogger everySecond = new InfrequentLogger(log, 1_000, TimeUnit.MILLISECONDS);
 	//TODO: think of better naming convention for InfrequentLogger
 
 	public DriveTank() {
@@ -36,8 +36,8 @@ public class DriveTank extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.tankDrive(-Robot.oi.getMoveValue(DS_USB.LEFT_STICK), -Robot.oi.getMoveValue(DS_USB.RIGHT_STICK));
-		everySencond.run(log -> log.info("tank driving"));
+		tDrive.tankDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), Robot.oi.getMoveValue(DS_USB.RIGHT_STICK));
+		everySecond.run(log -> log.info("tank driving"));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

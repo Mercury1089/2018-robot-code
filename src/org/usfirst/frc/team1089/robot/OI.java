@@ -3,7 +3,8 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 
@@ -44,7 +45,8 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 	
 	private final double DEADZONE = 0.1;
-	
+	private Logger log = LogManager.getLogger(OI.class);
+
 	private Joystick leftStick, rightStick, gamepad;
 
 	public OI() {
@@ -54,13 +56,13 @@ public class OI {
 		
 		// Gamepad binds
 		
-		startingPosition = new SendableChooser<AutonPosition>();
+		startingPosition = new SendableChooser<>();
 		startingPosition.addObject("Left", AutonPosition.LEFT);
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
 		SmartDashboard.putData("Auton Starting Position", startingPosition);
 		
-		
+		log.info("OI initialized");
 	}
 	
 	/**

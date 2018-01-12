@@ -6,17 +6,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
- * Purpose of this class is to reduce logging without removing it from frequently called periodic methods
- *
- * usage can be something like:
- *
- * //in init save it as a field
- * everySecond = new InfrequentLogger(log, 1_000, TimeUnit.Milliseconds); //TODO: think of better naming convention
- *
- * //in execute call the run method with a lambda
+ * Purpose of this class is to reduce logging without removing it from frequently-called periodic methods. <p>
+ * 
+ * Usage can be something like:
+ * 
+ * <pre>
+ * // in init save it as a field
+ * everySecond = new InfrequentLogger(log, 1_000, TimeUnit.Milliseconds);
+ * // TODO: think of better naming convention
+ * 
+ * // in execute call the run method with a lambda
  * everySecond.run(log -> log.info("I'm doing something!"));
- *
- * this will only log every 1 second as opposed to every time execute is called
+ * </pre>
+ * 
+ * This will only log every 1 second as opposed to every time execute is called.
  *
  */
 public class InfrequentLogger {

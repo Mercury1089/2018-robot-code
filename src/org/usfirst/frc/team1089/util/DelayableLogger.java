@@ -6,13 +6,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
- * Purpose of this class is to reduce logging without removing it from frequently-called periodic methods. <p>
+ * A logger that can be set to log with a certain delay between logs. 
+ * This is to prevent overhead from constant logging in periodic commands. <p>
  * 
  * Usage can be something like:
  * 
  * <pre>
  * // in init save it as a field
- * everySecond = new InfrequentLogger(log, 1_000, TimeUnit.Milliseconds);
+ * everySecond = new DelayableLogger(log, 1_000, TimeUnit.Milliseconds);
  * // TODO: think of better naming convention
  * 
  * // in execute call the run method with a lambda
@@ -22,14 +23,14 @@ import java.util.function.Consumer;
  * This will only log every 1 second as opposed to every time execute is called.
  *
  */
-public class InfrequentLogger {
+public class DelayableLogger {
 
     private final Logger delegate;
     private final long minTimeBetweenLogs;
     private final TimeUnit minTimeBetweenLogsUnit;
     private long lastLogTime;
 
-    public InfrequentLogger(Logger log, long timeBetweenLogs, TimeUnit timeBetweenLogsUnit) {
+    public DelayableLogger(Logger log, long timeBetweenLogs, TimeUnit timeBetweenLogsUnit) {
         if (log == null)
             throw new IllegalArgumentException("log must not be null!");
         if (timeBetweenLogs < 0)

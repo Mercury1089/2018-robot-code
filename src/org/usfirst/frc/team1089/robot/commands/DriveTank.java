@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
-import org.usfirst.frc.team1089.util.InfrequentLogger;
+import org.usfirst.frc.team1089.util.DelayableLogger;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
 import java.util.concurrent.TimeUnit;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class DriveTank extends Command {
 	private TalonDrive tDrive;
 	private Logger log = LogManager.getLogger();
-	private InfrequentLogger everySecond = new InfrequentLogger(log, 1_000, TimeUnit.MILLISECONDS);
+	private DelayableLogger everySecond = new DelayableLogger(log, 1_000, TimeUnit.MILLISECONDS);
 	//TODO: think of better naming convention for InfrequentLogger
 
 	public DriveTank() {

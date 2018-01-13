@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.util.MercuryLogConfig;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -37,6 +39,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		// This line NEEDS to be first in order for any of the loggers to work.
+		ConfigurationFactory.setConfigurationFactory(new MercuryLogConfig());
+		
 		driveTrain = new DriveTrain(
 				CAN.TALON_DRIVETRAIN_FL,
 				CAN.TALON_DRIVETRAIN_FR,
@@ -44,13 +49,12 @@ public class Robot extends IterativeRobot {
 				CAN.TALON_DRIVETRAIN_BR
 		);
 		
-		
-		
 		pdp = new PDP();
 		
 		ahrs = new AHRS(SerialPort.Port.kUSB1);
 		
-		oi = new OI(); //PLEASE PUT OI AT THE BOTTOM OF INITIALIZING EVERYTHING
+		// This NEEDS to be on the bottom for everything to work.
+		oi = new OI(); 
 	}
 
 

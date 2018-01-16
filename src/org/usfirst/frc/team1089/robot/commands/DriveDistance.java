@@ -7,8 +7,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
- */
+  we got a bag!!1!111!!
+ **/
 public class DriveDistance extends Command {
 
 	private double distance;
@@ -30,7 +30,7 @@ public class DriveDistance extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.getLeft().
+    	// Robot.driveTrain.getLeft().
     	Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }

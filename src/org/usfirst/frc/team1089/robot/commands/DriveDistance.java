@@ -1,5 +1,9 @@
 package org.usfirst.frc.team1089.robot.commands;
 
+import org.usfirst.frc.team1089.robot.Robot;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -7,13 +11,28 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveDistance extends Command {
 
-    public DriveDistance() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+	private double distance;
+	private double voltage;
+    private double endPosL, endPosR;
+    private double waitTime;
+	
+    /**
+     * 
+     * @param distance in inches
+     * @param voltage -1.0 to 1.0
+     */
+    public DriveDistance(double distance, double voltage) {
+    	this.distance = distance;
+    	this.voltage = voltage;
+    	endPosL = distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER);
+    	endPosR = -endPosL;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.driveTrain.getLeft().
+    	Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
+		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
 
     // Called repeatedly when this Command is scheduled to run

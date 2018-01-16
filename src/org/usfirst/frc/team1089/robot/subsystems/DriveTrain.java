@@ -16,6 +16,7 @@ import org.usfirst.frc.team1089.util.TalonDrive;
 public class DriveTrain extends Subsystem {
 	private TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
+	public static final double WHEEL_DIAMETER = 5.0;
 	
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
@@ -34,8 +35,6 @@ public class DriveTrain extends Subsystem {
 		// Set follower control on back talons.
 		tBackLeft.set(ControlMode.Follower, fl);
 		tBackRight.set(ControlMode.Follower, fr);
-		
-		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
 	}
 	
 	/**
@@ -60,6 +59,14 @@ public class DriveTrain extends Subsystem {
 			default: // Not a drivetrain Talon!
 				return null;
 		}
+	}
+	
+	public TalonSRX getLeft() {
+		return tFrontLeft;
+	}
+	
+	public TalonSRX getRight() {
+		return tFrontRight;
 	}
 	
 	public TalonDrive getTalonDrive() {

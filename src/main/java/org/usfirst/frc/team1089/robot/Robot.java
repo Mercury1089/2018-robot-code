@@ -39,9 +39,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		// This line NEEDS to be first in order for any of the loggers to work.
-		ConfigurationFactory.setConfigurationFactory(new MercuryLogConfig());
-		
 		driveTrain = new DriveTrain(
 				CAN.TALON_DRIVETRAIN_FL,
 				CAN.TALON_DRIVETRAIN_FR,

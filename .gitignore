@@ -13,10 +13,9 @@ out/
 tmp/
 .settings/
 .loadpath
+.project
 /.idea
-
-# Ant
-lib/*.properties
+.classpath
 
 # Toast/GradleRIO
 run/

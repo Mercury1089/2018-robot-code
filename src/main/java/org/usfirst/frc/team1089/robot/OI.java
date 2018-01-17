@@ -77,8 +77,6 @@ public class OI {
 		log.info("OI initialized");
 		
 		shuffleboard = new ShuffleDash();
-		
-		new Notifier(() -> shuffleboard.updateDash()).startPeriodic(0.050);
 	}
 	
 	/**

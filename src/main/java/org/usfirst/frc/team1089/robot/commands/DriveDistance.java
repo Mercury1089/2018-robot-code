@@ -33,19 +33,19 @@ public class DriveDistance extends Command {
     protected void initialize() {
     	Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
-
-		
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        boolean isFinished = false;
+        boolean leftFinished = Robot.driveTrain.getLeft().getSelectedSensorPosition(0) == endPosL;
+        boolean rightFinished = Robot.driveTrain.getLeft().getSelectedSensorPosition(0) == endPosR;
         
-    	return isFinished;
+    	return leftFinished && rightFinished;
     }
 
     // Called once after isFinished returns true

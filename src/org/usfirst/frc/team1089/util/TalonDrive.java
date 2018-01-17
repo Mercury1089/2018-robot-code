@@ -3,7 +3,6 @@ package org.usfirst.frc.team1089.util;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * Helper class for various manual drive controls

@@ -1,8 +1,11 @@
 package org.usfirst.frc.team1089.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
@@ -35,6 +38,12 @@ public class DriveTrain extends Subsystem {
 		// Set follower control on back talons.
 		tBackLeft.set(ControlMode.Follower, fl);
 		tBackRight.set(ControlMode.Follower, fr);
+		
+		// Set up feedback sensors
+		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.
+		// This allows us to measure the distance from any given point to any ending point.
+		Robot.driveTrain.getLeft().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		Robot.driveTrain.getRight().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 	}
 	
 	/**

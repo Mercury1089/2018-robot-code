@@ -14,6 +14,7 @@ public class ShuffleDash {
 	public ShuffleDash() {
 		new Notifier(() -> updateDash()).startPeriodic(0.050);
 	}
+	
 	public void updateDash() {
 		SmartDashboard.putString("FMS Data", DriverStation.getInstance().getGameSpecificMessage());
 		SmartDashboard.putString("Alliance Color", DriverStation.getInstance().getAlliance().toString());

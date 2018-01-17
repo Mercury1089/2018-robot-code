@@ -11,7 +11,5 @@
 	<classpathentry kind="lib" path="lib/log4j-api-2.10.0.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-core-2.10.0.jar"/>
 	<classpathentry kind="lib" path="lib/navx_frc.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix-sources.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

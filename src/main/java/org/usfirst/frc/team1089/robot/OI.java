@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
+import org.usfirst.frc.team1089.robot.commands.DriveDistance;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -48,12 +49,13 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	
-	private final double DEADZONE = 0.15;
+	private final double DEADZONE = 0.30;
 	private Logger log = LogManager.getLogger(OI.class);
 
 	private Joystick leftStick, rightStick, gamepad;
 	
 	private JoystickButton left_1;
+	private JoystickButton left_2;
 	
 	private ShuffleDash shuffleboard;
 
@@ -64,6 +66,8 @@ public class OI {
 		
 		left_1 = new JoystickButton(leftStick, 1);
 		left_1.whenPressed(new DegreeRotate(60));
+		left_2 = new JoystickButton(leftStick, 2);
+		left_2.whenPressed(new DriveDistance(12.0, 1.0));
 		
 		// Gamepad binds
 		

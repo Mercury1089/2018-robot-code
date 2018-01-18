@@ -39,10 +39,16 @@ public class DriveTrain extends Subsystem {
 		tBackLeft = new WPI_TalonSRX(bl);
 		tBackRight = new WPI_TalonSRX(br);
 		
+		
 		tFrontLeft.setInverted(true);
 		tBackLeft.setInverted(true);
 		tFrontRight.setInverted(false);
 		tBackRight.setInverted(false);
+		
+		tFrontLeft.setSensorPhase(true);
+		tBackLeft.setSensorPhase(true);
+		tFrontRight.setSensorPhase(false);
+		tBackRight.setSensorPhase(false);
 		
 		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
 		
@@ -119,29 +125,16 @@ public class DriveTrain extends Subsystem {
 		setDefaultCommand(new DriveArcade());
 	}
 	
-	/**
-     * <pre>
-	 * public double encoderTicksToFeet(double ticks)
-	 * </pre>
-	 * Returns a value in feet based on a certain value in ticks using
-	 * the Magnetic Encoder.
-	 * @param ticks The value in ticks
-	 * @return The value in feet
-     */
-	public double encoderTicksToFeet(double ticks, boolean inverted) {
-		int reversal_factor = inverted ? -1 : 1;
-		return reversal_factor * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
-	}
-	
 	public double getLeftEncPositionInFeet() {
 		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
-		//The left encoder is inverted, so the position needs to be multiplied by -1.
-		return -1 * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+		//Convert encoder ticks to feet
+		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
 	
 	public double getRightEncPositionInFeet() {
 		double ticks = tFrontRight.getSensorCollection().getQuadraturePosition();
-		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+		//Convert encoder ticks to feet
+		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
 	
 	/**

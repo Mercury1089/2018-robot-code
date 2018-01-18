@@ -56,6 +56,8 @@ public class OI {
 	
 	private JoystickButton left_1;
 	private JoystickButton left_2;
+	private JoystickButton left_3;
+	
 	
 	private ShuffleDash shuffleboard;
 
@@ -68,6 +70,8 @@ public class OI {
 		left_1.whenPressed(new DegreeRotate(60));
 		left_2 = new JoystickButton(leftStick, 2);
 		left_2.whenPressed(new DriveDistance(12.0, 1.0));
+		left_3 = new JoystickButton(leftStick,3);
+		
 		
 		// Gamepad binds
 		

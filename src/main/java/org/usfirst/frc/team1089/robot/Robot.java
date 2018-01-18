@@ -50,6 +50,8 @@ public class Robot extends IterativeRobot {
 		
 		ahrs = new AHRS(SerialPort.Port.kUSB1);
 		
+		Robot.driveTrain.resetEncoders();
+		
 		// This NEEDS to be on the bottom for everything to work.
 		oi = new OI(); 
 	}

@@ -22,6 +22,8 @@ public class DriveTrain extends Subsystem {
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
 	public static final double WHEEL_DIAMETER = 5.0;
+	private static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
+	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values
 	
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
@@ -103,7 +105,6 @@ public class DriveTrain extends Subsystem {
 	public void resetEncoders() {
     	tFrontLeft.getSensorCollection().setQuadraturePosition(0, 0);
     	tFrontRight.getSensorCollection().setQuadraturePosition(0, 0);
-    	
     }
 	
 	/**
@@ -116,5 +117,43 @@ public class DriveTrain extends Subsystem {
 
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveArcade());
+	}
+	
+	/**
+     * <pre>
+	 * public double encoderTicksToFeet(double ticks)
+	 * </pre>
+	 * Returns a value in feet based on a certain value in ticks using
+	 * the Magnetic Encoder.
+	 * @param ticks The value in ticks
+	 * @return The value in feet
+     */
+	public double encoderTicksToFeet(double ticks, boolean inverted) {
+		int reversal_factor = inverted ? -1 : 1;
+		return reversal_factor * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+	}
+	
+	public double getLeftEncPositionInFeet() {
+		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
+		//The left encoder is inverted, so the position needs to be multiplied by -1.
+		return -1 * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+	}
+	
+	public double getRightEncPositionInFeet() {
+		double ticks = tFrontRight.getSensorCollection().getQuadraturePosition();
+		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+	}
+	
+	/**
+     * <pre>s
+	 * public double feetToEncoderTicks(double feet)
+	 * </pre>
+	 * Returns a value in ticks based on a certain value in feet using
+	 * the Magnetic Encoder.
+	 * @param feet The value in feet
+	 * @return The value in ticks
+     */
+	public double feetToEncoderTicks(double feet) {
+		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER) * feet;
 	}
 }

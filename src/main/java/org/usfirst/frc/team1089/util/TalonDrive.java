@@ -66,19 +66,19 @@ public class TalonDrive {
 		// Set left and right motor speeds.
 		if (moveVal > 0) {
 			if (rotateVal > 0) {
-				leftPercent = moveVal - rotateVal;
-				rightPercent = Math.max(moveVal, rotateVal);
+				rightPercent = moveVal - rotateVal;
+				leftPercent = Math.max(moveVal, rotateVal);
 			} else {
-				leftPercent = Math.max(moveVal, -rotateVal);
-				rightPercent = moveVal + rotateVal;
+				rightPercent = Math.max(moveVal, -rotateVal);
+				leftPercent = moveVal + rotateVal;
 			}
 		} else {
 			if (rotateVal > 0) {
-				leftPercent = -Math.max(-moveVal, rotateVal);
-				rightPercent = moveVal + rotateVal;
+				rightPercent = -Math.max(-moveVal, rotateVal);
+				leftPercent = moveVal + rotateVal;
 			} else {
-				leftPercent = moveVal - rotateVal;
-				rightPercent = -Math.max(-moveVal, -rotateVal);
+				rightPercent = moveVal - rotateVal;
+				leftPercent = -Math.max(-moveVal, -rotateVal);
 			}
 		}
 		

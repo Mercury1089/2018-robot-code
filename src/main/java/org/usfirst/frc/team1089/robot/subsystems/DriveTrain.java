@@ -3,6 +3,8 @@ package org.usfirst.frc.team1089.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1089.robot.Robot;
@@ -17,23 +19,32 @@ import org.usfirst.frc.team1089.util.TalonDrive;
  * using the Talons.
  */
 public class DriveTrain extends Subsystem {
-	private TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
+	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
 	public static final double WHEEL_DIAMETER = 5.0;
+	private static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
+	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values
 	
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
 	 * 
 	 * @param fl Front-left Talon ID
 	 * @param fr Front-right Talon ID
-	 * @param bl Back-left Talon ID	 
+	 * @param bl Back-left Talon ID
 	 * @param br Back-right Talon ID
 	 */
 	public DriveTrain(int fl, int fr, int bl, int br) {
-		tFrontLeft = new TalonSRX(fl);
-		tFrontRight = new TalonSRX(fr);
-		tBackLeft = new TalonSRX(bl);
-		tBackRight = new TalonSRX(br);
+		tFrontLeft = new WPI_TalonSRX(fl);
+		tFrontRight = new WPI_TalonSRX(fr);
+		tBackLeft = new WPI_TalonSRX(bl);
+		tBackRight = new WPI_TalonSRX(br);
+		
+		tFrontLeft.setInverted(true);
+		tBackLeft.setInverted(true);
+		tFrontRight.setInverted(false);
+		tBackRight.setInverted(false);
+		
+		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
 		
 		// Set follower control on back talons.
 		tBackLeft.set(ControlMode.Follower, fl);
@@ -42,8 +53,17 @@ public class DriveTrain extends Subsystem {
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.
 		// This allows us to measure the distance from any given point to any ending point.
-		Robot.driveTrain.getLeft().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		Robot.driveTrain.getRight().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		if (Robot.driveTrain != null) {
+			if (Robot.driveTrain.getLeft() != null && Robot.driveTrain.getRight() != null) {
+				Robot.driveTrain.getLeft().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+				Robot.driveTrain.getRight().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+			} else {
+				System.out.println("getLeft() or getRight() is not initialized!");
+			}
+		} else {
+			System.out.println("Drive Train is not initialized!");
+		}
+		
 	}
 	
 	/**
@@ -82,6 +102,11 @@ public class DriveTrain extends Subsystem {
 		return tDrive;
 	}
 	
+	public void resetEncoders() {
+    	tFrontLeft.getSensorCollection().setQuadraturePosition(0, 0);
+    	tFrontRight.getSensorCollection().setQuadraturePosition(0, 0);
+    }
+	
 	/**
 	 * Stops the motors by zeroing the left and right Talons.
 	 */
@@ -91,6 +116,44 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveTank());
+		setDefaultCommand(new DriveArcade());
+	}
+	
+	/**
+     * <pre>
+	 * public double encoderTicksToFeet(double ticks)
+	 * </pre>
+	 * Returns a value in feet based on a certain value in ticks using
+	 * the Magnetic Encoder.
+	 * @param ticks The value in ticks
+	 * @return The value in feet
+     */
+	public double encoderTicksToFeet(double ticks, boolean inverted) {
+		int reversal_factor = inverted ? -1 : 1;
+		return reversal_factor * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+	}
+	
+	public double getLeftEncPositionInFeet() {
+		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
+		//The left encoder is inverted, so the position needs to be multiplied by -1.
+		return -1 * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+	}
+	
+	public double getRightEncPositionInFeet() {
+		double ticks = tFrontRight.getSensorCollection().getQuadraturePosition();
+		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+	}
+	
+	/**
+     * <pre>s
+	 * public double feetToEncoderTicks(double feet)
+	 * </pre>
+	 * Returns a value in ticks based on a certain value in feet using
+	 * the Magnetic Encoder.
+	 * @param feet The value in feet
+	 * @return The value in ticks
+     */
+	public double feetToEncoderTicks(double feet) {
+		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER) * feet;
 	}
 }

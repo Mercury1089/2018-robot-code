@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -12,9 +13,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * 
  */
 public class TalonDrive {
-	private final TalonSRX TALON_LEFT, TALON_RIGHT;
+	private final WPI_TalonSRX TALON_LEFT, TALON_RIGHT;
 	private double maxOutput = 0.5;
-
+	
 	/**
 	 * Creates a drive train, assuming there is one Talon for the left side
 	 * and another one for the right side.
@@ -22,7 +23,7 @@ public class TalonDrive {
 	 * @param left  Left-side Talon
 	 * @param right Right-side Talon
 	 */
-	public TalonDrive(TalonSRX left, TalonSRX right) {
+	public TalonDrive(WPI_TalonSRX left, WPI_TalonSRX right) {
 		TALON_LEFT = left;
 		TALON_RIGHT = right;
 	}
@@ -65,19 +66,19 @@ public class TalonDrive {
 		// Set left and right motor speeds.
 		if (moveVal > 0) {
 			if (rotateVal > 0) {
-				leftPercent = moveVal - rotateVal;
-				rightPercent = Math.max(moveVal, rotateVal);
+				rightPercent = moveVal - rotateVal;
+				leftPercent = Math.max(moveVal, rotateVal);
 			} else {
-				leftPercent = Math.max(moveVal, -rotateVal);
-				rightPercent = moveVal + rotateVal;
+				rightPercent = Math.max(moveVal, -rotateVal);
+				leftPercent = moveVal + rotateVal;
 			}
 		} else {
 			if (rotateVal > 0) {
-				leftPercent = -Math.max(-moveVal, rotateVal);
-				rightPercent = moveVal + rotateVal;
+				rightPercent = -Math.max(-moveVal, rotateVal);
+				leftPercent = moveVal + rotateVal;
 			} else {
-				leftPercent = moveVal - rotateVal;
-				rightPercent = -Math.max(-moveVal, -rotateVal);
+				rightPercent = moveVal - rotateVal;
+				leftPercent = -Math.max(-moveVal, -rotateVal);
 			}
 		}
 		
@@ -88,7 +89,7 @@ public class TalonDrive {
 		// Apply speeds to motors.
 		// This assumes that the Talons have been set properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftPercent * maxOutput);
-		TALON_RIGHT.set(ControlMode.PercentOutput, -rightPercent * maxOutput);
+		TALON_RIGHT.set(ControlMode.PercentOutput, rightPercent * maxOutput);
 	}
 	
 	/**
@@ -104,6 +105,6 @@ public class TalonDrive {
 		// Apply speeds to motors.
 		// This assumes that the Talons have been set properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftVal * maxOutput);
-		TALON_RIGHT.set(ControlMode.PercentOutput, -rightVal * maxOutput);
+		TALON_RIGHT.set(ControlMode.PercentOutput, rightVal * maxOutput);
 	}
 }

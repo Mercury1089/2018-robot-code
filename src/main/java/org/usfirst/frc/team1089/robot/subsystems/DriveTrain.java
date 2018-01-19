@@ -44,7 +44,7 @@ public class DriveTrain extends Subsystem {
 		tFrontRight.setInverted(false);
 		tBackRight.setInverted(false);
 
-		tFrontLeft.setSensorPhase(true);
+		tFrontLeft.setSensorPhase(false);
 		tFrontRight.setSensorPhase(false);
 
 		tDrive = new TalonDrive(tFrontLeft, tFrontRight);

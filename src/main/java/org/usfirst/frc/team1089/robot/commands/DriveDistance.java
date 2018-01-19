@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * Uses Talons and mag encoders to drive a set distance.
  */
 public class DriveDistance extends Command {
-	
+
 	private static double MOVE_THRESHOLD = .1;
 	private double distance;
 	private double percentVoltage; //Voltage is NOW from [-1, 1]
@@ -33,17 +33,21 @@ public class DriveDistance extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+<<<<<<< HEAD
     	System.out.println("Drive with distance has been initialized");
     	
+=======
+
+>>>>>>> master
     	Robot.driveTrain.resetEncoders();
-		
+
 		Robot.driveTrain.getLeft().config_kP(0, .1, 0);
 		Robot.driveTrain.getLeft().config_kI(0, 0, 0);
 		Robot.driveTrain.getLeft().config_kD(0, .05, 0);
 		Robot.driveTrain.getRight().config_kP(0, .1, 0);
 		Robot.driveTrain.getRight().config_kI(0, 0, 0);
 		Robot.driveTrain.getRight().config_kD(0, .05, 0);
-		
+
 		Robot.driveTrain.getLeft().configNominalOutputForward(0, 0);
 		Robot.driveTrain.getLeft().configNominalOutputReverse(0, 0);
 		Robot.driveTrain.getLeft().configPeakOutputForward(percentVoltage, 0);
@@ -52,15 +56,24 @@ public class DriveDistance extends Command {
 		Robot.driveTrain.getRight().configNominalOutputReverse(0, 0);
 		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, 0);
 		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, 0);
+<<<<<<< HEAD
 		
 		System.out.println(endPosL);
+=======
+
+
+>>>>>>> master
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+<<<<<<< HEAD
     	
+=======
+
+>>>>>>> master
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -70,22 +83,30 @@ public class DriveDistance extends Command {
         double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(0);
         //System.out.println(leftPos);
         double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(0);
+<<<<<<< HEAD
         //System.out.println(rightPos);
  
+=======
+
+>>>>>>> master
         if ((leftPos > endPosL - MOVE_THRESHOLD && leftPos < endPosL + MOVE_THRESHOLD)
 				&& (rightPos > endPosR - MOVE_THRESHOLD && rightPos < endPosR + MOVE_THRESHOLD)) {
    			isFinished = true;
    			System.out.println(" I'm done");
    		}
-        
+
     	return isFinished;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+<<<<<<< HEAD
     	
     	System.out.println(" Drive with distance has ended");
     	
+=======
+
+>>>>>>> master
     	Robot.driveTrain.stop();
     	//Robot.driveTrain.resetEncoders();
     }

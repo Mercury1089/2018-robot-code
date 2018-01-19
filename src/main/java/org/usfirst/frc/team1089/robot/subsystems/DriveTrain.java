@@ -146,7 +146,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	}
 
 	public void pidWrite(double output) {
-		tDrive.tankDrive(output, output);
+		tDrive.tankDrive(output, -output);
 	}
 
 	//  enable/disableTalonDrive methods are WIP.

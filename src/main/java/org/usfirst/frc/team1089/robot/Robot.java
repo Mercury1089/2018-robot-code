@@ -20,9 +20,6 @@ import com.kauailabs.navx.frc.AHRS;
  */
 public class Robot extends IterativeRobot {
 
-	public static final int TIMEOUT_MS = 10;
-	public static final int SLOT_0 = 0;
-	public static final int PRIMARY_PID_LOOP = 0;
 	public static DriveTrain driveTrain;
 	public static OI oi;
 	public static PDP pdp;

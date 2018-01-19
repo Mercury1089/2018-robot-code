@@ -5,6 +5,7 @@ import org.usfirst.frc.team1089.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**
  * Uses Talons and mag encoders to drive a set distance.
@@ -34,21 +35,21 @@ public class DriveDistance extends Command {
     protected void initialize() {
     	Robot.driveTrain.resetEncoders();
 		Robot.driveTrain.disableTalonDrive();
-		Robot.driveTrain.getLeft().config_kP(Robot.SLOT_0, .1, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().config_kI(Robot.SLOT_0, 0, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().config_kD(Robot.SLOT_0, .05, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().config_kP(Robot.SLOT_0, .1, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().config_kI(Robot.SLOT_0, 0, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().config_kD(Robot.SLOT_0, .05, Robot.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
 
-		Robot.driveTrain.getLeft().configNominalOutputForward(0, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configNominalOutputReverse(0, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configPeakOutputForward(percentVoltage, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configPeakOutputReverse(-percentVoltage, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configNominalOutputForward(0, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configNominalOutputReverse(0, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, Robot.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, Robot.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
 
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
@@ -63,9 +64,9 @@ public class DriveDistance extends Command {
     protected boolean isFinished() {
         boolean isFinished = false;
         
-        double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP);
+        double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
         //System.out.println(leftPos);
-        double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP);
+        double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
         if ((leftPos > endPosL - MOVE_THRESHOLD && leftPos < endPosL + MOVE_THRESHOLD)
 				&& (rightPos > endPosR - MOVE_THRESHOLD && rightPos < endPosR + MOVE_THRESHOLD)) {
    			isFinished = true;
@@ -79,7 +80,7 @@ public class DriveDistance extends Command {
     protected void end() {
     	Robot.driveTrain.stop();
     	Robot.driveTrain.enableTalonDrive();
-    	//Robot.driveTrain.resetEncoders();
+    	Robot.driveTrain.resetEncoders();
     }
 
     // Called when another command which requires one or more of the same

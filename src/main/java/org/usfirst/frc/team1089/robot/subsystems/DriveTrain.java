@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
 import org.usfirst.frc.team1089.util.TalonDrive;
@@ -19,6 +18,9 @@ import org.usfirst.frc.team1089.util.TalonDrive;
  * using the Talons.
  */
 public class DriveTrain extends Subsystem implements PIDOutput {
+	public static final int TIMEOUT_MS = 10;
+	public static final int SLOT_0 = 0;
+	public static final int PRIMARY_PID_LOOP = 0;
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
 	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
@@ -61,8 +63,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.
 		// This allows us to measure the distance from any given point to any ending point.
-		tFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Robot.PRIMARY_PID_LOOP, Robot.TIMEOUT_MS);
-		tFrontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Robot.PRIMARY_PID_LOOP, Robot.TIMEOUT_MS);
+		tFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
+		tFrontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 	}
 
 	/**
@@ -102,8 +104,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	}
 
 	public void resetEncoders() {
-    	tFrontLeft.getSensorCollection().setQuadraturePosition(0, Robot.TIMEOUT_MS);
-    	tFrontRight.getSensorCollection().setQuadraturePosition(0, Robot.TIMEOUT_MS);
+    	tFrontLeft.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
+    	tFrontRight.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
     }
 
 	/**
@@ -119,13 +121,13 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	}
 
 	public double getLeftEncPositionInFeet() {
-		double ticks = tFrontLeft.getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP);
+		double ticks = tFrontLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
 		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
 
 	public double getRightEncPositionInFeet() {
-		double ticks = tFrontRight.getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP);
+		double ticks = tFrontRight.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
 		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}

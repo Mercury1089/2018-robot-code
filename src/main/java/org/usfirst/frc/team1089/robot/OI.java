@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
 import org.usfirst.frc.team1089.robot.commands.DriveDistance;
+import org.usfirst.frc.team1089.robot.commands.DriveTank;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -57,6 +58,7 @@ public class OI {
 	private JoystickButton left_1;
 	private JoystickButton left_2;
 	private JoystickButton left_3;
+	private JoystickButton gamepad_a;
 	
 	
 	private ShuffleDash shuffleboard;
@@ -71,6 +73,9 @@ public class OI {
 		left_2 = new JoystickButton(leftStick, 2);
 		left_2.whenPressed(new DriveDistance(12.0, 1.0));
 		left_3 = new JoystickButton(leftStick,3);
+
+		gamepad_a = new JoystickButton(gamepad, 1);
+		gamepad_a.whenPressed(new DriveTank());
 		
 		
 		// Gamepad binds

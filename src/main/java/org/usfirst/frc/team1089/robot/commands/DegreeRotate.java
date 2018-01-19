@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class DegreeRotate extends PIDCommand {
 
-	protected double _heading;
+	private double _heading;
 	
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
@@ -40,8 +40,10 @@ public class DegreeRotate extends PIDCommand {
     	getPIDController().setOutputRange(-.6, .6);
     	
     	Robot.navX.reset();
+
     	getPIDController().setSetpoint(_heading);
 
+		System.out.println("DegreeRotate initialized");
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Initialized with heading: " + _heading);
     }
 
@@ -63,7 +65,7 @@ public class DegreeRotate extends PIDCommand {
     protected void end() {
     	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.end()");
     	//MercLogger.logMessage(Level.INFO, "Current setpoint: " + getPIDController().getSetpoint());
-		System.out.println("DegreeRotate initialized");
+		System.out.println("DegreeRotate ended");
 		Robot.driveTrain.stop();
     	//MercLogger.logMessage(Level.INFO, "Gyro reads: " + Robot.driveTrain.getGyro().getAngle() + " degrees.");
 		//MercLogger.logMessage(Level.INFO, "DegreeRotate: Completed");
@@ -73,7 +75,7 @@ public class DegreeRotate extends PIDCommand {
     // subsystems is scheduled to run
     protected void interrupted() {
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Interrupted");
-		System.out.println("DegreeRotate initialized");
+		System.out.println("DegreeRotate interrupted");
     	end();
     }
 

@@ -12,7 +12,7 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
 import org.usfirst.frc.team1089.robot.commands.DriveDistance;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
-import org.usfirst.frc.team1089.util.ShuffleDash;
+import org.usfirst.frc.team1089.shuffleboard.ShuffleDash;
 
 /**
  * This class is the glue that binds the controls on the physical operator

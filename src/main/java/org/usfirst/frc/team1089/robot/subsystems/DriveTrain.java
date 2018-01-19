@@ -56,17 +56,8 @@ public class DriveTrain extends Subsystem {
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.
 		// This allows us to measure the distance from any given point to any ending point.
-		if (Robot.driveTrain != null) {
-			if (Robot.driveTrain.getLeft() != null && Robot.driveTrain.getRight() != null) {
-				Robot.driveTrain.getLeft().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-				Robot.driveTrain.getRight().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-			} else {
-				System.out.println("getLeft() or getRight() is not initialized!");
-			}
-		} else {
-			System.out.println("Drive Train is not initialized!");
-		}
-		
+		tFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		tFrontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 	}
 	
 	/**
@@ -119,7 +110,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveArcade());
+		setDefaultCommand(new DriveTank());
 	}
 	
 	public double getLeftEncPositionInFeet() {

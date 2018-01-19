@@ -15,50 +15,31 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 public class DegreeRotate extends PIDCommand {
 
 	protected double _heading;
-	private DoubleSupplier _angleSupplier = null;
 	
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
     
     private final double MIN_PERCENT_VBUS = 0.15;
-	
-    protected DegreeRotate() {
-    	super(0.460, 0.002, 0.0);							//super(0.195 -> 0.225 -> 0.260 -> 0.360, 0.0008 -> 0.001 -> 0.002, 0.0);
-    	_heading = 0.0;
-    	requires(Robot.driveTrain);    	
-    }
-    
-    /**
-     * Construct a DegreeRotate command that gets its angle during initialize by calling
-     * the provided DoubleSupplier method.
-     * @param angleSupplier The DoubleSupplier method to output the angle.
-     */
-    public DegreeRotate(DoubleSupplier angleSupplier) {
-    	this();
-    	_angleSupplier = angleSupplier;
-    	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Constructed using DegreeRotate(DoubleSupplier angleSupplier)");
-	}
-    
+
     public DegreeRotate(double heading) {
-    	this();
+		super(0.460, 0.002, 0.0);
+		requires(Robot.driveTrain);
+		System.out.println("DegreeRotate constructed");
     	_heading = heading;
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Constructed using DegreeRotate(double heading).");
     }
-    
+
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.initialize()");
-    	if (_angleSupplier != null) {
-    		_heading = _angleSupplier.getAsDouble();
-    	}
     	getPIDController().setContinuous(true);
     	getPIDController().setAbsoluteTolerance(1.5);
     	
     	getPIDController().setInputRange(-180, 180);
     	getPIDController().setOutputRange(-.6, .6);
     	
-    	Robot.ahrs.reset();
+    	Robot.navX.reset();
     	getPIDController().setSetpoint(_heading);
 
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Initialized with heading: " + _heading);
@@ -82,7 +63,8 @@ public class DegreeRotate extends PIDCommand {
     protected void end() {
     	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.end()");
     	//MercLogger.logMessage(Level.INFO, "Current setpoint: " + getPIDController().getSetpoint());
-    	Robot.driveTrain.stop();
+		System.out.println("DegreeRotate initialized");
+		Robot.driveTrain.stop();
     	//MercLogger.logMessage(Level.INFO, "Gyro reads: " + Robot.driveTrain.getGyro().getAngle() + " degrees.");
 		//MercLogger.logMessage(Level.INFO, "DegreeRotate: Completed");
     }
@@ -91,12 +73,13 @@ public class DegreeRotate extends PIDCommand {
     // subsystems is scheduled to run
     protected void interrupted() {
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Interrupted");
+		System.out.println("DegreeRotate initialized");
     	end();
     }
 
 	@Override
 	protected double returnPIDInput() {
-		return Robot.ahrs.getAngle();
+		return Robot.navX.getAngle();
 	}
 
 	@Override

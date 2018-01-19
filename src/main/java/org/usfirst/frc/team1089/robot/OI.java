@@ -80,7 +80,7 @@ public class OI {
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
 		SmartDashboard.putData("Auton Starting Position", startingPosition);
-		SmartDashboard.putNumber("NavX Angle", Robot.ahrs.getAngle());
+		SmartDashboard.putNumber("NavX Angle", Robot.navX.getAngle());
 			
 		log.info("OI initialized");
 		

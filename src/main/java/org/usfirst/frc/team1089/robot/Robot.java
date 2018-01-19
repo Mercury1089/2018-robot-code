@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static OI oi;
 	public static PDP pdp;
-	public static AHRS ahrs;
+	public static AHRS navX;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -48,8 +48,9 @@ public class Robot extends IterativeRobot {
 		
 		pdp = new PDP();
 		
-		ahrs = new AHRS(SerialPort.Port.kUSB1);
+		navX = new AHRS(SerialPort.Port.kUSB1);
 		
+		navX.reset();
 		Robot.driveTrain.resetEncoders();
 		
 		// This NEEDS to be on the bottom for everything to work.

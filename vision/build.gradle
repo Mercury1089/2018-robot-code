@@ -1,0 +1,152 @@
+apply plugin: 'jaci.gradle.EmbeddedTools'
+
+// Coprocessor type. We are NOT using a generic Windows/Linux system.
+// Raspbian (Pi): "arm-raspbian"
+// armhf devices (Jetson/Beaglebone Black): "armhf"
+
+def buildType = "arm-raspbian"
+
+deploy {
+    targets {
+        target("rpi") {
+            addresses << '10.10.89.2:5802'
+            user = 'pi'
+            password = 'raspberry'
+            directory = '/home/pi/output'
+        }
+    }
+    artifacts {
+        // Define my artifact. In this case, the default java build for this project.
+        javaArtifact('visionArtifact') {
+            targets << "rpi"
+            jar = 'jar'     // This sets the jarfile to deploy. The default jar task in gradle is simply called 'jar'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://first.wpi.edu/FRC/roborio/maven/release"
+    }
+}
+
+// Does this work? IDKKK
+dependencies {
+    compile "edu.wpi.first.wpilib.networktables.java:NetworkTables:+:$buildType"
+    compile "edu.wpi.cscore.java:cscore:+:$buildType"
+    compile "org.opencv:opencv-java:3.2.0"
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    // I need to set my manifest up so the coprocessor knows where my main class is
+    manifest {
+        attributes 'Main-Class': 'org.usfirst.frc.team1089.main.Main'
+    }
+}
+
+//jar {
+//  baseName = projectName
+//}
+//
+//shadowJar {
+//  baseName = projectName
+//}
+//
+//distributions {
+//    main {
+//        baseName = projectName
+//        contents {
+//            from (openCvUnzipLocation) {
+//                exclude 'META-INF'
+//                exclude '**/MANIFEST.MF'
+//                into 'bin/'
+//            }
+//        }
+//    }
+//}
+//
+//def outputDirectory = file("${rootDir}/output")
+//
+//task deploy {
+//    dependsOn build
+//    group = 'build'
+//    doLast {
+//        ssh.run {
+//            session(remotes.pi) {
+//                execute 'rm -rf /home/pi/output'
+//                put from: outputDirectory, into: '/home/pi'
+//                execute 'chmod 755 /home/pi/output/runCameraVision'
+//            }
+//        }
+//    }
+//}
+//
+//task writeExecuteScript() {
+//  dependsOn jar
+//  doLast {
+//    if (buildType == "windows") {
+//      def runFile = new File("${buildDir}/run${projectName}.bat")
+//      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+//    } else {
+//      def runFile = new File("${buildDir}/run${projectName}")
+//      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+//    }
+//  }
+//}
+//
+//task copyToOutput(type: Copy) {
+//  dependsOn shadowJar
+//  dependsOn unzipOpenCv
+//  dependsOn writeExecuteScript
+//  destinationDir = outputDirectory
+//  from (file(shadowJar.archivePath)) {
+//  }
+//  from (openCvUnzipLocation) {
+//    exclude 'META-INF'
+//    exclude '**/MANIFEST.MF'
+//  }
+//  if (buildType == "windows") {
+//    from (file("${buildDir}/run${projectName}.bat")) {
+//    }
+//  } else {
+//    from (file("${buildDir}/run${projectName}")) {
+//    }
+//  }
+//}
+//
+//task zipOutput(type: Zip) {
+//  baseName = projectName
+//  duplicatesStrategy = 'exclude'
+//  dependsOn shadowJar
+//  dependsOn unzipOpenCv
+//  destinationDir = outputDirectory
+//  from (file(shadowJar.archivePath)) {
+//  }
+//  from (openCvUnzipLocation) {
+//    exclude 'META-INF'
+//    exclude '**/MANIFEST.MF'
+//  }
+//  if (buildType == "windows") {
+//    from (file("${buildDir}/run${projectName}.bat")) {
+//    }
+//  } else {
+//    from (file("${buildDir}/run${projectName}")) {
+//      fileMode 0777
+//    }
+//  }
+//}
+//
+//distZip.dependsOn unzipOpenCv
+//distTar.dependsOn unzipOpenCv
+//
+//applicationDefaultJvmArgs = ["-Djava.library.path=${openCvUnzipLocation}"]
+//
+//build.dependsOn copyToOutput
+//build.dependsOn zipOutput
+//run.dependsOn unzipOpenCv
+//
+//clean {
+//    delete outputDirectory
+//}

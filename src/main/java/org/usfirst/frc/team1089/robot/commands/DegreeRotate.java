@@ -1,13 +1,6 @@
 package org.usfirst.frc.team1089.robot.commands;
-
-import java.util.function.DoubleSupplier;
-import java.util.logging.Level;
-
 import org.usfirst.frc.team1089.robot.Robot;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  *
@@ -24,6 +17,7 @@ public class DegreeRotate extends PIDCommand {
     public DegreeRotate(double heading) {
 		super(0.460, 0.002, 0.0);
 		requires(Robot.driveTrain);
+
 		System.out.println("DegreeRotate constructed");
     	_heading = heading;
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Constructed using DegreeRotate(double heading).");
@@ -38,7 +32,7 @@ public class DegreeRotate extends PIDCommand {
     	
     	getPIDController().setInputRange(-180, 180);
     	getPIDController().setOutputRange(-.6, .6);
-    	
+
     	Robot.navX.reset();
 
     	getPIDController().setSetpoint(_heading);
@@ -91,6 +85,7 @@ public class DegreeRotate extends PIDCommand {
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
+		Robot.driveTrain.pidWrite(output);
 	}
 	
 	protected void updateHeading(double heading) {

@@ -137,4 +137,8 @@ public class DriveTrain extends Subsystem {
 	public double feetToEncoderTicks(double feet) {
 		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER_INCHES) * feet * 12.0;
 	}
+
+	public void pidWrite(double output) {
+		tDrive.tankDrive(output, output);
+	}
 }

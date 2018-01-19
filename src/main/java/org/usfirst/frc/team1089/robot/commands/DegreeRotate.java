@@ -15,7 +15,7 @@ public class DegreeRotate extends PIDCommand {
     private final double MIN_PERCENT_VBUS = 0.15;
 
     public DegreeRotate(double heading) {
-		super(0.060, 0.0, 0.5);
+		super(0.060, 0.05, 0.5);
 		requires(Robot.driveTrain);
 
 		System.out.println("DegreeRotate constructed");
@@ -26,14 +26,13 @@ public class DegreeRotate extends PIDCommand {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        //Robot.driveTrain.disableTalonDrive();
 		Robot.navX.reset();
 
     	getPIDController().setContinuous(true);
     	getPIDController().setAbsoluteTolerance(1.5);
     	
     	getPIDController().setInputRange(-180, 180);
-    	getPIDController().setOutputRange(-.6, .6);
+    	getPIDController().setOutputRange(-.2, .2);
 
     	getPIDController().setSetpoint(_heading);
 
@@ -59,7 +58,6 @@ public class DegreeRotate extends PIDCommand {
     protected void end() {
 		System.out.println("DegreeRotate ended");
 		Robot.driveTrain.stop();
-		//Robot.driveTrain.enableTalonDrive();
     }
 
     // Called when another command which requires one or more of the same

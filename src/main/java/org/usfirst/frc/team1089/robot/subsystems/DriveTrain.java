@@ -51,8 +51,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
 
 		// Set follower control on back talons.
-		tBackLeft.set(ControlMode.Follower, fl);
-		tBackRight.set(ControlMode.Follower, fr);
+		tBackLeft.follow(tFrontLeft);
+		tBackRight.follow(tFrontRight);
 
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.

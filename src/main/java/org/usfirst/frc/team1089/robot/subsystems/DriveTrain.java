@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1089.robot.Robot;
@@ -18,7 +19,7 @@ import org.usfirst.frc.team1089.util.TalonDrive;
  * This contains the {@link TalonDrive} needed to drive manually
  * using the Talons.
  */
-public class DriveTrain extends Subsystem {
+public class DriveTrain extends Subsystem implements PIDOutput {
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
 	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;

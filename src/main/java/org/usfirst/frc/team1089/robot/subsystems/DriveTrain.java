@@ -24,10 +24,10 @@ public class DriveTrain extends Subsystem {
 	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
 	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values
-	
+
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
-	 * 
+	 *
 	 * @param fl Front-left Talon ID
 	 * @param fr Front-right Talon ID
 	 * @param bl Back-left Talon ID
@@ -38,35 +38,35 @@ public class DriveTrain extends Subsystem {
 		tFrontRight = new WPI_TalonSRX(fr);
 		tBackLeft = new WPI_TalonSRX(bl);
 		tBackRight = new WPI_TalonSRX(br);
-		
+
 		tFrontLeft.setInverted(true);
 		tBackLeft.setInverted(true);
 		tFrontRight.setInverted(false);
 		tBackRight.setInverted(false);
-		
+
 		tFrontLeft.setSensorPhase(true);
 		tFrontRight.setSensorPhase(false);
-		
+
 		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
-		
+
 		// Set follower control on back talons.
 		tBackLeft.set(ControlMode.Follower, fl);
 		tBackRight.set(ControlMode.Follower, fr);
-		
+
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.
 		// This allows us to measure the distance from any given point to any ending point.
 		tFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 		tFrontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 	}
-	
+
 	/**
 	 * Gets the Talon based on the ID.
-	 * 
+	 *
 	 * @param id The device ID of the Talon.
 	 * @return The Talon bound to the ID port,
 	 *         or {@code null} if no drivetrain Talon was found.
-	 *         
+	 *
 	 * @see CAN RobotMap.CAN
 	 */
 	public TalonSRX getTalon(int id) {
@@ -83,24 +83,24 @@ public class DriveTrain extends Subsystem {
 				return null;
 		}
 	}
-	
+
 	public TalonSRX getLeft() {
 		return tFrontLeft;
 	}
-	
+
 	public TalonSRX getRight() {
 		return tFrontRight;
 	}
-	
+
 	public TalonDrive getTalonDrive() {
 		return tDrive;
 	}
-	
+
 	public void resetEncoders() {
     	tFrontLeft.getSensorCollection().setQuadraturePosition(0, 0);
     	tFrontRight.getSensorCollection().setQuadraturePosition(0, 0);
     }
-	
+
 	/**
 	 * Stops the motors by zeroing the left and right Talons.
 	 */
@@ -112,44 +112,19 @@ public class DriveTrain extends Subsystem {
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveTank());
 	}
-	
-<<<<<<< HEAD
-	/**
-     * <pre>
-	 * public double encoderTicksToFeet(double ticks)
-	 * </pre>
-	 * Returns a value in feet based on a certain value in ticks using
-	 * the Magnetic Encoder.
-	 * @param ticks The value in ticks
-	 * @return The value in feet
-     */
-	public double encoderTicksToFeet(double ticks, boolean inverted) {
-		int reversal_factor = inverted ? -1 : 1;
-		return reversal_factor * ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
-	}
-	
-	public double getLeftEncPositionInFeet() {
-		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
-		//The left encoder is inverted, so the position needs to be multiplied by -1.
-		return -1 * ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
-=======
+
 	public double getLeftEncPositionInFeet() {
 		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
 		//Convert encoder ticks to feet
-		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
->>>>>>> master
+		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
-	
+
 	public double getRightEncPositionInFeet() {
 		double ticks = tFrontRight.getSensorCollection().getQuadraturePosition();
-<<<<<<< HEAD
-		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
-=======
 		//Convert encoder ticks to feet
-		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
->>>>>>> master
+		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
-	
+
 	/**
      * <pre>s
 	 * public double feetToEncoderTicks(double feet)
@@ -162,5 +137,4 @@ public class DriveTrain extends Subsystem {
 	public double feetToEncoderTicks(double feet) {
 		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER_INCHES) * feet * 12.0;
 	}
-	
 }

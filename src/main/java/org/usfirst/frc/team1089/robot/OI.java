@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
+import org.usfirst.frc.team1089.robot.commands.ButtonTest;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
 import org.usfirst.frc.team1089.robot.commands.DriveDistance;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
@@ -71,7 +72,7 @@ public class OI {
 		left_1 = new JoystickButton(leftStick, 1);
 		left_1.whenPressed(new DegreeRotate(60));
 		left_2 = new JoystickButton(leftStick, 2);
-		left_2.whenPressed(new DriveDistance(12.0, 1.0));
+		left_2.whenPressed(new DriveDistance(24.0, .5));
 		left_3 = new JoystickButton(leftStick,3);
 
 		gamepad_a = new JoystickButton(gamepad, 1);

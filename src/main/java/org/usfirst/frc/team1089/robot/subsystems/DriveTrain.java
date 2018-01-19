@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
+import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
@@ -51,8 +52,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tBackRight.setInverted(false);
 
 		//Account for encoder orientation.
-		tFrontLeft.setSensorPhase(false);
-		tFrontRight.setSensorPhase(false);
+		tFrontLeft.setSensorPhase(true);
+		tFrontRight.setSensorPhase(true);
 
 		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
 
@@ -117,7 +118,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveTank());
+		setDefaultCommand(new DriveArcade());
 	}
 
 	public double getLeftEncPositionInFeet() {

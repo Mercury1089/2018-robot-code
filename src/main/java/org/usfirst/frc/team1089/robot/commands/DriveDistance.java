@@ -12,7 +12,7 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
  */
 public class DriveDistance extends Command {
 
-	private static double MOVE_THRESHOLD = .1;
+	private static double MOVE_THRESHOLD = 500;
 	private double distance;
 	private double percentVoltage; //Voltage is NOW from [-1, 1]
     private double endPosL, endPosR;
@@ -28,7 +28,7 @@ public class DriveDistance extends Command {
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
     	endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
-    	endPosR = -endPosL;
+    	endPosR = endPosL;
     }
 
     // Called just before this Command runs the first time
@@ -51,6 +51,7 @@ public class DriveDistance extends Command {
 		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
 		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
 
+		System.out.println(endPosL);
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }

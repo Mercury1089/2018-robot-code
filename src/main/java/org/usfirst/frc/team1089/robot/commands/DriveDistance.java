@@ -24,14 +24,16 @@ public class DriveDistance extends Command {
      * @param voltage -1.0 to 1.0
      */
     public DriveDistance(double distance, double percentVoltage) {
+    	requires(Robot.driveTrain);
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
-    	endPosL = distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER);
+    	endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
     	endPosR = -endPosL;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("Drive with distance has been initialized");
     	
     	Robot.driveTrain.resetEncoders();
 		
@@ -51,13 +53,14 @@ public class DriveDistance extends Command {
 		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, 0);
 		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, 0);
 		
-
+		System.out.println(endPosL);
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -65,11 +68,14 @@ public class DriveDistance extends Command {
         boolean isFinished = false;
         
         double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(0);
+        //System.out.println(leftPos);
         double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(0);
+        //System.out.println(rightPos);
  
         if ((leftPos > endPosL - MOVE_THRESHOLD && leftPos < endPosL + MOVE_THRESHOLD)
 				&& (rightPos > endPosR - MOVE_THRESHOLD && rightPos < endPosR + MOVE_THRESHOLD)) {
    			isFinished = true;
+   			System.out.println(" I'm done");
    		}
         
     	return isFinished;
@@ -78,13 +84,15 @@ public class DriveDistance extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	
+    	System.out.println(" Drive with distance has ended");
+    	
     	Robot.driveTrain.stop();
-    	Robot.driveTrain.getLeft().getSensorCollection().setQuadraturePosition(0, 10);
-    	Robot.driveTrain.getRight().getSensorCollection().setQuadraturePosition(0, 10);
+    	//Robot.driveTrain.resetEncoders();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.out.println(" I'm interrupted");
     }
 }

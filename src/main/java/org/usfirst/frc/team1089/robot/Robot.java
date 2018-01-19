@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 		
 		pdp = new PDP();
 		
-		ahrs = new AHRS(SerialPort.Port.kUSB1);
+		//ahrs = new AHRS(SerialPort.Port.kUSB1);
 		
 		Robot.driveTrain.resetEncoders();
 		

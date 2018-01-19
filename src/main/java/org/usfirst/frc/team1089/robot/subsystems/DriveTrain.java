@@ -21,8 +21,8 @@ import org.usfirst.frc.team1089.util.TalonDrive;
 public class DriveTrain extends Subsystem {
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
-	public static final double WHEEL_DIAMETER = 5.0;
-	private static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
+	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
+	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
 	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values
 	
 	/**
@@ -130,18 +130,18 @@ public class DriveTrain extends Subsystem {
      */
 	public double encoderTicksToFeet(double ticks, boolean inverted) {
 		int reversal_factor = inverted ? -1 : 1;
-		return reversal_factor * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+		return reversal_factor * ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
 	}
 	
 	public double getLeftEncPositionInFeet() {
 		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
 		//The left encoder is inverted, so the position needs to be multiplied by -1.
-		return -1 * ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+		return -1 * ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
 	}
 	
 	public double getRightEncPositionInFeet() {
 		double ticks = tFrontRight.getSensorCollection().getQuadraturePosition();
-		return ((Math.PI * WHEEL_DIAMETER) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
+		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks)/12;
 	}
 	
 	/**
@@ -154,6 +154,7 @@ public class DriveTrain extends Subsystem {
 	 * @return The value in ticks
      */
 	public double feetToEncoderTicks(double feet) {
-		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER) * feet;
+		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER_INCHES) * feet * 12.0;
 	}
+	
 }

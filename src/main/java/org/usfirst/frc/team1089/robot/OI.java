@@ -1,10 +1,5 @@
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
@@ -12,6 +7,11 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
 import org.usfirst.frc.team1089.robot.commands.DriveDistance;
 import org.usfirst.frc.team1089.util.ShuffleDash;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -67,9 +67,9 @@ public class OI {
 		gamepad = new Joystick(DS_USB.GAMEPAD);
 		
 		left_1 = new JoystickButton(leftStick, 1);
-		left_1.whenPressed(new DegreeRotate(60));
+		//left_1.whenPressed(new DegreeRotate(60));
 		left_2 = new JoystickButton(leftStick, 2);
-		left_2.whenPressed(new DriveDistance(12.0, 1.0));
+		left_2.whenPressed(new DriveDistance(1.0, 0.5));
 		left_3 = new JoystickButton(leftStick,3);
 		
 		
@@ -80,7 +80,7 @@ public class OI {
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
 		SmartDashboard.putData("Auton Starting Position", startingPosition);
-		SmartDashboard.putNumber("NavX Angle", Robot.ahrs.getAngle());
+		//SmartDashboard.putNumber("NavX Angle", Robot.ahrs.getAngle());
 			
 		log.info("OI initialized");
 		

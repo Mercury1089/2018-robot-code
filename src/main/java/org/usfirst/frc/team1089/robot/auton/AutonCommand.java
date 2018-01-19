@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1089.robot.auton;
 
+import org.usfirst.frc.team1089.robot.commands.DriveDistance;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -10,8 +12,6 @@ public class AutonCommand extends CommandGroup {
 
     public AutonCommand(AutonPosition ap) {
     	String data = DriverStation.getInstance().getGameSpecificMessage();
-    	
-    	
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

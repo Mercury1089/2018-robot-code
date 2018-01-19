@@ -44,6 +44,7 @@ dependencies {
     compile "edu.wpi.first.wpilib.networktables.java:NetworkTables:+:$buildType"
     compile "edu.wpi.cscore.java:cscore:+:$buildType"
     compile "org.opencv:opencv-java:3.2.0"
+    compile "org.opencv:opencv-jni:3.2.0:all@jar"
 }
 
 jar {

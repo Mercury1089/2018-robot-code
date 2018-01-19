@@ -20,8 +20,8 @@ public class ShuffleDash {
 		if(Robot.navX != null)
 			SmartDashboard.putNumber("NavX Angle", Robot.navX.getAngle());
 
-		SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSensorCollection().getQuadraturePosition());
-		SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSensorCollection().getQuadraturePosition());
+		SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP));
+		SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP));
 		SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
 		SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
 	}

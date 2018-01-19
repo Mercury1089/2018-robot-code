@@ -119,13 +119,13 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	}
 
 	public double getLeftEncPositionInFeet() {
-		double ticks = tFrontLeft.getSelectedSensorPosition(Robot.SLOT_0);
+		double ticks = tFrontLeft.getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
 		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
 
 	public double getRightEncPositionInFeet() {
-		double ticks = tFrontRight.getSelectedSensorPosition(Robot.SLOT_0);
+		double ticks = tFrontRight.getSelectedSensorPosition(Robot.PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
 		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}

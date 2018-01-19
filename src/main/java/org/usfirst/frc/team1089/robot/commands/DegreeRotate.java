@@ -1,5 +1,5 @@
 package org.usfirst.frc.team1089.robot.commands;
-import org.usfirst.frc.team1089.robot.Robot;
+ import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 
 /**
@@ -26,7 +26,7 @@ public class DegreeRotate extends PIDCommand {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.initialize()");
+        Robot.driveTrain.disableTalonDrive();
     	getPIDController().setContinuous(true);
     	getPIDController().setAbsoluteTolerance(1.5);
     	
@@ -57,12 +57,9 @@ public class DegreeRotate extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-    	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.end()");
-    	//MercLogger.logMessage(Level.INFO, "Current setpoint: " + getPIDController().getSetpoint());
 		System.out.println("DegreeRotate ended");
 		Robot.driveTrain.stop();
-    	//MercLogger.logMessage(Level.INFO, "Gyro reads: " + Robot.driveTrain.getGyro().getAngle() + " degrees.");
-		//MercLogger.logMessage(Level.INFO, "DegreeRotate: Completed");
+		Robot.driveTrain.enableTalonDrive();
     }
 
     // Called when another command which requires one or more of the same

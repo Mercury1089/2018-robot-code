@@ -34,7 +34,7 @@ public class DriveDistance extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.driveTrain.resetEncoders();
-
+		Robot.driveTrain.disableTalonDrive();
 		Robot.driveTrain.getLeft().config_kP(0, .1, 0);
 		Robot.driveTrain.getLeft().config_kI(0, 0, 0);
 		Robot.driveTrain.getLeft().config_kD(0, .05, 0);
@@ -50,6 +50,7 @@ public class DriveDistance extends Command {
 		Robot.driveTrain.getRight().configNominalOutputReverse(0, 0);
 		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, 0);
 		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, 0);
+
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
@@ -78,6 +79,7 @@ public class DriveDistance extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.driveTrain.stop();
+    	Robot.driveTrain.enableTalonDrive();
     	//Robot.driveTrain.resetEncoders();
     }
 

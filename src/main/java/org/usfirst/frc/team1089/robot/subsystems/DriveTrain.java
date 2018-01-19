@@ -141,4 +141,16 @@ public class DriveTrain extends Subsystem {
 	public void pidWrite(double output) {
 		tDrive.tankDrive(output, output);
 	}
+
+	//  enable/disableTalonDrive methods are WIP.
+	public void enableTalonDrive() {
+		tFrontLeft.setSafetyEnabled(true);
+		tFrontRight.setSafetyEnabled(true);
+	}
+
+	public void disableTalonDrive() {
+		tFrontLeft.setSafetyEnabled(false);
+		tFrontRight.setSafetyEnabled(false);
+
+	}
 }

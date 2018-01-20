@@ -22,8 +22,10 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	public static final int TIMEOUT_MS = 10;
 	public static final int SLOT_0 = 0;
 	public static final int PRIMARY_PID_LOOP = 0;
+
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
+
 	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
 	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values

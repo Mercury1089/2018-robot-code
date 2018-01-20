@@ -39,6 +39,8 @@ deploy {
 // and NavX.
 dependencies {
     compile wpilib()
+    compile ctre()
+    compile navx()
 	compile fileTree(dir: 'lib', include: ['*.jar'])
     nativeLib fileTree(dir: 'lib', include: ['*.so'])
 }
@@ -52,5 +54,5 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.4.1'
 }

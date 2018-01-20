@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,11 +8,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
-import org.usfirst.frc.team1089.robot.commands.ButtonTest;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
 import org.usfirst.frc.team1089.robot.commands.DriveDistance;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
-import org.usfirst.frc.team1089.shuffleboard.ShuffleDash;
+import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
  * This class is the glue that binds the controls on the physical operator

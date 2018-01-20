@@ -31,12 +31,11 @@ deploy {
             targets << "rpi"
             jar = 'jar'
 
-            // Offending blocks
-            predeploy = {
+            predeploy << {
                 execute 'rm -rf /home/pi/output'
             }
 
-            postdeploy = {
+            postdeploy << {
                 execute "echo ${launchCmd} > /home/pi/output/runVision"
                 execute 'cd /output && ./runVision'
             }

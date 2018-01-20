@@ -12,6 +12,14 @@ plugins {
 def TEAM = 1089
 def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
 
+sourceSets.main.java {
+    srcDirs = ['src']; include '**/*.java'
+}
+
+sourceSets.main.resources {
+    srcDirs = ['src']; exclude '**/*.java'
+}
+
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {

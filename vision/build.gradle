@@ -5,6 +5,7 @@ apply plugin: 'jaci.gradle.EmbeddedTools'
 // armhf devices (Jetson/Beaglebone Black): "armhf"
 
 def buildType = "arm-raspbian"
+def launchCmd = "java -jar vision.jar"
 
 sourceSets.main.java {
     srcDirs = ['src']; include '**/*.java'
@@ -20,14 +21,25 @@ deploy {
             addresses << '10.10.89.2:5802'
             user = 'pi'
             password = 'raspberry'
-            directory = '/home/pi/output'
+            directory = '/vision'
         }
     }
     artifacts {
-        // Define my artifact. In this case, the default java build for this project.
+        // Defines the vision artifact.
+        // We can refer to the vision subproject jar under this name.
         javaArtifact('visionArtifact') {
             targets << "rpi"
-            jar = 'jar'     // This sets the jarfile to deploy. The default jar task in gradle is simply called 'jar'
+            jar = 'jar'
+
+            // Offending blocks
+            predeploy = {
+                execute 'rm -rf /home/pi/output'
+            }
+
+            postdeploy = {
+                execute "echo ${launchCmd} > /home/pi/output/runVision"
+                execute 'cd /output && ./runVision'
+            }
         }
     }
 }

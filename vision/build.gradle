@@ -5,7 +5,7 @@ apply plugin: 'jaci.gradle.EmbeddedTools'
 // armhf devices (Jetson/Beaglebone Black): "armhf"
 
 def buildType = "arm-raspbian"
-def launchCmd = "java -jar vision.jar"
+def launchArgs = ""
 
 sourceSets.main.java {
     srcDirs = ['src']; include '**/*.java'
@@ -36,8 +36,9 @@ deploy {
             }
 
             postdeploy << {
-                execute "echo ${launchCmd} > /home/pi/output/runVision"
-                execute 'cd /output && ./runVision'
+                execute "echo 'java -jar ${project.name}.jar ${launchArgs}' > /home/pi/output/runVision"
+                execute "chmod 755 /home/pi/runVision"
+                execute '/home/pi/runVision'
             }
         }
     }

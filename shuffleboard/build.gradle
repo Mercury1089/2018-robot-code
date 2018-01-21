@@ -22,7 +22,7 @@ task debugShuffleboard(type: Exec) {
     description = "Launch Shuffleboard with logging"
 
     // Lazy config, just pull wpiTools config from robot proj.
-    def config = project(':robot').configurations.getByName("wpiTools")
+    def config = rootProject.configurations.getByName("shuffleboard")
     def byteOut = new ByteArrayOutputStream()
 
     // Get shuffleboard dependency from wpiTools config

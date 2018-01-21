@@ -9,6 +9,23 @@ plugins {
     id "jaci.gradle.EmbeddedTools" version "2018.01.20" apply false
 }
 
+// Shuffleboard fix
+configurations {
+    shuffleboard {
+        repositories {
+            maven {
+                url 'http://first.wpi.edu/FRC/roborio/maven/release'
+            }
+        }
+        
+        description = 'Shuffleboard app'
+    }
+}
+
+dependencies {
+    shuffleboard 'edu.wpi.first.shuffleboard:app:+'
+}
+
 // allprojects = root project + subprojects
 // IDE plugins should be applied to the entire project.
 allprojects {

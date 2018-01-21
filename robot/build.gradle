@@ -26,19 +26,19 @@ deploy {
 
 // Overwrite this task b/c the default GradleRIO
 // task doesn't function as it should.
-//task shuffleboard(overwrite: true, type: Exec) {
-//    group = "GradleRIO"
-//    description = "Launch Shuffleboard with logging"
-//
-//    def config = project(':robot').configurations.getByName("wpiTools")
-//
-//    // Get shuffleboard dependency from wpiTools config
-//    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
-//
-//    // Exec task fields
-//    workingDir = WPIToolsPlugin.shuffleboardDirectory()
-//    // commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
-//}
+task shuffleboard(overwrite: true, type: Exec) {
+    group = "GradleRIO"
+    description = "Launch Shuffleboard"
+
+    def config = rootProject.configurations.getByName("shuffleboard")
+
+    // Get shuffleboard dependency from wpiTools config
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+
+    // Exec task fields
+    workingDir = WPIToolsPlugin.shuffleboardDirectory()
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}
 
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
 // and NavX.

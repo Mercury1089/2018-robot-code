@@ -1,21 +1,15 @@
 package org.usfirst.frc.team1089.main;
 
-import java.util.ArrayList;
-
-import edu.wpi.first.wpilibj.networktables.*;
-import edu.wpi.first.wpilibj.tables.*;
 import edu.wpi.cscore.*;
+import edu.wpi.first.networktables.*;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 public class Main {
     public static void main(String[] args) {
         // Connect NetworkTables, and get access to the publishing table
-        NetworkTable.setClientMode();
-        // Set your team number here
-        NetworkTable.setTeam(1089);
-
-        NetworkTable.initialize();
+        NetworkTableInstance nt = NetworkTableInstance.getDefault();
+        nt.startClient();
 
         final String ROOT = "Vision";
         final Runtime RUNTIME = Runtime.getRuntime();
@@ -41,7 +35,7 @@ public class Main {
         CvSink lifecamSink = new CvSink("CvSink_Lifecam");
 
         //Our NetworkTable
-        NetworkTable lifecamTable = NetworkTable.getTable(ROOT + "/CubeVision");
+        NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
 
         //Making the Settings for the lifecam
         lifecam.setResolution(Res_X, Res_Y);

@@ -14,7 +14,7 @@ import edu.wpi.first.shuffleboard.api.widget.ComponentType;
 import edu.wpi.first.shuffleboard.api.widget.WidgetType;
 
 
-@Description(group = "org.frc1089", name = "MercuryPlugin", summary = "Defines the custom widgets used by Team Mercury 1089", version = "1.0.0") 
+@Description(group = "org.usfirst.frc.team1089", name = "MercuryWidgets", summary = "Custom widgets used by Team Mercury 1089", version = "1.0.0")
 public class MercuryPlugin extends Plugin {
 
 	@Override

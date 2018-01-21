@@ -10,6 +10,19 @@ sourceSets.main.resources {
     srcDirs = ['src']; exclude '**/*.java'
 }
 
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
+// and NavX.
+repositories {
+    mavenCentral()
+    maven {
+        url "http://first.wpi.edu/FRC/roborio/maven/release"
+    }
+}
+
+dependencies {
+    compile 'edu.wpi.first.shuffleboard:api:+'
+}
+
 task debugShuffleboard(type: Exec) {
     group = "GradleRIO"
     description = "Launch Shuffleboard with logging"
@@ -46,10 +59,4 @@ task debugShuffleboard(type: Exec) {
 
         System.out.println("Log exported to ${file.toString()}.")
     }
-}
-
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
-// and NavX.
-dependencies {
-    compile fileTree(dir: 'lib', include: ['*.jar'])
 }

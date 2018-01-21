@@ -1,3 +1,5 @@
+jar.baseName = 'MercuryPlugins'
+
 sourceSets.main.java {
     srcDirs = ['src']; include '**/*.java'
 }

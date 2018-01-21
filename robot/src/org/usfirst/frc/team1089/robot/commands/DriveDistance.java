@@ -3,16 +3,16 @@ package org.usfirst.frc.team1089.robot.commands;
 import org.usfirst.frc.team1089.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**
  * Uses Talons and mag encoders to drive a set distance.
  */
 public class DriveDistance extends Command {
 
-	private static double MOVE_THRESHOLD = .1;
+	private static double MOVE_THRESHOLD = 500;
 	private double distance;
 	private double percentVoltage; //Voltage is NOW from [-1, 1]
     private double endPosL, endPosR;
@@ -28,28 +28,30 @@ public class DriveDistance extends Command {
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
     	endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
-    	endPosR = -endPosL;
+    	endPosR = endPosL;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.driveTrain.resetEncoders();
+		Robot.driveTrain.disableTalonDrive();
+		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
 
-		Robot.driveTrain.getLeft().config_kP(0, .1, 0);
-		Robot.driveTrain.getLeft().config_kI(0, 0, 0);
-		Robot.driveTrain.getLeft().config_kD(0, .05, 0);
-		Robot.driveTrain.getRight().config_kP(0, .1, 0);
-		Robot.driveTrain.getRight().config_kI(0, 0, 0);
-		Robot.driveTrain.getRight().config_kD(0, .05, 0);
+		Robot.driveTrain.getLeft().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
 
-		Robot.driveTrain.getLeft().configNominalOutputForward(0, 0);
-		Robot.driveTrain.getLeft().configNominalOutputReverse(0, 0);
-		Robot.driveTrain.getLeft().configPeakOutputForward(percentVoltage, 0);
-		Robot.driveTrain.getLeft().configPeakOutputReverse(-percentVoltage, 0);
-		Robot.driveTrain.getRight().configNominalOutputForward(0, 0);
-		Robot.driveTrain.getRight().configNominalOutputReverse(0, 0);
-		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, 0);
-		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, 0);
+		System.out.println(endPosL);
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
@@ -63,9 +65,9 @@ public class DriveDistance extends Command {
     protected boolean isFinished() {
         boolean isFinished = false;
         
-        double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(0);
+        double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
         //System.out.println(leftPos);
-        double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(0);
+        double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
         if ((leftPos > endPosL - MOVE_THRESHOLD && leftPos < endPosL + MOVE_THRESHOLD)
 				&& (rightPos > endPosR - MOVE_THRESHOLD && rightPos < endPosR + MOVE_THRESHOLD)) {
    			isFinished = true;
@@ -78,7 +80,8 @@ public class DriveDistance extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.driveTrain.stop();
-    	//Robot.driveTrain.resetEncoders();
+    	Robot.driveTrain.enableTalonDrive();
+    	Robot.driveTrain.resetEncoders();
     }
 
     // Called when another command which requires one or more of the same

@@ -1,21 +1,13 @@
 
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
-import org.usfirst.frc.team1089.util.MercuryLogConfig;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -32,7 +24,6 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static PDP pdp;
 	public static AHRS navX;
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -49,12 +40,11 @@ public class Robot extends IterativeRobot {
 		pdp = new PDP();
 		
 		navX = new AHRS(SerialPort.Port.kUSB1);
-		
-		navX.reset();
+
 		Robot.driveTrain.resetEncoders();
-		
+
 		// This NEEDS to be on the bottom for everything to work.
-		oi = new OI(); 
+		oi = new OI();
 	}
 
 

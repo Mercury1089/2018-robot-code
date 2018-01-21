@@ -5,9 +5,9 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
@@ -18,9 +18,14 @@ import org.usfirst.frc.team1089.util.TalonDrive;
  * This contains the {@link TalonDrive} needed to drive manually
  * using the Talons.
  */
-public class DriveTrain extends Subsystem {
+public class DriveTrain extends Subsystem implements PIDOutput {
+	public static final int TIMEOUT_MS = 10;
+	public static final int SLOT_0 = 0;
+	public static final int PRIMARY_PID_LOOP = 0;
+
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
+
 	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
 	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values
@@ -34,30 +39,35 @@ public class DriveTrain extends Subsystem {
 	 * @param br Back-right Talon ID
 	 */
 	public DriveTrain(int fl, int fr, int bl, int br) {
+
+		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tFrontLeft = new WPI_TalonSRX(fl);
 		tFrontRight = new WPI_TalonSRX(fr);
 		tBackLeft = new WPI_TalonSRX(bl);
 		tBackRight = new WPI_TalonSRX(br);
 
+
+		//Account for motor orientation.
 		tFrontLeft.setInverted(true);
 		tBackLeft.setInverted(true);
 		tFrontRight.setInverted(false);
 		tBackRight.setInverted(false);
 
-		tFrontLeft.setSensorPhase(false);
-		tFrontRight.setSensorPhase(false);
+		//Account for encoder orientation.
+		tFrontLeft.setSensorPhase(true);
+		tFrontRight.setSensorPhase(true);
 
 		tDrive = new TalonDrive(tFrontLeft, tFrontRight);
 
-		// Set follower control on back talons.
-		tBackLeft.set(ControlMode.Follower, fl);
-		tBackRight.set(ControlMode.Follower, fr);
+		// Set follower control on back talons. Use follow() instead of ControlMode.Follower so that Talons can follow Victors and vice versa.
+		tBackLeft.follow(tFrontLeft);
+		tBackRight.follow(tFrontRight);
 
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.
 		// This allows us to measure the distance from any given point to any ending point.
-		tFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		tFrontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		tFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
+		tFrontRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 	}
 
 	/**
@@ -97,8 +107,8 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void resetEncoders() {
-    	tFrontLeft.getSensorCollection().setQuadraturePosition(0, 0);
-    	tFrontRight.getSensorCollection().setQuadraturePosition(0, 0);
+    	tFrontLeft.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
+    	tFrontRight.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
     }
 
 	/**
@@ -110,17 +120,17 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveTank());
+		setDefaultCommand(new DriveArcade());
 	}
 
 	public double getLeftEncPositionInFeet() {
-		double ticks = tFrontLeft.getSensorCollection().getQuadraturePosition();
+		double ticks = tFrontLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
 		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
 
 	public double getRightEncPositionInFeet() {
-		double ticks = tFrontRight.getSensorCollection().getQuadraturePosition();
+		double ticks = tFrontRight.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
 		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
 	}
@@ -136,5 +146,21 @@ public class DriveTrain extends Subsystem {
      */
 	public double feetToEncoderTicks(double feet) {
 		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER_INCHES) * feet * 12.0;
+	}
+
+	public void pidWrite(double output) {
+		tDrive.tankDrive(output, -output);
+	}
+
+	//  enable/disableTalonDrive methods are WIP.
+	public void enableTalonDrive() {
+		tFrontLeft.setSafetyEnabled(true);
+		tFrontRight.setSafetyEnabled(true);
+	}
+
+	public void disableTalonDrive() {
+		tFrontLeft.setSafetyEnabled(false);
+		tFrontRight.setSafetyEnabled(false);
+
 	}
 }

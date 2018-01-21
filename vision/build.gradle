@@ -3,8 +3,8 @@ apply plugin: 'jaci.gradle.EmbeddedTools'
 // Coprocessor type. We are NOT using a generic Windows/Linux system.
 // Raspbian (Pi): "arm-raspbian"
 // armhf devices (Jetson/Beaglebone Black): "armhf"
-
 def buildType = "arm-raspbian"
+
 def launchArgs = ""
 
 sourceSets.main.java {
@@ -38,7 +38,7 @@ deploy {
             postdeploy << {
                 execute "echo 'java -jar ${project.name}.jar ${launchArgs}' > /home/pi/output/runVision"
                 execute "chmod 755 /home/pi/runVision"
-                execute '/home/pi/runVision'
+                execute 'nohup /home/pi/runVision'
             }
         }
     }

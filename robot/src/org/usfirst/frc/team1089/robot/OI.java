@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +11,7 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.DegreeRotate;
 import org.usfirst.frc.team1089.robot.commands.DriveDistance;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
-import org.usfirst.frc.team1089.shuffleboard.ShuffleDash;
+import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -71,7 +70,7 @@ public class OI {
 		left_1 = new JoystickButton(leftStick, 1);
 		left_1.whenPressed(new DegreeRotate(60));
 		left_2 = new JoystickButton(leftStick, 2);
-		left_2.whenPressed(new DriveDistance(12.0, 1.0));
+		left_2.whenPressed(new DriveDistance(24.0, .5));
 		left_3 = new JoystickButton(leftStick,3);
 
 		gamepad_a = new JoystickButton(gamepad, 1);

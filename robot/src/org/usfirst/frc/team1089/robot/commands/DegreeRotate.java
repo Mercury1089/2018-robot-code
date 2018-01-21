@@ -1,13 +1,6 @@
 package org.usfirst.frc.team1089.robot.commands;
-
-import java.util.function.DoubleSupplier;
-import java.util.logging.Level;
-
-import org.usfirst.frc.team1089.robot.Robot;
-
-import edu.wpi.first.wpilibj.Timer;
+ import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.command.PIDCommand;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  *
@@ -22,8 +15,9 @@ public class DegreeRotate extends PIDCommand {
     private final double MIN_PERCENT_VBUS = 0.15;
 
     public DegreeRotate(double heading) {
-		super(0.460, 0.002, 0.0);
+		super(0.060, 0.05, 0.5);
 		requires(Robot.driveTrain);
+
 		System.out.println("DegreeRotate constructed");
     	_heading = heading;
     	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Constructed using DegreeRotate(double heading).");
@@ -32,14 +26,13 @@ public class DegreeRotate extends PIDCommand {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.initialize()");
+		Robot.navX.reset();
+
     	getPIDController().setContinuous(true);
     	getPIDController().setAbsoluteTolerance(1.5);
     	
     	getPIDController().setInputRange(-180, 180);
-    	getPIDController().setOutputRange(-.6, .6);
-    	
-    	Robot.navX.reset();
+    	getPIDController().setOutputRange(-.2, .2);
 
     	getPIDController().setSetpoint(_heading);
 
@@ -63,12 +56,8 @@ public class DegreeRotate extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-    	//MercLogger.logMessage(Level.INFO, "Entering DegreeRotate.end()");
-    	//MercLogger.logMessage(Level.INFO, "Current setpoint: " + getPIDController().getSetpoint());
 		System.out.println("DegreeRotate ended");
 		Robot.driveTrain.stop();
-    	//MercLogger.logMessage(Level.INFO, "Gyro reads: " + Robot.driveTrain.getGyro().getAngle() + " degrees.");
-		//MercLogger.logMessage(Level.INFO, "DegreeRotate: Completed");
     }
 
     // Called when another command which requires one or more of the same
@@ -91,6 +80,7 @@ public class DegreeRotate extends PIDCommand {
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
+		Robot.driveTrain.pidWrite(output);
 	}
 	
 	protected void updateHeading(double heading) {

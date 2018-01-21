@@ -48,6 +48,8 @@ jar {
     manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
+// Override this command b/c the default GradleRIO
+// command doesn't function as it should.
 task shuffleboard(overwrite: true, type:Exec) {
     group = "GradleRIO"
     description = "Launch Shuffleboard"

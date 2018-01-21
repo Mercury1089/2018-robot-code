@@ -38,3 +38,6 @@ Thumbs.db
 
 # directory for XML generated after running junit tests through ant
 junit/
+
+# Don't commit log files
+.log/

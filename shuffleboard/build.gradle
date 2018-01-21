@@ -1,4 +1,6 @@
-jar.baseName = 'MercuryPlugins'
+jar.baseName = 'MercuryWidget'
+
+def shuffleboardLogDir = "/shuffleboard"
 
 sourceSets.main.java {
     srcDirs = ['src']; include '**/*.java'
@@ -6,6 +8,45 @@ sourceSets.main.java {
 
 sourceSets.main.resources {
     srcDirs = ['src']; exclude '**/*.java'
+}
+
+task debugShuffleboard(type: Exec) {
+    group = "GradleRIO"
+    description = "Launch Shuffleboard with logging"
+
+    System.out.println("NOTICE: Running in debug mode!")
+    System.out.println("This means logging is enabled!")
+
+    // Lazy config, just pull wpiTools config from robot proj.
+    def config = project(':robot').configurations.getByName("wpiTools")
+    def byteOut = new ByteArrayOutputStream()
+
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+
+    workingDir = "${System.getProperty('user.home')}/.gradle/gradlerio/Shuffleboard"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+    standardOutput = byteOut
+    errorOutput = byteOut
+
+    // Do logging after task finishes
+    // i.e.: Shuffleboard is closed
+    doLast {
+        def date = new Date().format('yyy-MM-dd HH-mm-ss.SSS')
+        def logDir = new File("${rootProject.projectDir}/.log", shuffleboardLogDir)
+
+        if (!logDir.exists())
+            logDir.mkdirs()
+
+        def file = new File(logDir, "shuffleboard-${date}.log")
+
+        def fileOut = new FileOutputStream(file)
+
+        byteOut.writeTo(fileOut)
+
+        fileOut.close()
+
+        System.out.println("Log exported to ${file.toString()}.")
+    }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix

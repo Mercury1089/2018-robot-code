@@ -14,9 +14,6 @@ task debugShuffleboard(type: Exec) {
     group = "GradleRIO"
     description = "Launch Shuffleboard with logging"
 
-    System.out.println("NOTICE: Running in debug mode!")
-    System.out.println("This means logging is enabled!")
-
     // Lazy config, just pull wpiTools config from robot proj.
     def config = project(':robot').configurations.getByName("wpiTools")
     def byteOut = new ByteArrayOutputStream()

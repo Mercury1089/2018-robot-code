@@ -21,8 +21,10 @@ task debugShuffleboard(type: Exec) {
     def config = project(':robot').configurations.getByName("wpiTools")
     def byteOut = new ByteArrayOutputStream()
 
+    // Get shuffleboard dependency from wpiTools config
     Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
 
+    // Exec task fields
     workingDir = "${System.getProperty('user.home')}/.gradle/gradlerio/Shuffleboard"
     commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
     standardOutput = byteOut

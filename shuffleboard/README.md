@@ -6,6 +6,6 @@ the layout configuration for the shuffleboard.
 These can either be run in the command line using `gradlew` or
 in the tasks list for whatever IDE you're in.
 
+- `debugShuffleboard` - Runs the shuffleboard with file output. Good
+for if you need to debug plugins.
 - `jar` - Assembles and builds a working jarfile.
-- `build` - Builds the project, but does not deploy. This is good
-for seeing if everything has been properly configured.

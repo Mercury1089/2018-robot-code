@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import edu.wpi.first.shuffleboard.api.data.ComplexDataType;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class FMSDataType extends ComplexDataType<FMSData> {
 
@@ -17,12 +16,14 @@ public class FMSDataType extends ComplexDataType<FMSData> {
 
 	@Override
 	public Function<Map<String, Object>, FMSData> fromMap() {
-			return map -> { return new FMSData(map.getOrDefault("positions", "RRR").toString(), (Alliance) map.getOrDefault("alliance", Alliance.Blue)); };
+			return map -> {
+				return new FMSData(map.getOrDefault("positions", "RRR").toString(), (Alliance) map.getOrDefault("alliance", Alliance.BLUE));
+			};
 	}
 
 	@Override
 	public FMSData getDefaultValue() {
-		return new FMSData("RRR", Alliance.Blue);
+		return new FMSData("RRR", Alliance.BLUE);
 	}
 	
 }

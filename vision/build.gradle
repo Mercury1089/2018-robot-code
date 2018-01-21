@@ -7,14 +7,6 @@ def buildType = "arm-raspbian"
 
 def launchArgs = ""
 
-sourceSets.main.java {
-    srcDirs = ['src']; include '**/*.java'
-}
-
-sourceSets.main.resources {
-    srcDirs = ['src']; exclude '**/*.java'
-}
-
 deploy {
     targets {
         target("rpi") {

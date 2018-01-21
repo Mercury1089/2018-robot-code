@@ -16,9 +16,10 @@ public class FMSDataType extends ComplexDataType<FMSData> {
 
 	@Override
 	public Function<Map<String, Object>, FMSData> fromMap() {
-			return map -> {
-				return new FMSData(map.getOrDefault("positions", "RRR").toString(), (Alliance) map.getOrDefault("alliance", Alliance.BLUE));
-			};
+			return map -> new FMSData(
+				map.getOrDefault("positions", "RRR").toString(),
+				(Alliance) map.getOrDefault("alliance", Alliance.BLUE)
+			);
 	}
 
 	@Override

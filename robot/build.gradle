@@ -3,17 +3,11 @@ apply plugin: "jaci.openrio.gradle.GradleRIO"
 import jaci.openrio.gradle.GradleRIOPlugin
 import jaci.openrio.gradle.frc.FRCJavaArtifact
 import jaci.openrio.gradle.frc.RoboRIO
+import jaci.openrio.gradle.wpi.dependencies.WPIToolsPlugin
+import jaci.openrio.gradle.ExternalLaunchTask
 
 def TEAM = 1089
 def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
-
-sourceSets.main.java {
-    srcDirs = ['src']; include '**/*.java'
-}
-
-sourceSets.main.resources {
-    srcDirs = ['src']; exclude '**/*.java'
-}
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -30,13 +24,29 @@ deploy {
     }
 }
 
+// Overwrite this task b/c the default GradleRIO
+// task doesn't function as it should.
+//task shuffleboard(overwrite: true, type: Exec) {
+//    group = "GradleRIO"
+//    description = "Launch Shuffleboard with logging"
+//
+//    def config = project(':robot').configurations.getByName("wpiTools")
+//
+//    // Get shuffleboard dependency from wpiTools config
+//    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+//
+//    // Exec task fields
+//    workingDir = WPIToolsPlugin.shuffleboardDirectory()
+//    // commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+//}
+
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
 // and NavX.
 dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
-	compile fileTree(dir: 'lib', include: ['*.jar'])
+    compile fileTree(dir: 'lib', include: ['*.jar'])
     nativeLib fileTree(dir: 'lib', include: ['*.so'])
 }
 
@@ -46,21 +56,4 @@ dependencies {
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
-}
-
-// Override this command b/c the default GradleRIO
-// command doesn't function as it should.
-task shuffleboard(overwrite: true, type:Exec) {
-    group = "GradleRIO"
-    description = "Launch Shuffleboard"
-
-    def config = project.configurations.getByName("wpiTools")
-    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
-
-    workingDir = "${System.getProperty('user.home')}/.gradle/gradlerio/Shuffleboard"
-    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4.1'
 }

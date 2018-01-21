@@ -1,56 +1,14 @@
-import jaci.openrio.gradle.GradleRIOPlugin
-import jaci.openrio.gradle.frc.FRCJavaArtifact
-import jaci.openrio.gradle.frc.RoboRIO
-
 plugins {
-    id "java"
-    id "eclipse"
-    id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.01.20"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.20" apply false
 }
 
-def TEAM = 1089
-def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
-
-sourceSets.main.java {
-    srcDirs = ['src']; include '**/*.java'
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
 }
 
-sourceSets.main.resources {
-    srcDirs = ['src']; exclude '**/*.java'
-}
-
-// Define my targets (RoboRIO) and artifacts (deployable files)
-// This is added by GradleRIO's backing project EmbeddedTools.
-deploy {
-    targets {
-        target("roborio", RoboRIO) {
-            team = TEAM
-        }
-    }
-    artifacts {
-        artifact('frcJava', FRCJavaArtifact) {
-            targets << "roborio"
-        }
-    }
-}
-
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
-// and NavX.
-dependencies {
-    compile wpilib()
-    compile ctre()
-    compile navx()
-	compile fileTree(dir: 'lib', include: ['*.jar'])
-    nativeLib fileTree(dir: 'lib', include: ['*.so'])
-}
-
-// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
-// in order to make them all available at runtime. Also adding the manifest so WPILib
-// knows where to look for our Robot Class.
-jar {
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
+subprojects {
+    apply plugin: "java"
 }
 
 task wrapper(type: Wrapper) {

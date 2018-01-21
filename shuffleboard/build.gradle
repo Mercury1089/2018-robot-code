@@ -1,0 +1,13 @@
+sourceSets.main.java {
+    srcDirs = ['src']; include '**/*.java'
+}
+
+sourceSets.main.resources {
+    srcDirs = ['src']; exclude '**/*.java'
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
+// and NavX.
+dependencies {
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+}

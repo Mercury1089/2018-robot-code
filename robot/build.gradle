@@ -48,6 +48,17 @@ jar {
     manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
+task shuffleboard(overwrite: true, type:Exec) {
+    group = "GradleRIO"
+    description = "Launch Shuffleboard"
+
+    def config = project.configurations.getByName("wpiTools")
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+
+    workingDir = "${System.getProperty('user.home')}/.gradle/gradlerio/Shuffleboard"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
 }

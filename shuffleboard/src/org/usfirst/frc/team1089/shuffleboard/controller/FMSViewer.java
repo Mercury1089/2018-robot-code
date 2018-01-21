@@ -1,11 +1,11 @@
 package org.usfirst.frc.team1089.shuffleboard.controller;
 
+import org.usfirst.frc.team1089.shuffleboard.datatype.Alliance;
 import org.usfirst.frc.team1089.shuffleboard.datatype.FMSData;
 
 import edu.wpi.first.shuffleboard.api.widget.Description;
 import edu.wpi.first.shuffleboard.api.widget.ParametrizedController;
 import edu.wpi.first.shuffleboard.api.widget.SimpleAnnotatedWidget;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -47,8 +47,8 @@ public class FMSViewer extends SimpleAnnotatedWidget<FMSData> {
 		final char enemySwitchData = positions.charAt(2);
 		
 		//Determine the color of both alliances 
-		ourAlliance = data.getAlliance() == Alliance.Blue ? "blue" : "red";
-		enemyAlliance = data.getAlliance() == Alliance.Blue ? "red" : "blue";
+		ourAlliance = data.getAlliance() == Alliance.BLUE ? "blue" : "red";
+		enemyAlliance = data.getAlliance() == Alliance.BLUE ? "red" : "blue";
 		
 		//Set the colors of each side of both switches and the scale. 
 		enemySwitchLeft.setStyle("-fx-background-color: " + determineColor('L', enemySwitchData) + ";");

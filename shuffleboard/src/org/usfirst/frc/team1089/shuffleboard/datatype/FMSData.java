@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.shuffleboard.api.data.ComplexData;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * 

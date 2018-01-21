@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) {
         // Connect NetworkTables, and get access to the publishing table
         NetworkTableInstance nt = NetworkTableInstance.getDefault();
+        nt.setServerTeam(1089);
         nt.startClient();
 
         final String ROOT = "Vision";
@@ -58,12 +59,10 @@ public class Main {
         }));
 
         Mat img = new Mat();
-
-
         while (!Thread.interrupted()) {
 
-            // Grab a frame. If it has a frame time of 0, there was an error.
-            // Just skip and continue
+            // Grab a frame. If it has a frame time of 0, the request timed out.
+            // So we just skip the frame and continue instead.
             if (lifecamSink.grabFrame(img) == 0) {
                 System.out.println(Thread.currentThread().getName() + ": " + lifecamSink.getError());
                 continue;

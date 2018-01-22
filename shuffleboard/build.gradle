@@ -29,17 +29,15 @@ task debugShuffleboard(type: Exec) {
     group = "Shuffleboard"
     description = "Launch Shuffleboard with logging"
 
-    // Use the shuffleboard config that is set up in the root project
-    // to get the latest version of shuffleboard
-    def config = rootProject.configurations.getByName("shuffleboard")
+    // Init byte array out stream
+    // This will store exec output
     def byteOut = new ByteArrayOutputStream()
 
-    // Get shuffleboard dependency from wpiTools config
-    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+    // Copy task fields from runShuffleboard
+    workingDir = runShuffleboard.workingDir
+    commandLine = runShuffleboard.commandLine
 
-    // Exec task fields
-    workingDir = WPIToolsPlugin.shuffleboardDirectory()
-    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+    // Override output with byteOut
     standardOutput = byteOut
     errorOutput = byteOut
 

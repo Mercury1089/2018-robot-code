@@ -37,7 +37,7 @@ public class DriveArcade extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.arcadeDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), -Robot.oi.getRotateValue(DS_USB.RIGHT_STICK), true);
+		tDrive.arcadeDrive(Robot.oi.getY(DS_USB.LEFT_STICK), -Robot.oi.getX(DS_USB.RIGHT_STICK), true);
 		everySecond.run(log -> log.info("arcade driving"));
 	}
 

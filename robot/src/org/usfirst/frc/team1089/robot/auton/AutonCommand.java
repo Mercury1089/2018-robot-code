@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- *
+ * Command group that specifies the commands to be run
+ * during the autonomous period.
  */
 public class AutonCommand extends CommandGroup {
 

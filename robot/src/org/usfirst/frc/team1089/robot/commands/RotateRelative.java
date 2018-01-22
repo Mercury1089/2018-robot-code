@@ -3,9 +3,9 @@ package org.usfirst.frc.team1089.robot.commands;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 
 /**
- *
+ * Turns the robot a set amount of degrees relative to its current angle.
  */
-public class DegreeRotate extends PIDCommand {
+public class RotateRelative extends PIDCommand {
 
 	private double _heading;
 	
@@ -14,13 +14,18 @@ public class DegreeRotate extends PIDCommand {
     
     private final double MIN_PERCENT_VBUS = 0.15;
 
-    public DegreeRotate(double heading) {
+	/**
+	 * Constructs this command with a set degree to rotate.
+	 *
+	 * @param heading the amount of degrees to rotate by
+	 */
+	public RotateRelative(double heading) {
 		super(0.060, 0.05, 0.5);
 		requires(Robot.driveTrain);
 
-		System.out.println("DegreeRotate constructed");
+		System.out.println("RotateRelative constructed");
     	_heading = heading;
-    	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Constructed using DegreeRotate(double heading).");
+    	//MercLogger.logMessage(Level.INFO, "RotateRelative: Constructed using RotateRelative(double heading).");
     }
 
 
@@ -36,8 +41,8 @@ public class DegreeRotate extends PIDCommand {
 
     	getPIDController().setSetpoint(_heading);
 
-		System.out.println("DegreeRotate initialized");
-    	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Initialized with heading: " + _heading);
+		System.out.println("RotateRelative initialized");
+    	//MercLogger.logMessage(Level.INFO, "RotateRelative: Initialized with heading: " + _heading);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -56,15 +61,15 @@ public class DegreeRotate extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-		System.out.println("DegreeRotate ended");
+		System.out.println("RotateRelative ended");
 		Robot.driveTrain.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	//MercLogger.logMessage(Level.INFO, "DegreeRotate: Interrupted");
-		System.out.println("DegreeRotate interrupted");
+    	//MercLogger.logMessage(Level.INFO, "RotateRelative: Interrupted");
+		System.out.println("RotateRelative interrupted");
     	end();
     }
 

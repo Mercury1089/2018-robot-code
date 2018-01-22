@@ -37,7 +37,7 @@ public class DriveTank extends Command {
 	@Override
 	protected void execute() {
 		if (tDrive != null) {
-			tDrive.tankDrive(Robot.oi.getMoveValue(DS_USB.LEFT_STICK), Robot.oi.getMoveValue(DS_USB.RIGHT_STICK));
+			tDrive.tankDrive(Robot.oi.getY(DS_USB.LEFT_STICK), Robot.oi.getY(DS_USB.RIGHT_STICK));
 		} else {
 			System.out.println("Talon Drive is not initialized!");
 		}

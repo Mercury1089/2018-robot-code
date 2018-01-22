@@ -13,10 +13,9 @@ import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * @author sagar
- *
+ * Use motion profiling to move on a specified path
  */
-public class MercuryMotion extends Command {
+public class MoveOnProfile extends Command {
 
 	private double endPos, maxVel, maxAccel;
 	private boolean curved;
@@ -37,9 +36,7 @@ public class MercuryMotion extends Command {
 	 * @param curvedPath If true, the robot will travel on a curved path to the given endPos. If false, it will travel in a linear motion to the endPos.
 	 * @param numberOfPoints The number of trajectory points that will be in the motion profile.
 	 */
-	
-	
-	public MercuryMotion(double endPosition, double maxVelocity, double maxAcceleration, boolean curvedPath, int numberOfPoints) {
+	public MoveOnProfile(double endPosition, double maxVelocity, double maxAcceleration, boolean curvedPath, int numberOfPoints) {
 		endPos = endPosition;
 		maxVel = maxVelocity;
 		maxAccel = maxAcceleration;

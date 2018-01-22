@@ -9,19 +9,12 @@ plugins {
     id "jaci.gradle.EmbeddedTools" version "2018.01.20" apply false
 }
 
-// Shuffleboard fix
+// Hacky shuffleboard fix
 configurations {
     shuffleboard {
-        repositories {
-            maven {
-                url 'http://first.wpi.edu/FRC/roborio/maven/release'
-            }
-        }
-        
-        description = 'Shuffleboard app'
+        description = 'shuffleboard app'
     }
 }
-
 dependencies {
     shuffleboard 'edu.wpi.first.shuffleboard:app:+'
 }
@@ -31,6 +24,13 @@ dependencies {
 allprojects {
     apply plugin: "idea"
     apply plugin: "eclipse"
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://first.wpi.edu/FRC/roborio/maven/release'
+        }
+    }
 }
 
 // Apply java plugin only to subprojects
@@ -44,6 +44,10 @@ subprojects {
 
     sourceSets.main.resources {
         srcDirs = ['src']; exclude '**/*.java'
+    }
+
+    dependencies {
+        compile fileTree(dir: 'lib', include: '*.jar')
     }
 }
 

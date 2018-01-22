@@ -4,24 +4,33 @@ jar.baseName = 'MercuryWidgets'
 
 def shuffleboardLogDir = "/shuffleboard"
 
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
-// and NavX.
-repositories {
-    mavenCentral()
-    maven {
-        url "http://first.wpi.edu/FRC/roborio/maven/release"
-    }
-}
-
 dependencies {
     compile 'edu.wpi.first.shuffleboard:api:+'
 }
 
+task runShuffleboard(type: Exec) {
+    group = "Shuffleboard"
+    description = "Launch Shuffleboard"
+
+    // Use the shuffleboard config that is set up in the root project
+    // to get the latest version of shuffleboard
+    def config = rootProject.configurations.getByName("shuffleboard")
+    def byteOut = new ByteArrayOutputStream()
+
+    // Get shuffleboard dependency from wpiTools config
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+
+    // Exec task fields
+    workingDir = WPIToolsPlugin.shuffleboardDirectory()
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}
+
 task debugShuffleboard(type: Exec) {
-    group = "GradleRIO"
+    group = "Shuffleboard"
     description = "Launch Shuffleboard with logging"
 
-    // Lazy config, just pull wpiTools config from robot proj.
+    // Use the shuffleboard config that is set up in the root project
+    // to get the latest version of shuffleboard
     def config = rootProject.configurations.getByName("shuffleboard")
     def byteOut = new ByteArrayOutputStream()
 

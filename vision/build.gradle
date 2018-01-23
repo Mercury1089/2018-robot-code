@@ -1,40 +1,34 @@
-apply plugin: 'jaci.gradle.EmbeddedTools'
+plugins {
+    id 'application'
+    id 'org.hidetake.ssh' version '2.9.0'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
+}
 
-// Coprocessor type. We are NOT using a generic Windows/Linux system.
+// Set the buildType to whichever OS you're building for.
+// Windows: "windows"
 // Raspbian (Pi): "arm-raspbian"
 // armhf devices (Jetson/Beaglebone Black): "armhf"
-def buildType = "arm-raspbian"
 
-def launchArgs = ""
+ext.buildType = "arm-raspbian"
 
-deploy {
-    targets {
-        target("rpi") {
-            addresses << '10.10.89.2:5802'
-            user = 'pi'
-            password = 'raspberry'
-            directory = '/vision'
-        }
-    }
-    artifacts {
-        // Defines the vision artifact.
-        // We can refer to the vision subproject jar under this name.
-        javaArtifact('visionArtifact') {
-            targets << "rpi"
-            jar = 'jar'
+// Change the line below if you change the name of your main Java class.
+// Reminder: full declaration of name, i.e.: include packages
+mainClassName = 'org.usfirst.frc.team1089.main.Main'
 
-            predeploy << {
-                execute 'rm -rf /home/pi/output'
-            }
+// Change the line below to change the name of the output jar
+def projectName = 'CameraVision'
 
-            postdeploy << {
-                execute "echo 'java -jar ${project.name}.jar ${launchArgs}' > /home/pi/output/runVision"
-                execute "chmod 755 /home/pi/runVision"
-                execute 'nohup /home/pi/runVision'
-            }
-        }
+remotes {
+    pi {
+        host = '10.10.89.20'
+        port = 5802
+        user = 'pi'
+        password = 'raspberry'
     }
 }
+
+// Shouldn't need to change anything below this point
+apply from: 'dependencies.gradle'
 
 repositories {
     mavenCentral()
@@ -43,21 +37,167 @@ repositories {
     }
 }
 
-// Does this work? IDKKK
+configurations {
+    vision
+}
+
 dependencies {
-    compile "edu.wpi.first.ntcore:ntcore-java:+"
-    compile "edu.wpi.first.cscore:cscore-java:+"
-    compile "org.opencv:opencv-java:+"
-    compile "org.opencv:opencv-jni:+:all@jar"
+    compile 'edu.wpi.first.wpiutil:wpiutil-java:+'
+    compile 'edu.wpi.first.ntcore:ntcore-java:+'
+    compile 'edu.wpi.first.cscore:cscore-java:+'
+    compile 'org.opencv:opencv-java:3.2.0'
+
+    vision 'edu.wpi.first.ntcore:ntcore-jni:+:all@jar'
+    vision 'edu.wpi.first.cscore:cscore-jni:+:all@jar'
+    vision 'org.opencv:opencv-jni:3.2.0:all@jar'
 }
 
 jar {
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    // I need to set my manifest up so the coprocessor knows where my main class is
-    manifest {
-        attributes 'Main-Class': 'org.usfirst.frc.team1089.main.Main'
+    baseName = projectName
+}
+
+shadowJar {
+    baseName = projectName
+}
+
+def outputDirectory = file("${buildDir}/output")
+
+task deploy {
+    dependsOn build
+    group = 'build'
+    doLast {
+        ssh.run {
+            session(remotes.pi) {
+                execute 'rm -rf /home/pi/output'
+                put from: outputDirectory, into: '/home/pi'
+                execute 'chmod 755 /home/pi/output/runCameraVision'
+            }
+        }
     }
 }
+
+task writeExecuteScript() {
+    dependsOn jar
+    doLast {
+        if (buildType == "windows") {
+            def runFile = new File("${buildDir}/run${projectName}.bat")
+            runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+        } else {
+            def runFile = new File("${buildDir}/run${projectName}")
+            runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+        }
+    }
+}
+
+task copyToOutput(type: Copy) {
+    dependsOn shadowJar
+    // dependsOn unzipDeps
+    dependsOn writeExecuteScript
+    destinationDir = outputDirectory
+    from (file(shadowJar.archivePath)) {
+    }
+    from (unzipDeps) {
+        exclude 'META-INF'
+        exclude '**/MANIFEST.MF'
+    }
+    if (buildType == "windows") {
+        from (file("${buildDir}/run${projectName}.bat")) {
+        }
+    } else {
+        from (file("${buildDir}/run${projectName}")) {
+        }
+    }
+}
+
+task zipOutput(type: Zip) {
+    baseName = projectName
+    duplicatesStrategy = 'exclude'
+    dependsOn shadowJar
+    // dependsOn unzipDeps
+    destinationDir = outputDirectory
+    from (file(shadowJar.archivePath)) {
+    }
+
+    from (unzipDeps) {
+        exclude 'META-INF'
+        exclude '**/MANIFEST.MF'
+    }
+
+    if (buildType == "windows") {
+        from (file("${buildDir}/run${projectName}.bat")) {
+        }
+    } else {
+        from (file("${buildDir}/run${projectName}")) {
+            fileMode 0777
+        }
+    }
+}
+
+distZip.dependsOn unzipDeps
+distTar.dependsOn unzipDeps
+
+applicationDefaultJvmArgs = ["-Djava.library.path=${nativeUnzipLocation}"]
+
+build.dependsOn copyToOutput
+build.dependsOn zipOutput
+run.dependsOn unzipDeps
+
+clean {
+    delete outputDirectory
+}
+//
+//deploy {
+//    targets {
+//        target('rpi') {
+//            addresses << '10.10.89.20:5802'
+//            user = 'pi'
+//            password = 'raspberry'
+//            failOnMissing = false
+//            timeout = 10
+//        }
+//    }
+//    artifacts {
+//        // Defines the vision artifact.
+//        // We can refer to the vision subproject jar under this name.
+//        javaArtifact('visionArtifact') {
+//            targets << "rpi"
+//            jar = 'jar'
+//
+//            predeploy << {
+//                execute 'rm -rf /home/pi/output'
+//            }
+//
+//            postdeploy << {
+//                execute "echo 'java -jar ${project.name}.jar ${launchArgs}' > /home/pi/output/runVision"
+//                execute "chmod 755 /home/pi/runVision"
+//                execute 'nohup /home/pi/runVision'
+//            }
+//        }
+//    }
+//}
+//
+//repositories {
+//    mavenCentral()
+//    maven {
+//        url "http://first.wpi.edu/FRC/roborio/maven/release"
+//    }
+//}
+//
+//// Does this work? IDKKK
+//dependencies {
+//    compile "edu.wpi.first.ntcore:ntcore-java:+"
+//    compile "edu.wpi.first.cscore:cscore-java:+"
+//    compile "org.opencv:opencv-java:+"
+//    compile "org.opencv:opencv-jni:+:all@jar"
+//}
+//
+//jar {
+//    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+//    // I need to set my manifest up so the coprocessor knows where my main class is
+//    manifest {
+//        attributes 'Main-Class': 'org.usfirst.frc.team1089.main.Main'
+//    }
+//}
 
 //jar {
 //  baseName = projectName

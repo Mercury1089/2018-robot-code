@@ -8,9 +8,9 @@ import org.opencv.imgproc.Imgproc;
 public class Main {
     public static void main(String[] args) {
         // Connect NetworkTables, and get access to the publishing table
-        NetworkTableInstance nt = NetworkTableInstance.getDefault();
-        nt.setServerTeam(1089);
-        nt.startClient();
+//        NetworkTableInstance nt = NetworkTableInstance.create();
+//        nt.setServerTeam(1089);
+//        nt.startClient();
 
         final String ROOT = "Vision";
         final Runtime RUNTIME = Runtime.getRuntime();
@@ -24,7 +24,7 @@ public class Main {
         final int STREAMPORT = 1186;
 
         // This stores our reference to our mjpeg server for streaming the input image
-        MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", STREAMPORT);
+        // MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", STREAMPORT);
 
         //Our CvSource
         CvSource lifecamSource = new CvSource("lifecamSource", VideoMode.PixelFormat.kMJPEG, Res_X, Res_Y, FPS);
@@ -36,7 +36,7 @@ public class Main {
         CvSink lifecamSink = new CvSink("CvSink_Lifecam");
 
         //Our NetworkTable
-        NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
+        //NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
 
         //Making the Settings for the lifecam
         lifecam.setResolution(Res_X, Res_Y);
@@ -45,14 +45,14 @@ public class Main {
         lifecam.setExposureManual(0);
 
         //Sets all of the various sources
-        lifecamOutputStream.setSource(lifecamSource);
+        // lifecamOutputStream.setSource(lifecamSource);
         lifecamSink.setSource(lifecam);
 
         //Shutdown procedure
 
         RUNTIME.addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down...");
-            lifecamOutputStream.free();
+            // lifecamOutputStream.free();
             lifecamSink.free();
             lifecamSource.free();
             lifecam.free();

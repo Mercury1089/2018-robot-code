@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -52,6 +53,11 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tBackLeft.setInverted(true);
 		tFrontRight.setInverted(false);
 		tBackRight.setInverted(false);
+
+		tFrontLeft.setNeutralMode(NeutralMode.Brake);
+		tBackLeft.setNeutralMode(NeutralMode.Brake);
+		tFrontRight.setNeutralMode(NeutralMode.Brake);
+		tBackRight.setNeutralMode(NeutralMode.Brake);
 
 		//Account for encoder orientation.
 		tFrontLeft.setSensorPhase(true);

@@ -6,6 +6,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.util.TalonDrive;
+
+import java.util.function.DoubleSupplier;
 
 /**
  * Uses Talons and mag encoders to drive a set distance.
@@ -13,10 +16,13 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 public class DriveDistance extends Command {
 
 	private static double MOVE_THRESHOLD = 500;
+	private static int ON_TARGET_MINIMUM_COUNT = 10;
 	private double distance;
 	private double percentVoltage; //Voltage is NOW from [-1, 1]
     private double endPosL, endPosR;
+    private DoubleSupplier distanceSupplier;
     private double waitTime;
+    private int onTargetCount;
 	
     /**
      * 
@@ -27,17 +33,29 @@ public class DriveDistance extends Command {
     	requires(Robot.driveTrain);
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
-    	endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
+
+    }
+
+	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
+		this(0, percentVoltage);
+		this.distanceSupplier = distanceSupplier;
+		if (distanceSupplier != null) {
+			this.distance = distanceSupplier.getAsDouble();
+		}
+
+
+	}
+
+    // Called just before this Command runs the first time
+    protected void initialize() {
+		endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
 		// Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
 		// On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
 		// to negate both endPosR and endPosL.
 		// THIS MIGHT CHANGE on the 2018 robot!!
 		endPosL = -endPosL;
-    	endPosR = endPosL;
-    }
+		endPosR = endPosL;
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
     	Robot.driveTrain.resetEncoders();
 		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
 		Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
@@ -67,6 +85,7 @@ public class DriveDistance extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	/*
         boolean isFinished = false;
         
         double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
@@ -76,15 +95,51 @@ public class DriveDistance extends Command {
 				&& (rightPos > endPosR - MOVE_THRESHOLD && rightPos < endPosR + MOVE_THRESHOLD)) {
    			isFinished = true;
    			System.out.println(" I'm done");
+
    		}
 
     	return isFinished;
+		*/
+		boolean isFinished = false;
+
+		double rError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
+		double lError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
+
+		boolean isOnTarget = (Math.abs(rError) < MOVE_THRESHOLD && Math.abs(lError) < MOVE_THRESHOLD);
+
+		if (isOnTarget) {
+			onTargetCount++;
+		} else {
+			if (onTargetCount > 0) {
+				onTargetCount = 0;
+				System.out.println("false positive - still moving");
+			} else {
+				// we are definitely moving
+			}
+		}
+
+		if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
+			isFinished = true;
+			onTargetCount = 0;
+			System.out.println("I''m Done");
+		}
+
+		return isFinished;
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.driveTrain.stop();
     	Robot.driveTrain.resetEncoders();
+
+		Robot.driveTrain.getLeft().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configPeakOutputForward(Robot.driveTrain.getTalonDrive().maxOutput, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getLeft().configPeakOutputReverse(-(Robot.driveTrain.getTalonDrive().maxOutput), DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configPeakOutputForward(Robot.driveTrain.getTalonDrive().maxOutput, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().configPeakOutputReverse(-(Robot.driveTrain.getTalonDrive().maxOutput), DriveTrain.TIMEOUT_MS);
     }
 
     // Called when another command which requires one or more of the same

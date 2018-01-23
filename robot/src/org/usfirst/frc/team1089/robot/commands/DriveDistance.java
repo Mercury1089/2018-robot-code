@@ -28,13 +28,17 @@ public class DriveDistance extends Command {
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
     	endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
+		// Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
+		// On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
+		// to negate both endPosR and endPosL.
+		// THIS MIGHT CHANGE on the 2018 robot!!
+		endPosL = -endPosL;
     	endPosR = endPosL;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.driveTrain.resetEncoders();
-		Robot.driveTrain.disableTalonDrive();
 		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
 		Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
 		Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
@@ -80,7 +84,6 @@ public class DriveDistance extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.driveTrain.stop();
-    	Robot.driveTrain.enableTalonDrive();
     	Robot.driveTrain.resetEncoders();
     }
 

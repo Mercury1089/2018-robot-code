@@ -100,18 +100,8 @@ task unzipDeps(type: Copy) {
     description = 'Unzips the wpiutil maven dependency so that the include files and libraries can be used'
     group = 'WPILib'
 
-    from {
-        include 'linux/x86/*.so'
-
-        eachFile {
-            it.path = it.path.substring(it.path.lastIndexOf("/") + 1)
-        }
-
-        configurations.getByName('vision').collect {
-            zipTree(it)
-        }
-    }
-
+    from 'lib'
     into nativeUnzipLocation
+    include '*.so'
 }
 // Create a task that will unzip the wpiutil files into a temporary build directory

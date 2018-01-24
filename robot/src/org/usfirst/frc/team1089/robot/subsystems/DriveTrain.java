@@ -6,12 +6,16 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.robot.commands.DriveTank;
+import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
 /**
@@ -26,6 +30,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
 	private WPI_TalonSRX tFrontLeft, tFrontRight, tBackLeft, tBackRight;
 	private TalonDrive tDrive;
+    private NavX navX;
+    private AnalogGyro analogGyro;
 
 	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
@@ -46,6 +52,10 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tFrontRight = new WPI_TalonSRX(fr);
 		tBackLeft = new WPI_TalonSRX(bl);
 		tBackRight = new WPI_TalonSRX(br);
+
+		//Initialize the gyro that is currently on the robot. Comment out the initialization of the one not in use.
+        navX = new NavX(SerialPort.Port.kUSB1);
+        //analogGyro = new AnalogGyro(Port#);
 
 
 		//Account for motor orientation.
@@ -144,6 +154,19 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tFrontRight.configPeakOutputForward(peakOutput, TIMEOUT_MS);
 		tFrontRight.configPeakOutputReverse(-peakOutput, TIMEOUT_MS);
 	}
+
+    /**
+     * @return The gyro, either the NavX or Analog Gyro, currently in use on the robot.
+     */
+    public Gyro getGyro() {
+        if (navX != null) {
+            return navX;
+        } else if (analogGyro != null){
+            return analogGyro;
+        } else {
+            return null;
+        }
+    }
 
 	public double getLeftEncPositionInFeet() {
 		double ticks = tFrontLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);

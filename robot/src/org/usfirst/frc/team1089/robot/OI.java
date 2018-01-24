@@ -76,7 +76,7 @@ public class OI {
 		gamepad = new Joystick(DS_USB.GAMEPAD);
 		
 		left_1 = new JoystickButton(leftStick, 1);
-		left_1.whenPressed(new RotateRelative(60, Robot.navX));
+		left_1.whenPressed(new RotateRelative(60));
 		left_2 = new JoystickButton(leftStick, 2);
 		left_2.whenPressed(new DriveDistance(24.0, .5));
 		left_3 = new JoystickButton(leftStick,3);
@@ -92,7 +92,7 @@ public class OI {
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
 		SmartDashboard.putData("Auton Starting Position", startingPosition);
-		SmartDashboard.putNumber("NavX Angle", Robot.navX.getAngle());
+		SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
 			
 		log.info("OI initialized");
 		

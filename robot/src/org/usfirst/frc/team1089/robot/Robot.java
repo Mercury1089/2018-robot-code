@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
@@ -25,8 +26,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static OI oi;
 	public static PDP pdp;
-	public static NavX navX;
-	//public static AnalogGyro analogGyro;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -41,9 +41,6 @@ public class Robot extends IterativeRobot {
 		);
 		
 		pdp = new PDP();
-		
-		navX = new NavX(SerialPort.Port.kUSB1);
-        //analogGyro = new AnalogGyro(Port#);
 
 		Robot.driveTrain.resetEncoders();
 
@@ -106,4 +103,7 @@ public class Robot extends IterativeRobot {
 		// Keep this line; it's needed for commands.
 		Scheduler.getInstance().run();
 	}
+
+
+
 }

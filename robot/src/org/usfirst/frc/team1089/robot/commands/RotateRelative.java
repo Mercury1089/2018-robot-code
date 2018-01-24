@@ -22,12 +22,13 @@ public class RotateRelative extends PIDCommand {
 	 * @param targetHeading the relative number of degrees to rotate by
      * @param gyro Either the navX or the analog gyro.
 	 */
-	public RotateRelative(double targetHeading, Gyro gyro) {
+	public RotateRelative(double targetHeading) {
 		super(0.060, 0.05, 0.5);
 		requires(Robot.driveTrain);
 
     	this.targetHeading = targetHeading;
-    	this.gyro = gyro;
+    	this.gyro = Robot.driveTrain.getGyro();
+
         System.out.println("RotateRelative constructed");
     }
 
@@ -35,7 +36,6 @@ public class RotateRelative extends PIDCommand {
     // Called just before this Command runs the first time
     protected void initialize() {
 	    gyro.reset();
-
     	
     	getPIDController().setInputRange(-180, 180);
     	getPIDController().setOutputRange(-.2, .2);
@@ -72,7 +72,6 @@ public class RotateRelative extends PIDCommand {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	//MercLogger.logMessage(Level.INFO, "RotateRelative: Interrupted");
 		System.out.println("RotateRelative interrupted");
     	end();
     }

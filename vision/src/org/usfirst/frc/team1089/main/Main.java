@@ -21,16 +21,20 @@ public class Main {
 
         // This is the network port you want to stream the raw received image to
         // By rules, this has to be between 1180 and 1190, so 1185 is a good choice
-        final int STREAMPORT = 1186;
+        // To access the stream via GRIP: IP Camera >> http://10.10.89.20:<ip>/stream.mjpg
+        final int PICAM_PORT = 1186;
+        final int LIFECAM_PORT = 1187;
 
         // This stores our reference to our mjpeg server for streaming the input image
-        // MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", STREAMPORT);
+        MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", LIFECAM_PORT);
+        MjpegServer picamOutputStream = new MjpegServer("PiCam_Out", PICAM_PORT);
 
         //Our CvSource
         CvSource lifecamSource = new CvSource("lifecamSource", VideoMode.PixelFormat.kMJPEG, Res_X, Res_Y, FPS);
 
         //Our UsbCamera
-        UsbCamera lifecam = new UsbCamera("Lifecam_3000", 0);
+        UsbCamera picam = new UsbCamera("PiCam", 0);
+        UsbCamera lifecam = new UsbCamera("Lifecam_3000", 1);
 
         //Our CvSink
         CvSink lifecamSink = new CvSink("CvSink_Lifecam");
@@ -45,14 +49,18 @@ public class Main {
         lifecam.setExposureManual(0);
 
         //Sets all of the various sources
-        // lifecamOutputStream.setSource(lifecamSource);
+        picamOutputStream.setSource(picam);
+
+        lifecamOutputStream.setSource(lifecam);
         lifecamSink.setSource(lifecam);
 
         //Shutdown procedure
 
         RUNTIME.addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down...");
-            // lifecamOutputStream.free();
+            lifecamOutputStream.free();
+            picamOutputStream.free();
+
             lifecamSink.free();
             lifecamSource.free();
             lifecam.free();

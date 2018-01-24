@@ -10,7 +10,7 @@ import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
 
-import com.kauailabs.navx.frc.AHRS;
+import org.usfirst.frc.team1089.util.NavX;
 
 
 /**
@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static OI oi;
 	public static PDP pdp;
-	public static AHRS navX;
+	public static NavX navX;
 	//public static AnalogGyro analogGyro;
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 		
 		pdp = new PDP();
 		
-		navX = new AHRS(SerialPort.Port.kUSB1);
+		navX = new NavX(SerialPort.Port.kUSB1);
         //analogGyro = new AnalogGyro(Port#);
 
 		Robot.driveTrain.resetEncoders();

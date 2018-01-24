@@ -42,6 +42,7 @@ public class DriveDistance extends Command {
     }
 
 	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
+        requires(Robot.driveTrain);
         this.percentVoltage = percentVoltage;
 		this.distanceSupplier = distanceSupplier;
 	}

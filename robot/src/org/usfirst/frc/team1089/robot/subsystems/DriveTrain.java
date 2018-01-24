@@ -129,6 +129,22 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		setDefaultCommand(new DriveArcade());
 	}
 
+	/**
+	 * Sets both of the front talons to have a forward output of nominalOutput and peakOutput with the reverse output set to the negated outputs.
+	 * @param nominalOutput The desired nominal voltage output of the left and right talons, both forward and reverse.
+	 * @param peakOutput The desired peak voltage output of the left and right talons, both forward and reverse
+	 */
+	public void configVoltage(double nominalOutput, double peakOutput) {
+		tFrontLeft.configNominalOutputForward(nominalOutput, TIMEOUT_MS);
+		tFrontLeft.configNominalOutputReverse(-nominalOutput, TIMEOUT_MS);
+		tFrontLeft.configPeakOutputForward(peakOutput, TIMEOUT_MS);
+		tFrontLeft.configPeakOutputReverse(-peakOutput, TIMEOUT_MS);
+		tFrontRight.configNominalOutputForward(nominalOutput, TIMEOUT_MS);
+		tFrontRight.configNominalOutputReverse(-nominalOutput, TIMEOUT_MS);
+		tFrontRight.configPeakOutputForward(peakOutput, TIMEOUT_MS);
+		tFrontRight.configPeakOutputReverse(-peakOutput, TIMEOUT_MS);
+	}
+
 	public double getLeftEncPositionInFeet() {
 		double ticks = tFrontLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
@@ -154,19 +170,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER_INCHES) * feet * 12.0;
 	}
 
+	public double inchesToEncoderTicks(double inches) {
+        return (inches / (Math.PI * WHEEL_DIAMETER_INCHES)) * MAG_ENCODER_TICKS_PER_REVOLUTION;
+    }
+
 	public void pidWrite(double output) {
 		tDrive.tankDrive(output, -output);
 	}
 
-	//  enable/disableTalonDrive methods are WIP.
-	public void enableTalonDrive() {
-		tFrontLeft.setSafetyEnabled(true);
-		tFrontRight.setSafetyEnabled(true);
-	}
-
-	public void disableTalonDrive() {
-		tFrontLeft.setSafetyEnabled(false);
-		tFrontRight.setSafetyEnabled(false);
-
-	}
 }

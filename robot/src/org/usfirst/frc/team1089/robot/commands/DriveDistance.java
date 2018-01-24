@@ -15,14 +15,19 @@ import java.util.function.DoubleSupplier;
  */
 public class DriveDistance extends Command {
 
-	private static double MOVE_THRESHOLD = 500;
-	private static int ON_TARGET_MINIMUM_COUNT = 10;
-	private double distance;
-	private double percentVoltage; //Voltage is NOW from [-1, 1]
-    private double endPosL, endPosR;
-    private DoubleSupplier distanceSupplier;
-    private double waitTime;
+
+    private final double PROPORTIONAL = .1;
+    private final double INTEGRAL = 0;
+    private final double DERIVATIVE = .05;
+
+	private final double MOVE_THRESHOLD = 500;
+	private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
+
+	private double distance;
+    private DoubleSupplier distanceSupplier;
+    private double endPosL, endPosR;
+	private double percentVoltage; //Voltage is NOW from [-1, 1]
 	
     /**
      * 
@@ -42,13 +47,13 @@ public class DriveDistance extends Command {
 		if (distanceSupplier != null) {
 			this.distance = distanceSupplier.getAsDouble();
 		}
-
-
 	}
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		endPosL = (distance / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
+        //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
+		endPosL = Robot.driveTrain.inchesToEncoderTicks(distance);
+
 		// Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
 		// On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
 		// to negate both endPosR and endPosL.
@@ -56,24 +61,21 @@ public class DriveDistance extends Command {
 		endPosL = -endPosL;
 		endPosR = endPosL;
 
-    	Robot.driveTrain.resetEncoders();
-		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, .1, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, 0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, .05, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.resetEncoders();
 
-		Robot.driveTrain.getLeft().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configPeakOutputForward(percentVoltage, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configPeakOutputReverse(-percentVoltage, DriveTrain.TIMEOUT_MS);
 
-		System.out.println(endPosL);
+		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
+		Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
+
+
+		Robot.driveTrain.configVoltage(0, percentVoltage);
+
+		System.out.println("DriveDistance has been initialized and set to go " + endPosL + "encoder ticks");
+
 		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
 		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
@@ -84,35 +86,19 @@ public class DriveDistance extends Command {
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	/*
-        boolean isFinished = false;
-        
-        double leftPos = Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
-        //System.out.println(leftPos);
-        double rightPos = Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP);
-        if ((leftPos > endPosL - MOVE_THRESHOLD && leftPos < endPosL + MOVE_THRESHOLD)
-				&& (rightPos > endPosR - MOVE_THRESHOLD && rightPos < endPosR + MOVE_THRESHOLD)) {
-   			isFinished = true;
-   			System.out.println(" I'm done");
-
-   		}
-
-    	return isFinished;
-		*/
+    protected boolean isFinished()
+    {
 		boolean isFinished = false;
 
-		double rError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
-		double lError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
-
-		boolean isOnTarget = (Math.abs(rError) < MOVE_THRESHOLD && Math.abs(lError) < MOVE_THRESHOLD);
+        double leftError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
+        double rightError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
+		boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
 
 		if (isOnTarget) {
 			onTargetCount++;
 		} else {
 			if (onTargetCount > 0) {
 				onTargetCount = 0;
-				System.out.println("false positive - still moving");
 			} else {
 				// we are definitely moving
 			}
@@ -121,7 +107,7 @@ public class DriveDistance extends Command {
 		if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
 			isFinished = true;
 			onTargetCount = 0;
-			System.out.println("I''m Done");
+            System.out.println("DriveDistance ended");
 		}
 
 		return isFinished;
@@ -132,19 +118,13 @@ public class DriveDistance extends Command {
     	Robot.driveTrain.stop();
     	Robot.driveTrain.resetEncoders();
 
-		Robot.driveTrain.getLeft().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configPeakOutputForward(Robot.driveTrain.getTalonDrive().maxOutput, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getLeft().configPeakOutputReverse(-(Robot.driveTrain.getTalonDrive().maxOutput), DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configNominalOutputForward(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configNominalOutputReverse(0, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configPeakOutputForward(Robot.driveTrain.getTalonDrive().maxOutput, DriveTrain.TIMEOUT_MS);
-		Robot.driveTrain.getRight().configPeakOutputReverse(-(Robot.driveTrain.getTalonDrive().maxOutput), DriveTrain.TIMEOUT_MS);
+    	//The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
+		Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().maxOutput);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	System.out.println(" I'm interrupted");
+    	System.out.println("DriveDistance interrupted");
     }
 }

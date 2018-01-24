@@ -1,4 +1,7 @@
 package org.usfirst.frc.team1089.robot.commands;
+ import com.kauailabs.navx.frc.AHRS;
+ import edu.wpi.first.wpilibj.AnalogGyro;
+ import edu.wpi.first.wpilibj.PIDSource;
  import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 
@@ -7,31 +10,42 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
  */
 public class RotateRelative extends PIDCommand {
 
-	private double _heading;
-	
+	private double targetHeading;
+    private final double MIN_PERCENT_VBUS = 0.15;
+
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
-    
-    private final double MIN_PERCENT_VBUS = 0.15;
+
+	private PIDSource gyro;
 
 	/**
 	 * Constructs this command with a set degree to rotate.
 	 *
-	 * @param heading the amount of degrees to rotate by
+	 * @param targetHeading the relative number of degrees to rotate by
+     * @param gyro Either the navX or the analog gyro.
 	 */
-	public RotateRelative(double heading) {
+	public RotateRelative(double targetHeading, PIDSource gyro) {
 		super(0.060, 0.05, 0.5);
 		requires(Robot.driveTrain);
 
-		System.out.println("RotateRelative constructed");
-    	_heading = heading;
-    	//MercLogger.logMessage(Level.INFO, "RotateRelative: Constructed using RotateRelative(double heading).");
+    	this.targetHeading = targetHeading;
+    	this.gyro = gyro;
+        System.out.println("RotateRelative constructed");
     }
 
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		Robot.navX.reset();
+	    if (gyro instanceof AHRS) {
+	        ((AHRS) gyro).reset();
+            System.out.println("RotateRelative is initializing with the NavX");
+        } else if (gyro instanceof AnalogGyro){
+	        ((AnalogGyro) gyro).reset();
+            System.out.println("RotateRelative is initializing with the Analog Gyro");
+        } else {
+            System.out.println("Gyro for RotateRelative not recognized!");
+            end();
+        }
 
     	getPIDController().setContinuous(true);
     	getPIDController().setAbsoluteTolerance(1.5);
@@ -39,10 +53,9 @@ public class RotateRelative extends PIDCommand {
     	getPIDController().setInputRange(-180, 180);
     	getPIDController().setOutputRange(-.2, .2);
 
-    	getPIDController().setSetpoint(_heading);
+    	getPIDController().setSetpoint(targetHeading);
 
 		System.out.println("RotateRelative initialized");
-    	//MercLogger.logMessage(Level.INFO, "RotateRelative: Initialized with heading: " + _heading);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -75,7 +88,14 @@ public class RotateRelative extends PIDCommand {
 
 	@Override
 	protected double returnPIDInput() {
-		return Robot.navX.getAngle();
+	    if (gyro instanceof AHRS) {
+            return ((AHRS) gyro).getAngle();
+        } else if (gyro instanceof AnalogGyro) {
+	        return ((AnalogGyro) gyro).getAngle();
+        } else {
+            System.out.println("Gyro for RotateRelative not recognized!");
+            return targetHeading;
+        }
 	}
 
 	@Override
@@ -89,7 +109,7 @@ public class RotateRelative extends PIDCommand {
 	}
 	
 	protected void updateHeading(double heading) {
-		_heading = heading;
-		getPIDController().setSetpoint(_heading);
+		this.targetHeading = heading;
+		getPIDController().setSetpoint(this.targetHeading);
 	}
 }

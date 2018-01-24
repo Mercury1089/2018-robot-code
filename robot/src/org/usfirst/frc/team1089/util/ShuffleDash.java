@@ -25,7 +25,6 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
-
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
     }
 }

@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team1089.robot;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -10,6 +11,7 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
 
 import com.kauailabs.navx.frc.AHRS;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +26,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static PDP pdp;
 	public static AHRS navX;
+	//public static AnalogGyro analogGyro;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -40,10 +43,11 @@ public class Robot extends IterativeRobot {
 		pdp = new PDP();
 		
 		navX = new AHRS(SerialPort.Port.kUSB1);
+        //analogGyro = new AnalogGyro(Port#);
 
 		Robot.driveTrain.resetEncoders();
 
-		// This NEEDS to be on the bottom for everything to work.
+		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
 	}
 

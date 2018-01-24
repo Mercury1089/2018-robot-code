@@ -42,15 +42,15 @@ public class DriveDistance extends Command {
     }
 
 	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
-		this(0, percentVoltage);
+        this.percentVoltage = percentVoltage;
 		this.distanceSupplier = distanceSupplier;
-		if (distanceSupplier != null) {
-			this.distance = distanceSupplier.getAsDouble();
-		}
 	}
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        if (distanceSupplier != null) {
+            this.distance = distanceSupplier.getAsDouble();
+        }
         //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
 		endPosL = Robot.driveTrain.inchesToEncoderTicks(distance);
 

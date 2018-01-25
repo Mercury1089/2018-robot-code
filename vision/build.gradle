@@ -7,8 +7,11 @@ apply plugin: 'jaci.gradle.EmbeddedTools'
 // Reminder: full declaration of name, i.e.: include packages
 def mainClass = 'org.usfirst.frc.team1089.main.Main'
 
-// Name of the jarfile to deploy, if you want to
+// Name of the files to create on the pi
 def jarName = "vision"
+def runScriptName = "runVision"
+def killScriptName = "killVision"
+def logName = "visionLog"
 
 deploy {
     targets {
@@ -23,18 +26,24 @@ deploy {
     }
 
     artifacts {
+        // NOTE: Directory is relative to target directory
         javaArtifact('visionArtifact') {
             targets << 'rpi'
             filename = "${jarName}.jar"
             jar = 'jar'
 
             predeploy << {
+                execute './${killScriptName}'
                 execute 'rm -rf /home/pi/output'
             }
 
             postdeploy << {
-                execute "echo \"java -Djava.library.path=. -jar ${jarName}.jar\" >> /home/pi/output/runVision"
-                execute 'chmod 755 /home/pi/output/runVision'
+                def cmd = "java -Djava.library.path=. -jar ${jarName}.jar"
+
+                execute "echo \"${cmd}\" >> ${runScriptName}"
+                execute "echo \"pkill -f ${cmd}\" >> ${killScriptName}"
+                execute "chmod 755 ${runScriptName}"
+                execute "nohup ./${runScriptName} > /tmp/${logName} 2>&1 &"
             }
         }
 

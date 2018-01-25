@@ -85,10 +85,12 @@ public class RotateRelative extends PIDCommand {
             System.out.println("Output before: " + output);
 			output = 0;
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
-			output = -Math.signum(output) * MIN_PERCENT_VBUS;
+			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
 		System.out.println("Output after: " + output);
-        Robot.driveTrain.pidWrite(output);
+		//TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
+		//and remove the negation on the next line.
+        Robot.driveTrain.pidWrite(-output);
 	}
 	
 	protected void updateHeading(double heading) {

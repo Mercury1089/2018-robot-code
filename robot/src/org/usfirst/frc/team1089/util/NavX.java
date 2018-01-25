@@ -20,6 +20,8 @@ public class NavX extends AHRS implements Gyro {
         return;
     }
 
+    //TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have getAngle() return -super.getAngle();
+
     public double getAngle() {
         return super.getAngle();
     }

@@ -7,15 +7,8 @@ apply plugin: 'jaci.gradle.EmbeddedTools'
 // Reminder: full declaration of name, i.e.: include packages
 def mainClass = 'org.usfirst.frc.team1089.main.Main'
 
+// Name of the jarfile to deploy, if you want to
 def jarName = "vision"
-
-configurations {
-    vision
-}
-
-dependencies {
-    vision fileTree(dir: 'lib/natives', include: '*.so')
-}
 
 deploy {
     targets {
@@ -49,14 +42,14 @@ deploy {
         // Bad practice, I think.
         fileCollectionArtifact('nativeCollectionArtifact') {
             targets << 'rpi'
-            files = fileTree(dir: 'lib/natives', include: '*.so')      // Set the filecollection (e.g. filetree, files, etc) to deploy. Required
+            files = fileTree(dir: 'lib/natives', include: '*.so')
         }
     }
 }
 
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    // I need to set my manifest up so the coprocessor knows where my main class is
+    // Set up manifest to point the main class to the right class.
     manifest {
         attributes 'Main-Class': mainClass
     }

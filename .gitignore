@@ -16,6 +16,7 @@ tmp/
 .project
 /.idea
 .classpath
+**/lib/User_Libraries.properties
 
 # Toast/GradleRIO
 run/

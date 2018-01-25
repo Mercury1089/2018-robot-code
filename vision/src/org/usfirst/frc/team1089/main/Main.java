@@ -20,8 +20,8 @@ public class Main {
         final int FPS = 20;
 
         // This is the network port you want to stream the raw received image to
-        // By rules, this has to be between 1180 and 1190, so 1185 is a good choice
-        // To access the stream via GRIP: IP Camera >> http://10.10.89.20:<ip>/stream.mjpg
+        // By rules, this has to be between 1180 and 1190
+        // To access the stream via GRIP: IP Camera >> http://10.10.89.20:<port>/stream.mjpg
         final int PICAM_PORT = 1186;
         final int LIFECAM_PORT = 1187;
 
@@ -39,13 +39,16 @@ public class Main {
         //Our CvSink
         CvSink lifecamSink = new CvSink("CvSink_Lifecam");
 
+        //Our Grip Pipeline
+        Grip grip = new Grip();
+
         //Our NetworkTable
         //NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
 
         //Making the Settings for the lifecam
         lifecam.setResolution(Res_X, Res_Y);
         lifecam.setFPS(FPS);
-        lifecam.setBrightness(30);
+        lifecam.setBrightness(50);
         lifecam.setExposureManual(0);
 
         //Sets all of the various sources
@@ -75,7 +78,7 @@ public class Main {
                 System.out.println(Thread.currentThread().getName() + ": " + lifecamSink.getError());
                 continue;
             }
-
+            grip.process(img);
             img.release();
         }
     }

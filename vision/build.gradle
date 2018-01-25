@@ -13,6 +13,14 @@ def runScriptName = "runVision"
 def killScriptName = "killVision"
 def logName = "visionLog"
 
+configurations {
+    nativeLib
+}
+
+dependencies {
+    nativeLib fileTree(dir: 'lib/natives', include: '*.so')
+}
+
 deploy {
     targets {
         target('rpi') {
@@ -51,7 +59,7 @@ deploy {
         // Bad practice, I think.
         fileCollectionArtifact('nativeCollectionArtifact') {
             targets << 'rpi'
-            files = fileTree(dir: 'lib/natives', include: '*.so')
+            files = configurations.nativeLib
         }
     }
 }

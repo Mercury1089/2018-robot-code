@@ -18,8 +18,8 @@ public class ShuffleDash {
     private void updateDash() {
         SmartDashboard.putString("FMS Data", DriverStation.getInstance().getGameSpecificMessage());
         SmartDashboard.putString("Alliance Color", DriverStation.getInstance().getAlliance().toString());
-        if (Robot.navX != null)
-            SmartDashboard.putNumber("NavX Angle", Robot.navX.getAngle());
+        if (Robot.driveTrain.getGyro() != null)
+            SmartDashboard.putNumber("NavX Angle", Robot.driveTrain.getGyro().getAngle());
 
         SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));

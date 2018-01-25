@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 public class RotateRelative extends PIDCommand {
 
 	private double targetHeading;
-    private final double MIN_PERCENT_VBUS = 0.15;
+    private final double MIN_PERCENT_VBUS = 0.4;
 
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
@@ -18,9 +18,7 @@ public class RotateRelative extends PIDCommand {
 
 	/**
 	 * Constructs this command with a set degree to rotate.
-	 *
 	 * @param targetHeading the relative number of degrees to rotate by
-     * @param gyro Either the navX or the analog gyro.
 	 */
 	public RotateRelative(double targetHeading) {
 		super(0.060, 0.05, 0.5);
@@ -84,11 +82,13 @@ public class RotateRelative extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		if(getPIDController().onTarget()) {
+            System.out.println("Output before: " + output);
 			output = 0;
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
-			output = Math.signum(output) * MIN_PERCENT_VBUS;
+			output = -Math.signum(output) * MIN_PERCENT_VBUS;
 		}
-		Robot.driveTrain.pidWrite(output);
+		System.out.println("Output after: " + output);
+        Robot.driveTrain.pidWrite(output);
 	}
 	
 	protected void updateHeading(double heading) {

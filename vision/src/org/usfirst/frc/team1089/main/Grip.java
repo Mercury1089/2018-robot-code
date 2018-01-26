@@ -40,7 +40,7 @@ public class Grip {
     public void process(Mat source0) {
         // Step HSV_Threshold0:
         Mat hsvThresholdInput = source0;
-        double[] hsvThresholdHue = {14.568345323741006, 49.6969696969697};
+        double[] hsvThresholdHue = {16.0 , 75.0};
         double[] hsvThresholdSaturation = {199.9640287769784, 255.0};
         double[] hsvThresholdValue = {66.50179856115108, 149.82323232323233};
         hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
@@ -88,7 +88,14 @@ public class Grip {
      * @return ArrayList<MatOfPoint> output from Filter_Contours.
      */
     public ArrayList<MatOfPoint> filterContoursOutput() {
-        return filterContoursOutput;
+
+        contours.sort((MatOfPoint o1, MatOfPoint o2) -> {
+            Rect
+                    r1 = Imgproc.boundingRect(o1),
+                    r2 = Imgproc.boundingRect(o2);
+        }
+                    return filterContoursOutput;
+
     }
 
 
@@ -99,7 +106,7 @@ public class Grip {
      * @param hue The min and max hue
      * @param sat The min and max saturation
      * @param val The min and max value
-     * @param output The image in which to store the output.
+     * @param out The image in which to store the output.
      */
     private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
                               Mat out) {
@@ -178,7 +185,6 @@ public class Grip {
             output.add(contour);
         }
     }
-
 
 
 

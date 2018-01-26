@@ -49,8 +49,9 @@ deploy {
                 def cmd = "java -Djava.library.path=. -jar ${jarName}.jar"
 
                 execute "echo \"${cmd}\" >> ${runScriptName}"
-                execute "echo \"pkill -f ${cmd}\" >> ${killScriptName}"
+                execute "echo \"pkill -f \"${cmd}\"\" >> ${killScriptName}"
                 execute "chmod 755 ${runScriptName}"
+                execute "chmod 755 ${killScriptName}"
                 execute "nohup ./${runScriptName} > /tmp/${logName} 2>&1 &"
             }
         }
@@ -58,6 +59,7 @@ deploy {
         // Using a fileCollectionArtifact for deploying so's.
         // Bad practice, I think.
         fileCollectionArtifact('nativeCollectionArtifact') {
+            after('visionArtifact')
             targets << 'rpi'
             files = configurations.nativeLib
         }

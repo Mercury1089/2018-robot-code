@@ -42,7 +42,7 @@ public class RobotMap {
 	 */
 	public static class PWM {
 		public static final int
-				LIDAR = 1;
+				LIDAR = 0;
 
 		private PWM() { } // Should never be constructed.
 	}

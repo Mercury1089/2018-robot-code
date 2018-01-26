@@ -7,6 +7,7 @@ import com.ctre.phoenix.CANifier;
 public class LIDAR {
     private CANifier canifier;
     private CANifier.PWMChannel pwmChannel;
+    private final double[] PWM_INPUT = new double[2];
 
     /**
      * Creates a new LIDAR by defining both the CANifier PWM channel that the
@@ -20,7 +21,7 @@ public class LIDAR {
         canifier = new CANifier(deviceID);
         pwmChannel = channel;
 
-        canifier.enablePWMOutput(channel.value, true);
+        // canifier(channel.value, true);
     }
 
     /**
@@ -28,13 +29,11 @@ public class LIDAR {
      * @return the distance sensed from the LIDAR, in centimeters.
      */
     public double getDistance() {
-        double[] dutyCycle = new double[0];
-
         // returns [PWM Value, Period]
-        canifier.getPWMInput(pwmChannel, dutyCycle);
+        canifier.getPWMInput(pwmChannel, PWM_INPUT);
 
         // 10 us (microseconds) to 1 cm to 1 inch
-        return (dutyCycle[0]/10.0)/2.54;
+        return PWM_INPUT[0];
     }
 
 }

@@ -29,9 +29,20 @@ public class RobotMap {
 			TALON_DRIVETRAIN_FL = 4,
 			TALON_DRIVETRAIN_FR = 2,
 			TALON_DRIVETRAIN_BR = 1,
-			TALON_DRIVETRAIN_BL = 3;
+			TALON_DRIVETRAIN_BL = 3,
+			CANIFIER = 10;
 		
 		private CAN() { } // Should never be constructed.
+	}
+
+	/**
+	 * Class containing constants for PWM device channels
+	 */
+	public static class PWM {
+		public static final int
+				LIDAR = 2;
+
+		private PWM() { } // Should never be constructed.
 	}
 	
 	/**

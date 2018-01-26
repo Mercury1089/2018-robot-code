@@ -57,6 +57,7 @@ deploy {
 
         // Using a fileCollectionArtifact for deploying so's.
         // Bad practice, I think.
+
         fileCollectionArtifact('nativeCollectionArtifact') {
             targets << 'rpi'
             files = configurations.nativeLib

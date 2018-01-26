@@ -4,10 +4,12 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
-import org.usfirst.frc.team1089.robot.RobotMap.CAN;
-import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.robot.subsystems.PDP;
 import org.usfirst.frc.team1089.util.Config;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import org.usfirst.frc.team1089.robot.RobotMap.*;
+import org.usfirst.frc.team1089.robot.subsystems.*;
+
+import org.usfirst.frc.team1089.util.NavX;
 
 
 /**
@@ -20,6 +22,7 @@ import org.usfirst.frc.team1089.util.Config;
 public class Robot extends IterativeRobot {
 
 	public static DriveTrain driveTrain;
+	public static Manipulator manipulator;
 	public static OI oi;
 	public static PDP pdp;
 	public static final Config.RobotType robotType = Config.RobotType.SPEEDY_BOI;
@@ -38,6 +41,8 @@ public class Robot extends IterativeRobot {
                 );
 
 		pdp = new PDP();
+
+		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR);
 
 		Robot.driveTrain.resetEncoders();
 

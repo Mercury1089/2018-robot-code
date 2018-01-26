@@ -29,11 +29,22 @@ public class RobotMap {
             DRIVETRAIN_ML = 1,
 			DRIVETRAIN_MR = 2,
 			DRIVETRAIN_SL = 3,
-			DRIVETRAIN_SR = 4;
+			DRIVETRAIN_SR = 4,
+			CANIFIER = 10;
 
 		private CAN() { } // Should never be constructed.
 	}
-	
+
+	/**
+	 * Class containing constants for PWM device channels
+	 */
+	public static class PWM {
+		public static final int
+				LIDAR = 1;
+
+		private PWM() { } // Should never be constructed.
+	}
+
 	/**
 	 * Class containing constants for ports of the devices on the USB interface of the Driver Station.
 	 * Good for OI joystick ports and of the like.
@@ -43,7 +54,6 @@ public class RobotMap {
 			LEFT_STICK = 0,
 			RIGHT_STICK = 1,
 			GAMEPAD = 2;
-
 		
 		private DS_USB() { } // Should never be constructed.
 	}

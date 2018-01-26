@@ -23,5 +23,4 @@ public class MercMath {
 		
 		return val;
 	}
-
 }

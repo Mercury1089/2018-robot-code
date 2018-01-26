@@ -9,7 +9,6 @@ import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -44,10 +43,10 @@ public class MoveOnProfile extends Command {
 		numPoints = numberOfPoints;
 		
 
-		leftFront = Robot.driveTrain.getTalon(CAN.TALON_DRIVETRAIN_FL);
-		rightFront = Robot.driveTrain.getTalon(CAN.TALON_DRIVETRAIN_FR);
-		leftBack = Robot.driveTrain.getTalon(CAN.TALON_DRIVETRAIN_BL);
-		rightBack = Robot.driveTrain.getTalon(CAN.TALON_DRIVETRAIN_BR);
+		leftFront = Robot.driveTrain.getTalon(CAN.TALON_DRIVETRAIN_ML);
+		rightFront = Robot.driveTrain.getTalon(CAN.TALON_DRIVETRAIN_MR);
+		leftBack = Robot.driveTrain.getTalon(CAN.VICTOR_DRIVETRAIN_SL);
+		rightBack = Robot.driveTrain.getTalon(CAN.VICTOR_DRIVETRAIN_SR);
 		
 		requires(Robot.driveTrain);
 	}

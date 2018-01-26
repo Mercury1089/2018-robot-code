@@ -1,11 +1,10 @@
 
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+import org.usfirst.frc.team1089.util.Config;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.RobotMap.*;
 import org.usfirst.frc.team1089.robot.subsystems.*;
@@ -26,6 +25,7 @@ public class Robot extends IterativeRobot {
 	public static Manipulator manipulator;
 	public static OI oi;
 	public static PDP pdp;
+	public static final Config.RobotType robotType = Config.RobotType.THE_QUESTIONNAIRE;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -33,12 +33,26 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		driveTrain = new DriveTrain(
-				CAN.TALON_DRIVETRAIN_FL,
-				CAN.TALON_DRIVETRAIN_FR,
-				CAN.TALON_DRIVETRAIN_BL,
-				CAN.TALON_DRIVETRAIN_BR
-		);
+	    switch(robotType) {
+            case THE_QUESTIONNAIRE:
+                driveTrain = new DriveTrain(
+                        CAN.TALON_DRIVETRAIN_ML,
+                        CAN.TALON_DRIVETRAIN_MR,
+                        CAN.VICTOR_DRIVETRAIN_SL,
+                        CAN.VICTOR_DRIVETRAIN_SR
+                );
+                break;
+            case CROSS_SUPA_HOT_FIYA:
+            case PROTO_BOI:
+                driveTrain = new DriveTrain(
+                        CAN.TALON_DRIVETRAIN_ML,
+                        CAN.TALON_DRIVETRAIN_MR,
+                        CAN.TALON_DRIVETRAIN_SL,
+                        CAN.TALON_DRIVETRAIN_SR
+                );
+                break;
+        }
+
 		
 		pdp = new PDP();
 

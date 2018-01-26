@@ -15,10 +15,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
-import org.usfirst.frc.team1089.robot.commands.DriveTank;
-import org.usfirst.frc.team1089.util.Config;
 import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
@@ -59,12 +56,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
         switch(Robot.robotType) {
-            case THE_QUESTIONNAIRE:
+            case SPEEDY_BOI:
                 vSlaveLeft = new WPI_VictorSPX(bl);
                 vSlaveRight = new WPI_VictorSPX(br);
                 break;
-            case CROSS_SUPA_HOT_FIYA:
-            case PROTO_BOI:
+            case CROSSFIRE:
+            case PROTO_BOT:
                 vSlaveLeft = new WPI_TalonSRX(bl);
                 vSlaveRight = new WPI_TalonSRX(br);
                 break;
@@ -102,37 +99,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tMasterLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 		tMasterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 	}
-
-	/**
-	 * Gets the Talon based on the ID.
-	 *
-	 * @param id The device ID of the Talon.
-	 * @return The Talon bound to the ID port,
-	 *         or {@code null} if no drivetrain Talon was found.
-	 *
-	 * @see CAN RobotMap.CAN
-	 */
-	public TalonSRX getTalon(int id) {
-		switch(id) {
-			case CAN.TALON_DRIVETRAIN_ML:
-				return tMasterLeft;
-			case CAN.TALON_DRIVETRAIN_MR:
-				return tMasterRight;
-			default: // Not a drivetrain Talon!
-				return null;
-		}
-	}
-
-    public BaseMotorController getBack(int id) {
-        switch(id) {
-            case CAN.VICTOR_DRIVETRAIN_SR:
-                return vSlaveRight;
-            case CAN.VICTOR_DRIVETRAIN_SL:
-                return vSlaveLeft;
-            default:
-                return null;
-        }
-    }
 
     public TalonSRX getLeft() {
 		return tMasterLeft;
@@ -222,9 +188,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     /**
-     * TODO document this
+     * <pre>
+     *     public double ticksPerTenthToRevsPerMinute(double ticksPerTenthSecond)
+     * </pre>
+     * Returns value in revolutions per minute given ticks per tenth of a second.
      * @param ticksPerTenthSecond
-     * @return revs per minute
+     * @return Revs per minute
      */
     public double ticksPerTenthToRevsPerMinute(double ticksPerTenthSecond) {
 	    return ticksPerTenthSecond / MAG_ENCODER_TICKS_PER_REVOLUTION * 600;

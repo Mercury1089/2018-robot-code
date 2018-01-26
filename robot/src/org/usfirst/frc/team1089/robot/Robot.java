@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	public static Manipulator manipulator;
 	public static OI oi;
 	public static PDP pdp;
-	public static final Config.RobotType robotType = Config.RobotType.THE_QUESTIONNAIRE;
+	public static final Config.RobotType robotType = Config.RobotType.SPEEDY_BOI;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -33,27 +33,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-	    switch(robotType) {
-            case THE_QUESTIONNAIRE:
-                driveTrain = new DriveTrain(
-                        CAN.TALON_DRIVETRAIN_ML,
-                        CAN.TALON_DRIVETRAIN_MR,
-                        CAN.VICTOR_DRIVETRAIN_SL,
-                        CAN.VICTOR_DRIVETRAIN_SR
+	    driveTrain = new DriveTrain(
+	            CAN.DRIVETRAIN_ML,
+                CAN.DRIVETRAIN_MR,
+                CAN.DRIVETRAIN_SL,
+                CAN.DRIVETRAIN_SR
                 );
-                break;
-            case CROSS_SUPA_HOT_FIYA:
-            case PROTO_BOI:
-                driveTrain = new DriveTrain(
-                        CAN.TALON_DRIVETRAIN_ML,
-                        CAN.TALON_DRIVETRAIN_MR,
-                        CAN.TALON_DRIVETRAIN_SL,
-                        CAN.TALON_DRIVETRAIN_SR
-                );
-                break;
-        }
 
-		
 		pdp = new PDP();
 
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR);

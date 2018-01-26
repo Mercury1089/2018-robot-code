@@ -12,7 +12,7 @@ plugins {
 // Hacky shuffleboard fix
 configurations {
     shuffleboard {
-        description = 'shuffleboard app'
+        description = 'Shuffleboard app, automatically updated from Maven'
     }
 }
 dependencies {
@@ -45,9 +45,15 @@ subprojects {
     sourceSets.main.resources {
         srcDirs = ['src']; exclude '**/*.java'
     }
+    configurations {
+        config {
+            description = 'File configs'
+        }
+    }
 
     dependencies {
         compile fileTree(dir: 'lib', include: '*.jar')
+        config fileTree(dir: 'config', include: '*.properties')
     }
 }
 

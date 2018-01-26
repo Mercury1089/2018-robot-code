@@ -25,15 +25,28 @@ public class RobotMap {
 	 * Class containing constants for the ports of all CAN devices.
 	 */
 	public static class CAN {
-		public static final int 
-			TALON_DRIVETRAIN_FL = 4,
-			TALON_DRIVETRAIN_FR = 2,
-			TALON_DRIVETRAIN_BR = 1,
-			TALON_DRIVETRAIN_BL = 3;
+		public static final int
+            TALON_DRIVETRAIN_ML = 1,
+			TALON_DRIVETRAIN_MR = 2,
+			VICTOR_DRIVETRAIN_SL = 3,
+            TALON_DRIVETRAIN_SL = 3,
+			VICTOR_DRIVETRAIN_SR = 4,
+		    TALON_DRIVETRAIN_SR = 4,
+			CANIFIER = 10;
 		
 		private CAN() { } // Should never be constructed.
 	}
-	
+
+	/**
+	 * Class containing constants for PWM device channels
+	 */
+	public static class PWM {
+		public static final int
+				LIDAR = 1;
+
+		private PWM() { } // Should never be constructed.
+	}
+
 	/**
 	 * Class containing constants for ports of the devices on the USB interface of the Driver Station.
 	 * Good for OI joystick ports and of the like.

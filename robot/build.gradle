@@ -21,6 +21,12 @@ deploy {
         artifact('robotArtifact', FRCJavaArtifact) {
             targets << "roborio"
         }
+
+        fileCollectionArtifact('configCollectionArtifact') {
+            targets << 'roborio'
+            files = project.configurations.config
+            after('robotArtifact')
+        }
     }
 }
 

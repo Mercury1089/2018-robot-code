@@ -58,10 +58,18 @@ deploy {
 
         // Using a fileCollectionArtifact for deploying so's.
         // Bad practice, I think.
+
         fileCollectionArtifact('nativeCollectionArtifact') {
             after('visionArtifact')
             targets << 'rpi'
-            files = configurations.nativeLib
+            files = project.configurations.nativeLib
+            after('visionArtifact')
+        }
+
+        fileCollectionArtifact('configCollectionArtifact') {
+            targets << 'rpi'
+            files = project.configurations.config
+            after('visionArtifact')
         }
     }
 }

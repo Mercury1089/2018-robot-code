@@ -16,9 +16,11 @@ public class LIDAR {
      * @param deviceID ID of the CANifier
      * @param channel  PWMChannel of the LIDAR
      */
-    public LIDAR(int deviceID, CANifier.PWMChannel channel){
+    public LIDAR(int deviceID, CANifier.PWMChannel channel) {
         canifier = new CANifier(deviceID);
         pwmChannel = channel;
+
+        canifier.enablePWMOutput(channel.value, true);
     }
 
     /**

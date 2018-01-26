@@ -31,7 +31,8 @@ public class RobotMap {
 			VICTOR_DRIVETRAIN_SL = 3,
             TALON_DRIVETRAIN_SL = 3,
 			VICTOR_DRIVETRAIN_SR = 4,
-		    TALON_DRIVETRAIN_SR = 4;
+		    TALON_DRIVETRAIN_SR = 4,
+			CANIFIER = 10;
 		
 		private CAN() { } // Should never be constructed.
 	}

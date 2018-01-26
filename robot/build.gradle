@@ -42,6 +42,7 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
+    compile pathfinder()
     nativeLib fileTree(dir: 'lib', include: '*.so')
 }
 

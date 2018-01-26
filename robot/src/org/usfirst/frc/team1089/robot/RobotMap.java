@@ -26,13 +26,11 @@ public class RobotMap {
 	 */
 	public static class CAN {
 		public static final int
-            TALON_DRIVETRAIN_ML = 1,
-			TALON_DRIVETRAIN_MR = 2,
-			VICTOR_DRIVETRAIN_SL = 3,
-            TALON_DRIVETRAIN_SL = 3,
-			VICTOR_DRIVETRAIN_SR = 4,
-		    TALON_DRIVETRAIN_SR = 4;
-		
+            DRIVETRAIN_ML = 1,
+			DRIVETRAIN_MR = 2,
+			DRIVETRAIN_SL = 3,
+			DRIVETRAIN_SR = 4;
+
 		private CAN() { } // Should never be constructed.
 	}
 	
@@ -45,6 +43,7 @@ public class RobotMap {
 			LEFT_STICK = 0,
 			RIGHT_STICK = 1,
 			GAMEPAD = 2;
+
 		
 		private DS_USB() { } // Should never be constructed.
 	}

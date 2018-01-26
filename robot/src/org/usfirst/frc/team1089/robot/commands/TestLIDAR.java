@@ -6,7 +6,7 @@ import org.usfirst.frc.team1089.util.LIDAR;
 
 public class TestLIDAR extends Command {
     private LIDAR lidar;
-    public void TestLIDAR() {
+    public TestLIDAR() {
         requires(Robot.manipulator);
     }
 

@@ -11,6 +11,8 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
  * Helper class to interface with the Shuffleboard Dashboard.
  */
 public class ShuffleDash {
+    public double maxRevsPerMinRight = 0.0, maxRevsPerMinLeft = 0.0;
+
     public ShuffleDash() {
         new Notifier(this::updateDash).startPeriodic(0.050);
     }
@@ -26,5 +28,17 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
+        SmartDashboard.putNumber("Left Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
+        SmartDashboard.putNumber("Right Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
+
+        /*double recentRevsPerMinLeft = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
+        if(Math.abs(recentRevsPerMinLeft) > Math.abs(maxRevsPerMinLeft))
+            maxRevsPerMinLeft = Math.abs(recentRevsPerMinLeft);
+        double recentRevsPerMinRight = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
+        if(Math.abs(recentRevsPerMinRight) > Math.abs(maxRevsPerMinRight))
+            maxRevsPerMinRight = Math.abs(recentRevsPerMinRight);
+        SmartDashboard.putNumber("Left Max RPM", maxRevsPerMinLeft);
+        SmartDashboard.putNumber("Right Max RPM", maxRevsPerMinRight);*/
+
     }
 }

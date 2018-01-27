@@ -25,7 +25,10 @@ public class Robot extends IterativeRobot {
 	public static Manipulator manipulator;
 	public static OI oi;
 	public static PDP pdp;
-	public static final Config.RobotType robotType = Config.RobotType.SPEEDY_BOI;
+
+	static {
+		Config.initialize();
+	}
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -34,11 +37,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 	    driveTrain = new DriveTrain(
-	            CAN.DRIVETRAIN_ML,
-                CAN.DRIVETRAIN_MR,
-                CAN.DRIVETRAIN_SL,
-                CAN.DRIVETRAIN_SR
-                );
+			CAN.DRIVETRAIN_ML,
+			CAN.DRIVETRAIN_MR,
+			CAN.DRIVETRAIN_SL,
+			CAN.DRIVETRAIN_SR
+		);
 
 		pdp = new PDP();
 

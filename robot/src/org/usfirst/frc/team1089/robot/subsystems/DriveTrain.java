@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
+import org.usfirst.frc.team1089.util.Config;
 import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
@@ -55,16 +56,18 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
-        switch(Robot.robotType) {
-            case SPEEDY_BOI:
-                vSlaveLeft = new WPI_VictorSPX(bl);
-                vSlaveRight = new WPI_VictorSPX(br);
-                break;
-            case CROSSFIRE:
-            case PROTO_BOT:
+
+		// At this point it's based on what the layout is
+        switch(Config.getLayout()) {
+            case LEGACY:
                 vSlaveLeft = new WPI_TalonSRX(bl);
                 vSlaveRight = new WPI_TalonSRX(br);
                 break;
+			case DEFAULT:
+			default:
+				vSlaveLeft = new WPI_VictorSPX(bl);
+				vSlaveRight = new WPI_VictorSPX(br);
+				break;
         }
 
 		//Initialize the gyro that is currently on the robot. Comment out the initialization of the one not in use.

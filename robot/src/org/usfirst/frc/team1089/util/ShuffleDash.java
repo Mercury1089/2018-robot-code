@@ -12,7 +12,6 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
  */
 public class ShuffleDash {
     public double maxRevsPerMinRight = 0.0, maxRevsPerMinLeft = 0.0;
-
     public ShuffleDash() {
         new Notifier(this::updateDash).startPeriodic(0.050);
     }
@@ -30,7 +29,9 @@ public class ShuffleDash {
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
         SmartDashboard.putNumber("Left Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
         SmartDashboard.putNumber("Right Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
-        SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance(), 10));
+        SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[0], 10));
+
+        SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[1], 10));
 
         /*double recentRevsPerMinLeft = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         if(Math.abs(recentRevsPerMinLeft) > Math.abs(maxRevsPerMinLeft))

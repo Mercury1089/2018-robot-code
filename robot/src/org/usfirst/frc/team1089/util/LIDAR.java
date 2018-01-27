@@ -28,12 +28,16 @@ public class LIDAR {
      * Gets the distance from the LIDAR sensor
      * @return the distance sensed from the LIDAR, in centimeters.
      */
-    public double getDistance() {
+    public double[] getDistance() {
         // returns [PWM Value, Period]
         canifier.getPWMInput(pwmChannel, PWM_INPUT);
 
         // 10 us (microseconds) to 1 cm to 1 inch
-        return PWM_INPUT[0] / 10.0 / 2.54; // TODO: use a conversion method in MercMath
+        return new double[] {
+                PWM_INPUT[0] / 10.0 / 2.54,
+                PWM_INPUT[1]
+        }; // TODO: use a conversion method in MercMath
     }
+
 
 }

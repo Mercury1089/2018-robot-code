@@ -69,6 +69,10 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 			);
 		} catch (IllegalArgumentException e) { } // No layout exists with that name
 
+		DriveTrainLayout curLayout = DriveTrainLayout.valueOf(
+			Config.getInstance().getProperty("driveTrain.layout", "default").toUpperCase()
+		);
+
 		// At this point it's based on what the layout is
         switch(curLayout) {
             case LEGACY:

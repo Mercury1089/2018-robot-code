@@ -1,5 +1,8 @@
 import jaci.openrio.gradle.wpi.dependencies.WPIToolsPlugin
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 jar.baseName = 'MercuryWidgets'
 
 def shuffleboardLogDir = "/shuffleboard"

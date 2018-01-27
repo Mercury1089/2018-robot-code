@@ -15,6 +15,8 @@ public class Main {
         final String ROOT = "Vision";
         final Runtime RUNTIME = Runtime.getRuntime();
 
+
+
         final int Res_X = 640;
         final int Res_Y = 480;
         final int FPS = 20;
@@ -24,16 +26,18 @@ public class Main {
         // To access the stream via GRIP: IP Camera >> http://10.10.89.20:<port>/stream.mjpg
         final int PICAM_PORT = 1186;
         final int LIFECAM_PORT = 1187;
+        final int CONTOUR_PORT = 1188;
 
         // This stores our reference to our mjpeg server for streaming the input image
-        MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", LIFECAM_PORT);
-        MjpegServer picamOutputStream = new MjpegServer("PiCam_Out", PICAM_PORT);
+        MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", LIFECAM_PORT); //Large camera from microsoft
+        //MjpegServer picamOutputStream = new MjpegServer("PiCam_Out", PICAM_PORT);  //camera on Raspberry Pi
+        MjpegServer contourOutputStream = new MjpegServer("Contour_Out", CONTOUR_PORT); //output from the GRIP code contour finder
 
         //Our CvSource
         CvSource lifecamSource = new CvSource("lifecamSource", VideoMode.PixelFormat.kMJPEG, Res_X, Res_Y, FPS);
-
+        CvSource outputFeed = new CvSource("outputfeed", VideoMode.PixelFormat.kMJPEG, Res_X, Res_Y, FPS);
         //Our UsbCamera
-        UsbCamera picam = new UsbCamera("PiCam", 0);
+        //UsbCamera picam = new UsbCamera("PiCam", 0);
         UsbCamera lifecam = new UsbCamera("Lifecam_3000", 1);
 
         //Our CvSink
@@ -49,20 +53,24 @@ public class Main {
         lifecam.setResolution(Res_X, Res_Y);
         lifecam.setFPS(FPS);
         lifecam.setBrightness(50);
-        lifecam.setExposureManual(0);
+        lifecam.setExposureManual(50);
+
 
         //Sets all of the various sources
-        picamOutputStream.setSource(picam);
+        // picamOutputStream.setSource(picam);
 
         lifecamOutputStream.setSource(lifecam);
         lifecamSink.setSource(lifecam);
+
+        contourOutputStream.setSource(outputFeed);
 
         //Shutdown procedure
 
         RUNTIME.addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down...");
             lifecamOutputStream.free();
-            picamOutputStream.free();
+            // picamOutputStream.free();
+            contourOutputStream.free();
 
             lifecamSink.free();
             lifecamSource.free();
@@ -78,7 +86,9 @@ public class Main {
                 System.out.println(Thread.currentThread().getName() + ": " + lifecamSink.getError());
                 continue;
             }
+
             grip.process(img);
+            outputFeed.putFrame(img);
             img.release();
         }
     }

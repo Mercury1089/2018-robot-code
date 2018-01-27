@@ -15,9 +15,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
-import org.usfirst.frc.team1089.robot.commands.DriveTank;
 import org.usfirst.frc.team1089.util.Config;
 import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;
@@ -45,6 +43,11 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final double MAX_RPM_CROSSFIRE = 454.1;
     public static final double MAX_RPM = 0;
 
+	public enum DriveTrainLayout {
+		DEFAULT,
+		LEGACY;
+	}
+
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
 	 *
@@ -58,22 +61,30 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
-        switch(Robot.robotType) {
-            case THE_QUESTIONNAIRE:
-                vSlaveLeft = new WPI_VictorSPX(bl);
-                vSlaveRight = new WPI_VictorSPX(br);
-                break;
-            case CROSS_SUPA_HOT_FIYA:
-            case PROTO_BOI:
+		DriveTrainLayout curLayout = DriveTrainLayout.DEFAULT;
+
+		try {
+			curLayout = DriveTrainLayout.valueOf(
+					Config.getInstance().getProperty("driveTrain.layout", "default").toUpperCase().trim()
+			);
+		} catch (IllegalArgumentException e) { } // No layout exists with that name
+
+		// At this point it's based on what the layout is
+        switch(curLayout) {
+            case LEGACY:
                 vSlaveLeft = new WPI_TalonSRX(bl);
                 vSlaveRight = new WPI_TalonSRX(br);
                 break;
+			case DEFAULT:
+			default:
+				vSlaveLeft = new WPI_VictorSPX(bl);
+				vSlaveRight = new WPI_VictorSPX(br);
+				break;
         }
 
 		//Initialize the gyro that is currently on the robot. Comment out the initialization of the one not in use.
         navX = new NavX(SerialPort.Port.kUSB1);
         //analogGyro = new AnalogGyro(Port#);
-
 
 		//Account for motor orientation.
 		tMasterLeft.setInverted(true);
@@ -102,37 +113,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tMasterLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 		tMasterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 	}
-
-	/**
-	 * Gets the Talon based on the ID.
-	 *
-	 * @param id The device ID of the Talon.
-	 * @return The Talon bound to the ID port,
-	 *         or {@code null} if no drivetrain Talon was found.
-	 *
-	 * @see CAN RobotMap.CAN
-	 */
-	public TalonSRX getTalon(int id) {
-		switch(id) {
-			case CAN.TALON_DRIVETRAIN_ML:
-				return tMasterLeft;
-			case CAN.TALON_DRIVETRAIN_MR:
-				return tMasterRight;
-			default: // Not a drivetrain Talon!
-				return null;
-		}
-	}
-
-    public BaseMotorController getBack(int id) {
-        switch(id) {
-            case CAN.VICTOR_DRIVETRAIN_SR:
-                return vSlaveRight;
-            case CAN.VICTOR_DRIVETRAIN_SL:
-                return vSlaveLeft;
-            default:
-                return null;
-        }
-    }
 
     public TalonSRX getLeft() {
 		return tMasterLeft;
@@ -222,9 +202,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     /**
-     * TODO document this
+     * <pre>
+     *     public double ticksPerTenthToRevsPerMinute(double ticksPerTenthSecond)
+     * </pre>
+     * Returns value in revolutions per minute given ticks per tenth of a second.
      * @param ticksPerTenthSecond
-     * @return revs per minute
+     * @return Revs per minute
      */
     public double ticksPerTenthToRevsPerMinute(double ticksPerTenthSecond) {
 	    return ticksPerTenthSecond / MAG_ENCODER_TICKS_PER_REVOLUTION * 600;

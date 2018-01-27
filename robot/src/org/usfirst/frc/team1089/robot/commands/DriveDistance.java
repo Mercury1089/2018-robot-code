@@ -1,12 +1,9 @@
 package org.usfirst.frc.team1089.robot.commands;
 
-import org.usfirst.frc.team1089.robot.Robot;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.util.TalonDrive;
 
 import java.util.function.DoubleSupplier;
 
@@ -120,7 +117,7 @@ public class DriveDistance extends Command {
     	Robot.driveTrain.resetEncoders();
 
     	//The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
-		Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().maxOutput);
+		Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
     }
 
     // Called when another command which requires one or more of the same

@@ -1,9 +1,7 @@
 package org.usfirst.frc.team1089.util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -37,7 +35,15 @@ public class TalonDrive {
 	public void setMaxOutput(double max) {
 		maxOutput = max;
 	}
-	
+
+	/**
+	 * I'm just trying to get the code to compile sorry idk
+	 * @see TalonDrive#setMaxOutput(double)
+	 */
+	public double getMaxOutput() {
+		return maxOutput;
+	}
+
 	/**
 	 * Single stick driving. This is done by using one axis for forwards/backwards,
 	 * and another for turning right/left. This method allows direct input from any joystick

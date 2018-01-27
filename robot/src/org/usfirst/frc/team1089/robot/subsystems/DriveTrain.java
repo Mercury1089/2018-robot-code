@@ -43,6 +43,11 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final double MAX_RPM_CROSSFIRE = 454.1;
     public static final double MAX_RPM = 0;
 
+	public enum DriveTrainLayout {
+		DEFAULT,
+		LEGACY;
+	}
+
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
 	 *
@@ -56,9 +61,16 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
+		DriveTrainLayout curLayout = DriveTrainLayout.DEFAULT;
+
+		try {
+			curLayout = DriveTrainLayout.valueOf(
+					Config.getInstance().getProperty("driveTrain.layout", "default").toUpperCase().trim()
+			);
+		} catch (IllegalArgumentException e) { } // No layout exists with that name
 
 		// At this point it's based on what the layout is
-        switch(Config.getLayout()) {
+        switch(curLayout) {
             case LEGACY:
                 vSlaveLeft = new WPI_TalonSRX(bl);
                 vSlaveRight = new WPI_TalonSRX(br);
@@ -73,7 +85,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		//Initialize the gyro that is currently on the robot. Comment out the initialization of the one not in use.
         navX = new NavX(SerialPort.Port.kUSB1);
         //analogGyro = new AnalogGyro(Port#);
-
 
 		//Account for motor orientation.
 		tMasterLeft.setInverted(true);

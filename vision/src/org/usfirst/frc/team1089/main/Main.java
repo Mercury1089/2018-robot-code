@@ -21,7 +21,6 @@ public class Main {
     public static double[] boundsTotal = {-1, -1};
     public static double[] boundsTarget1 = {-1, 1};
     public static double[] boundsTarget2 = {-1, -1};
-
     public static final Scalar RED = new Scalar(255, 0, 0);
     public static final Scalar WHITE = new Scalar(255, 255, 255);
     public static final Scalar BLUE = new Scalar(0, 0, 255);
@@ -43,7 +42,6 @@ public class Main {
         MjpegServer contourOutputStream = new MjpegServer("Contour_Out", CONTOUR_PORT); //output from the GRIP code contour finder
 
         Mat img = new Mat();
-        Mat output = new Mat();
 
         // This stores our reference to our mjpeg server for streaming the input image
         MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", LIFECAM_PORT); //Large camera from microsoft
@@ -60,7 +58,7 @@ public class Main {
         CvSink lifecamSink = new CvSink("CvSink_Lifecam");
 
         //Our Grip Pipeline
-        Grip grip = new Grip();
+        GripPipeline grip = new GripPipeline();
 
         //Our NetworkTable
         //NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
@@ -103,45 +101,46 @@ public class Main {
 
             grip.process(img);
             ArrayList<MatOfPoint> contours = grip.filterContoursOutput();
-            contours.sort((MatOfPoint o1, MatOfPoint o2) -> {
-                Rect
-                        r1 = Imgproc.boundingRect(o1),
-                        r2 = Imgproc.boundingRect(o2);
-                return (int)Math.signum(r2.area() - r1.area());
-            });
 
-            if (contours.size() != 0) {
-                Rect
-                        target1 = Imgproc.boundingRect(contours.get(1)),
-                        target2 = Imgproc.boundingRect(contours.get(0));
+            if (contours.size() > 0) {
+                contours.sort((MatOfPoint o1, MatOfPoint o2) -> {
+                    Rect
+                            r1 = Imgproc.boundingRect(o1),
+                            r2 = Imgproc.boundingRect(o2);
+                    return (int)Math.signum(r2.area() - r1.area());
+                });
+
+                Rect target1 = Imgproc.boundingRect(contours.get(0));
 
                 Point topLeft = new Point(
-                        target1.x,
-                        target1.y < target2.y ? target1.y : target2.y
+                        target1.x - target1.width,
+                        target1.y
                 );
 
                 Point bottomRight = new Point(
-                        target2.x + target2.width,
-                        target1.y < target2.y ? target2.y + target2.height : target1.y + target1.height
-                );
-                Imgproc.rectangle(
-                        output,
-                        target1.br(),
-                        target1.tl(),
-                        Main.BLUE,
-                        LINE_THICKNESS
+                        target1.x - target1.width,
+                        target1.y - target1. height
                 );
 
+                boundsTotal[0] = bottomRight.x - topLeft.x;
+                boundsTotal[1] = bottomRight.y - topLeft.y;
+                boundsTarget1[0] = target1.br().x - target1.tl().x;
+                boundsTarget1[1] = target1.br().y - target1.tl().y;
+                centerTotal[0] = topLeft.x + boundsTotal[0] / 2;
+                centerTotal[1] = topLeft.y + boundsTotal[1] / 2;
+                centerTarget1[0] = target1.tl().x + target1.width / 2.0;
+                centerTarget1[1] = target1.tl().y + target1.height / 2.0;
+
                 Imgproc.rectangle(
-                        output,
-                        target2.br(),
-                        target2.tl(),
+                        img,
+                        target1.br(),
+                        target1.tl(),
                         BLUE,
                         LINE_THICKNESS
                 );
 
                 Imgproc.rectangle(
-                        output,
+                        img,
                         topLeft,
                         bottomRight,
                         RED,
@@ -149,7 +148,7 @@ public class Main {
                 );
 
                 Imgproc.line(
-                        output,
+                        img,
                         new Point(centerTotal[0], centerTotal[1] - 5),
                         new Point(centerTotal[0], centerTotal[1] + 5),
                         RED,
@@ -157,17 +156,15 @@ public class Main {
                 );
 
                 Imgproc.line(
-                        output,
+                        img,
                         new Point(centerTotal[0] - 5, centerTotal[1]),
                         new Point(centerTotal[0] + 5, centerTotal[1]),
                         RED,
                         LINE_THICKNESS
                 );
 
-
-                // Draw a midpoint
                 Imgproc.line(
-                        output,
+                        img,
                         new Point(Main.RES_X / 2.0, 50),
                         new Point(Main.RES_X / 2.0, Main.RES_Y - 50),
                         WHITE,
@@ -175,16 +172,15 @@ public class Main {
                 );
 
                 Imgproc.line(
-                        output,
+                        img,
                         new Point(50, Main.RES_Y / 2.0),
                         new Point(Main.RES_X - 50, Main.RES_Y / 2.0),
                         WHITE,
                         LINE_THICKNESS
                 );
-
-                outputFeed.putFrame(output);
-
             }
+
+            outputFeed.putFrame(img);
             img.release();
         }
     }

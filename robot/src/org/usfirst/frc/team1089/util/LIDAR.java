@@ -33,7 +33,7 @@ public class LIDAR {
         canifier.getPWMInput(pwmChannel, PWM_INPUT);
 
         // 10 us (microseconds) to 1 cm to 1 inch
-        return PWM_INPUT[0];
+        return PWM_INPUT[0] / 10.0 / 2.54; // TODO: use a conversion method in MercMath
     }
 
 }

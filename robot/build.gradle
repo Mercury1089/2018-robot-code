@@ -9,6 +9,9 @@ import jaci.openrio.gradle.ExternalLaunchTask
 def TEAM = 1089
 def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {

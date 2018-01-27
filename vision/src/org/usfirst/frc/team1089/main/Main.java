@@ -3,9 +3,28 @@ package org.usfirst.frc.team1089.main;
 import edu.wpi.cscore.*;
 import edu.wpi.first.networktables.*;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
+
 public class Main {
+    public static final int RES_X = 640;
+    public static final int RES_Y = 480;
+    public static final int FPS = 20;
+    private static final int LINE_THICKNESS = 2;
+    public static double[] centerTotal = {-1, -1};
+    public static double[] centerTarget1 = {-1, -1};
+    public static double[] centerTarget2 = {-1, -1};
+    public static double[] boundsTotal = {-1, -1};
+    public static double[] boundsTarget1 = {-1, 1};
+    public static double[] boundsTarget2 = {-1, -1};
+
+    public static final Scalar RED = new Scalar(255, 0, 0);
+    public static final Scalar WHITE = new Scalar(255, 255, 255);
+    public static final Scalar BLUE = new Scalar(0, 0, 255);
     public static void main(String[] args) {
         // Connect NetworkTables, and get access to the publishing table
 //        NetworkTableInstance nt = NetworkTableInstance.create();
@@ -15,27 +34,24 @@ public class Main {
         final String ROOT = "Vision";
         final Runtime RUNTIME = Runtime.getRuntime();
 
-
-
-        final int Res_X = 640;
-        final int Res_Y = 480;
-        final int FPS = 20;
-
         // This is the network port you want to stream the raw received image to
         // By rules, this has to be between 1180 and 1190
         // To access the stream via GRIP: IP Camera >> http://10.10.89.20:<port>/stream.mjpg
         final int PICAM_PORT = 1186;
         final int LIFECAM_PORT = 1187;
         final int CONTOUR_PORT = 1188;
+        MjpegServer contourOutputStream = new MjpegServer("Contour_Out", CONTOUR_PORT); //output from the GRIP code contour finder
+
+        Mat img = new Mat();
+        Mat output = new Mat();
 
         // This stores our reference to our mjpeg server for streaming the input image
         MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", LIFECAM_PORT); //Large camera from microsoft
         //MjpegServer picamOutputStream = new MjpegServer("PiCam_Out", PICAM_PORT);  //camera on Raspberry Pi
-        MjpegServer contourOutputStream = new MjpegServer("Contour_Out", CONTOUR_PORT); //output from the GRIP code contour finder
 
         //Our CvSource
-        CvSource lifecamSource = new CvSource("lifecamSource", VideoMode.PixelFormat.kMJPEG, Res_X, Res_Y, FPS);
-        CvSource outputFeed = new CvSource("outputfeed", VideoMode.PixelFormat.kMJPEG, Res_X, Res_Y, FPS);
+        CvSource lifecamSource = new CvSource("lifecamSource", VideoMode.PixelFormat.kMJPEG, RES_X, RES_Y, FPS);
+        CvSource outputFeed = new CvSource("outputfeed", VideoMode.PixelFormat.kMJPEG, RES_X, RES_Y, FPS);
         //Our UsbCamera
         //UsbCamera picam = new UsbCamera("PiCam", 0);
         UsbCamera lifecam = new UsbCamera("Lifecam_3000", 1);
@@ -50,7 +66,7 @@ public class Main {
         //NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
 
         //Making the Settings for the lifecam
-        lifecam.setResolution(Res_X, Res_Y);
+        lifecam.setResolution(RES_X, RES_Y);
         lifecam.setFPS(FPS);
         lifecam.setBrightness(50);
         lifecam.setExposureManual(50);
@@ -76,8 +92,6 @@ public class Main {
             lifecamSource.free();
             lifecam.free();
         }));
-
-        Mat img = new Mat();
         while (!Thread.interrupted()) {
 
             // Grab a frame. If it has a frame time of 0, the request timed out.
@@ -88,10 +102,93 @@ public class Main {
             }
 
             grip.process(img);
-            outputFeed.putFrame(img);
+            ArrayList<MatOfPoint> contours = grip.filterContoursOutput();
+            contours.sort((MatOfPoint o1, MatOfPoint o2) -> {
+                Rect
+                        r1 = Imgproc.boundingRect(o1),
+                        r2 = Imgproc.boundingRect(o2);
+                return (int)Math.signum(r2.area() - r1.area());
+            });
+
+            if (contours.size() != 0) {
+                Rect
+                        target1 = Imgproc.boundingRect(contours.get(1)),
+                        target2 = Imgproc.boundingRect(contours.get(0));
+
+                Point topLeft = new Point(
+                        target1.x,
+                        target1.y < target2.y ? target1.y : target2.y
+                );
+
+                Point bottomRight = new Point(
+                        target2.x + target2.width,
+                        target1.y < target2.y ? target2.y + target2.height : target1.y + target1.height
+                );
+                Imgproc.rectangle(
+                        output,
+                        target1.br(),
+                        target1.tl(),
+                        Main.BLUE,
+                        LINE_THICKNESS
+                );
+
+                Imgproc.rectangle(
+                        output,
+                        target2.br(),
+                        target2.tl(),
+                        BLUE,
+                        LINE_THICKNESS
+                );
+
+                Imgproc.rectangle(
+                        output,
+                        topLeft,
+                        bottomRight,
+                        RED,
+                        LINE_THICKNESS
+                );
+
+                Imgproc.line(
+                        output,
+                        new Point(centerTotal[0], centerTotal[1] - 5),
+                        new Point(centerTotal[0], centerTotal[1] + 5),
+                        RED,
+                        LINE_THICKNESS
+                );
+
+                Imgproc.line(
+                        output,
+                        new Point(centerTotal[0] - 5, centerTotal[1]),
+                        new Point(centerTotal[0] + 5, centerTotal[1]),
+                        RED,
+                        LINE_THICKNESS
+                );
+
+
+                // Draw a midpoint
+                Imgproc.line(
+                        output,
+                        new Point(Main.RES_X / 2.0, 50),
+                        new Point(Main.RES_X / 2.0, Main.RES_Y - 50),
+                        WHITE,
+                        LINE_THICKNESS
+                );
+
+                Imgproc.line(
+                        output,
+                        new Point(50, Main.RES_Y / 2.0),
+                        new Point(Main.RES_X - 50, Main.RES_Y / 2.0),
+                        WHITE,
+                        LINE_THICKNESS
+                );
+
+                outputFeed.putFrame(output);
+
+            }
             img.release();
         }
     }
+
 
 
     public static UsbCamera setUsbCamera(int cameraId, MjpegServer server) {

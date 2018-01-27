@@ -43,11 +43,15 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
+	    driveTrain.getTalonDrive().setMaxOutput(
+	    		(double) Config.getInstance().getOrDefault("driveTrain.maxOutput", 0.5)
+		);
+
+		driveTrain.resetEncoders();
+
 		pdp = new PDP();
 
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR);
-
-		Robot.driveTrain.resetEncoders();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

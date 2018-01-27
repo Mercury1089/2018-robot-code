@@ -20,16 +20,7 @@ public class Config {
         }
     }
 
-    public Properties getInstance() {
+    public static Properties getInstance() {
         return instance;
-    }
-
-    public static DriveTrainLayout getLayout() {
-        return DriveTrainLayout.valueOf(instance.getProperty("robot.layout", "default").toUpperCase());
-    }
-
-    public enum DriveTrainLayout {
-        DEFAULT,
-        LEGACY;
     }
 }

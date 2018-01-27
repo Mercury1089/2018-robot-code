@@ -43,6 +43,11 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final double MAX_RPM_CROSSFIRE = 454.1;
     public static final double MAX_RPM = 0;
 
+	public enum DriveTrainLayout {
+		DEFAULT,
+		LEGACY;
+	}
+
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
 	 *
@@ -57,8 +62,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
 
+		DriveTrainLayout curLayout = DriveTrainLayout.valueOf(
+			Config.getInstance().getProperty("driveTrain.layout", "default").toUpperCase()
+		);
+
 		// At this point it's based on what the layout is
-        switch(Config.getLayout()) {
+        switch(curLayout) {
             case LEGACY:
                 vSlaveLeft = new WPI_TalonSRX(bl);
                 vSlaveRight = new WPI_TalonSRX(br);

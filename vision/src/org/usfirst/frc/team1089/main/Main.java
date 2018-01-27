@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.main;
 
 import edu.wpi.cscore.*;
-import edu.wpi.first.networktables.*;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
@@ -21,9 +20,8 @@ public class Main {
     public static double[] boundsTotal = {-1, -1};
     public static double[] boundsTarget1 = {-1, 1};
     public static double[] boundsTarget2 = {-1, -1};
-    public static final Scalar RED = new Scalar(255, 0, 0);
-    public static final Scalar WHITE = new Scalar(255, 255, 255);
-    public static final Scalar BLUE = new Scalar(0, 0, 255);
+    public static final Scalar TARGET_COLOR = new Scalar(0, 0, 255);
+    public static final Scalar IMG_MARKUP_COLOR = new Scalar(255, 255, 255);
     public static void main(String[] args) {
         // Connect NetworkTables, and get access to the publishing table
 //        NetworkTableInstance nt = NetworkTableInstance.create();
@@ -133,33 +131,25 @@ public class Main {
 
                 Imgproc.rectangle(
                         img,
-                        target1.br(),
-                        target1.tl(),
-                        BLUE,
-                        LINE_THICKNESS
-                );
-
-                Imgproc.rectangle(
-                        img,
                         topLeft,
                         bottomRight,
-                        RED,
+                        TARGET_COLOR,
                         LINE_THICKNESS
                 );
 
                 Imgproc.line(
                         img,
-                        new Point(centerTotal[0], centerTotal[1] - 5),
-                        new Point(centerTotal[0], centerTotal[1] + 5),
-                        RED,
+                        new Point(centerTotal[0], centerTotal[1] - 10),
+                        new Point(centerTotal[0], centerTotal[1] + 10),
+                        TARGET_COLOR,
                         LINE_THICKNESS
                 );
 
                 Imgproc.line(
                         img,
-                        new Point(centerTotal[0] - 5, centerTotal[1]),
-                        new Point(centerTotal[0] + 5, centerTotal[1]),
-                        RED,
+                        new Point(centerTotal[0] - 10, centerTotal[1]),
+                        new Point(centerTotal[0] + 10, centerTotal[1]),
+                        TARGET_COLOR,
                         LINE_THICKNESS
                 );
 
@@ -167,7 +157,7 @@ public class Main {
                         img,
                         new Point(Main.RES_X / 2.0, 50),
                         new Point(Main.RES_X / 2.0, Main.RES_Y - 50),
-                        WHITE,
+                        IMG_MARKUP_COLOR,
                         LINE_THICKNESS
                 );
 
@@ -175,7 +165,7 @@ public class Main {
                         img,
                         new Point(50, Main.RES_Y / 2.0),
                         new Point(Main.RES_X - 50, Main.RES_Y / 2.0),
-                        WHITE,
+                        IMG_MARKUP_COLOR,
                         LINE_THICKNESS
                 );
             }

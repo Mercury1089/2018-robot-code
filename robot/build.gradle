@@ -12,11 +12,28 @@ def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+configurations {
+    trajectory {
+        description = "Trajectory files"
+    }
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
+// and NavX.
+dependencies {
+    compile wpilib()
+    compile ctre()
+    compile navx()
+    compile pathfinder()
+    nativeLib fileTree(dir: 'lib', include: '*.so')
+    trajectory fileTree(dir: 'trajectories', include: '*.csv')
+}
+
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
     targets {
-        target("roborio", RoboRIO) {
+        target('roborio', RoboRIO) {
             team = TEAM
         }
     }
@@ -28,6 +45,12 @@ deploy {
         fileCollectionArtifact('configCollectionArtifact') {
             targets << 'roborio'
             files = project.configurations.config
+            after('robotArtifact')
+        }
+
+        fileCollectionArtifact('trajectoryCollectionArtifact') {
+            targets << 'roborio'
+            files = project.configurations.trajectory
             after('robotArtifact')
         }
     }
@@ -43,16 +66,6 @@ task shuffleboard(overwrite: true) {
     doLast {
         System.out.println("Please see :shuffleboard for functioning tasks.")
     }
-}
-
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
-// and NavX.
-dependencies {
-    compile wpilib()
-    compile ctre()
-    compile navx()
-    compile pathfinder()
-    nativeLib fileTree(dir: 'lib', include: '*.so')
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

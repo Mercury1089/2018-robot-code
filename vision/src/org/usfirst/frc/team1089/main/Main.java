@@ -1,27 +1,33 @@
 package org.usfirst.frc.team1089.main;
 
 import edu.wpi.cscore.*;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1089.config.CscoreSettings;
+import org.usfirst.frc.team1089.config.PipelineSettings;
+import org.usfirst.frc.team1089.vision.BasicFilterPipeline;
+import org.usfirst.frc.team1089.vision.BoundingRect;
+import org.usfirst.frc.team1089.vision.Pipeline;
 
 import java.util.ArrayList;
 
 public class Main {
-    public static final int RES_X = 640;
-    public static final int RES_Y = 480;
-    public static final int FPS = 20;
     private static final int LINE_THICKNESS = 2;
     public static double[] centerTotal = {-1, -1};
-    public static double[] centerTarget1 = {-1, -1};
+    public static double[] center = {-1, -1};
     public static double[] centerTarget2 = {-1, -1};
     public static double[] boundsTotal = {-1, -1};
-    public static double[] boundsTarget1 = {-1, 1};
+    public static double[] bounds = {-1, 1};
     public static double[] boundsTarget2 = {-1, -1};
+
     public static final Scalar TARGET_COLOR = new Scalar(0, 0, 255);
     public static final Scalar IMG_MARKUP_COLOR = new Scalar(255, 255, 255);
+
+    static {
+        // Initialize configs beforehand
+        CscoreSettings.initialize();
+        PipelineSettings.initialize();
+    }
     public static void main(String[] args) {
         // Connect NetworkTables, and get access to the publishing table
 //        NetworkTableInstance nt = NetworkTableInstance.create();
@@ -31,63 +37,81 @@ public class Main {
         final String ROOT = "Vision";
         final Runtime RUNTIME = Runtime.getRuntime();
 
+        // Set resolution and fps of all output
+        int[] resolution = CscoreSettings.getResolution();
+        final int RES_X = resolution[0];
+        final int RES_Y = resolution[1];
+        final int FPS = CscoreSettings.getFPS();
+
         // This is the network port you want to stream the raw received image to
         // By rules, this has to be between 1180 and 1190
         // To access the stream via GRIP: IP Camera >> http://10.10.89.20:<port>/stream.mjpg
-        final int PICAM_PORT = 1186;
-        final int LIFECAM_PORT = 1187;
-        final int CONTOUR_PORT = 1188;
-        MjpegServer contourOutputStream = new MjpegServer("Contour_Out", CONTOUR_PORT); //output from the GRIP code contour finder
+        int[] piCamPorts = CscoreSettings.getPiCamPorts();
+        int[] lifeCamPorts = CscoreSettings.getLifeCamPorts();
 
-        Mat img = new Mat();
+        final int PORT_PICAM_RAW = piCamPorts[0];
+        final int PORT_LIFECAM_RAW = lifeCamPorts[0];
+        final int PORT_LIFECAM_MARKUP = lifeCamPorts[1];
 
         // This stores our reference to our mjpeg server for streaming the input image
-        MjpegServer lifecamOutputStream = new MjpegServer("Lifecam_Output_Stream", LIFECAM_PORT); //Large camera from microsoft
-        //MjpegServer picamOutputStream = new MjpegServer("PiCam_Out", PICAM_PORT);  //camera on Raspberry Pi
+        // NOTE: Lifecam 3000 is Microsoft's large camera
+        // NOTE: Pi Camera Module is the small camera connected by a ribbon cable
+        // NOTE: Output streams are needed to restream marked up images
+        MjpegServer lifecamRawServer = new MjpegServer("LIFECAM_RAW", PORT_LIFECAM_RAW);
+        MjpegServer lifecamMarkupServer = new MjpegServer("LIFECAM_MARKUP", PORT_LIFECAM_MARKUP);
+        //MjpegServer picamOutputStream = new MjpegServer("PiCam_Out", PICAM_PORT);
 
-        //Our CvSource
-        CvSource lifecamSource = new CvSource("lifecamSource", VideoMode.PixelFormat.kMJPEG, RES_X, RES_Y, FPS);
-        CvSource outputFeed = new CvSource("outputfeed", VideoMode.PixelFormat.kMJPEG, RES_X, RES_Y, FPS);
-        //Our UsbCamera
-        //UsbCamera picam = new UsbCamera("PiCam", 0);
+
+        // Our CvSources
+        // These just act as recievers to mats
+        CvSource lifecamMarkupSource = new CvSource("LIFECAM_MARKUP", VideoMode.PixelFormat.kMJPEG, RES_X, RES_Y, FPS);
+
+        // Our UsbCameras
+        // Defined just as they are.
+        // UsbCamera picam = new UsbCamera("PiCam", 0);
         UsbCamera lifecam = new UsbCamera("Lifecam_3000", 1);
 
-        //Our CvSink
+        // Our CvSink
         CvSink lifecamSink = new CvSink("CvSink_Lifecam");
 
-        //Our Grip Pipeline
-        GripPipeline grip = new GripPipeline();
+        // Our Pipeline
+        // It's made to be somewhat generic
+        Pipeline grip = new BasicFilterPipeline();
 
         //Our NetworkTable
         //NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
 
-        //Making the Settings for the lifecam
+        // Configuring lifecam settings
         lifecam.setResolution(RES_X, RES_Y);
         lifecam.setFPS(FPS);
         lifecam.setBrightness(50);
         lifecam.setExposureManual(50);
 
 
-        //Sets all of the various sources
-        // picamOutputStream.setSource(picam);
-
-        lifecamOutputStream.setSource(lifecam);
+        // Set sources to proper inputs.
+        // Raw servers get direct input from camera,
+        // Markup servers get input from CvSources feeding them marked up mats
+        lifecamRawServer.setSource(lifecam);
         lifecamSink.setSource(lifecam);
 
-        contourOutputStream.setSource(outputFeed);
+        lifecamMarkupServer.setSource(lifecamMarkupSource);
 
-        //Shutdown procedure
-
+        // Shutdown hook to release all the occupied resources.
+        // Keeps the pi from exploding.
         RUNTIME.addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down...");
-            lifecamOutputStream.free();
+            lifecamRawServer.free();
             // picamOutputStream.free();
-            contourOutputStream.free();
+            lifecamMarkupServer.free();
 
             lifecamSink.free();
-            lifecamSource.free();
+            lifecamMarkupSource.free();
             lifecam.free();
         }));
+
+        Mat img = new Mat();
+        ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+
         while (!Thread.interrupted()) {
 
             // Grab a frame. If it has a frame time of 0, the request timed out.
@@ -97,10 +121,31 @@ public class Main {
                 continue;
             }
 
+            // Process the image.
             grip.process(img);
-            ArrayList<MatOfPoint> contours = grip.filterContoursOutput();
+            grip.output(contours);
 
+            // Regardless of whether or not we see anything, we still want to see
+            // what we consider the center of the screen.
+            Imgproc.line(
+                    img,
+                    new Point(RES_X / 2.0, 80),
+                    new Point(RES_X / 2.0, RES_Y - 80),
+                    IMG_MARKUP_COLOR,
+                    LINE_THICKNESS
+            );
+
+            Imgproc.line(
+                    img,
+                    new Point(80, RES_Y / 2.0),
+                    new Point(RES_X - 80, RES_Y / 2.0),
+                    IMG_MARKUP_COLOR,
+                    LINE_THICKNESS
+            );
+
+            // Only do this part if there are contours to even look at
             if (contours.size() > 0) {
+                // Sort the contours by area
                 contours.sort((MatOfPoint o1, MatOfPoint o2) -> {
                     Rect
                             r1 = Imgproc.boundingRect(o1),
@@ -108,81 +153,51 @@ public class Main {
                     return (int)Math.signum(r2.area() - r1.area());
                 });
 
-                Rect target1 = Imgproc.boundingRect(contours.get(0));
+                // Just get the bounding rect from the first (largest) target.
+                // Don't think about it too hard.
+                BoundingRect target1 = new BoundingRect(Imgproc.boundingRect(contours.get(0)));
 
-                Point topLeft = new Point(
-                        target1.x - target1.width,
-                        target1.y
-                );
-
-                Point bottomRight = new Point(
-                        target1.x - target1.width,
-                        target1.y - target1. height
-                );
-
-                boundsTotal[0] = bottomRight.x - topLeft.x;
-                boundsTotal[1] = bottomRight.y - topLeft.y;
-                boundsTarget1[0] = target1.br().x - target1.tl().x;
-                boundsTarget1[1] = target1.br().y - target1.tl().y;
-                centerTotal[0] = topLeft.x + boundsTotal[0] / 2;
-                centerTotal[1] = topLeft.y + boundsTotal[1] / 2;
-                centerTarget1[0] = target1.tl().x + target1.width / 2.0;
-                centerTarget1[1] = target1.tl().y + target1.height / 2.0;
-
-                Imgproc.rectangle(
-                        img,
-                        topLeft,
-                        bottomRight,
-                        TARGET_COLOR,
-                        LINE_THICKNESS
-                );
-
-                Imgproc.line(
-                        img,
-                        new Point(centerTotal[0], centerTotal[1] - 10),
-                        new Point(centerTotal[0], centerTotal[1] + 10),
-                        TARGET_COLOR,
-                        LINE_THICKNESS
-                );
-
-                Imgproc.line(
-                        img,
-                        new Point(centerTotal[0] - 10, centerTotal[1]),
-                        new Point(centerTotal[0] + 10, centerTotal[1]),
-                        TARGET_COLOR,
-                        LINE_THICKNESS
-                );
-
-                Imgproc.line(
-                        img,
-                        new Point(Main.RES_X / 2.0, 50),
-                        new Point(Main.RES_X / 2.0, Main.RES_Y - 50),
-                        IMG_MARKUP_COLOR,
-                        LINE_THICKNESS
-                );
-
-                Imgproc.line(
-                        img,
-                        new Point(50, Main.RES_Y / 2.0),
-                        new Point(Main.RES_X - 50, Main.RES_Y / 2.0),
-                        IMG_MARKUP_COLOR,
-                        LINE_THICKNESS
-                );
+                // Draw the contours
+                drawContours(img, target1);
             }
 
-            outputFeed.putFrame(img);
+            // Restream the marked up image
+            // then release the resources within the mat
+            lifecamMarkupSource.putFrame(img);
             img.release();
         }
     }
 
+    /**
+     * Draws the bounding boxes of all the contours in the image.
+     * @param img        the mat to draw on
+     * @param rectangles the rectangles to mark up onto the mat
+     */
+    private static void drawContours(Mat img, BoundingRect... rectangles) {
+        for (BoundingRect rect : rectangles) {
+            Imgproc.rectangle(
+                    img,
+                    rect.tl(),
+                    rect.br(),
+                    TARGET_COLOR,
+                    LINE_THICKNESS
+            );
 
+            Imgproc.line(
+                    img,
+                    new Point(rect.getCenterX(), rect.getCenterY() - 10),
+                    new Point(rect.getCenterX(), rect.getCenterY() + 10),
+                    TARGET_COLOR,
+                    LINE_THICKNESS
+            );
 
-    public static UsbCamera setUsbCamera(int cameraId, MjpegServer server) {
-        // This gets the image from a USB camera
-        // Usually this will be on device 0, but there are other overloads
-        // that can be used
-        UsbCamera camera = new UsbCamera("CoprocessorCamera", cameraId);
-        server.setSource(camera);
-        return camera;
+            Imgproc.line(
+                    img,
+                    new Point(rect.getCenterX() - 10, rect.getCenterY()),
+                    new Point(rect.getCenterX() + 10, rect.getCenterY()),
+                    TARGET_COLOR,
+                    LINE_THICKNESS
+            );
+        }
     }
 }

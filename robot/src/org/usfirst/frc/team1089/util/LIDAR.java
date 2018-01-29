@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.util;
 import com.ctre.phoenix.CANifier;
 
+
 /**
  * Wrapper class for the entire LIDAR system that we are using to check for distance.
  */
@@ -8,6 +9,11 @@ public class LIDAR {
     private CANifier canifier;
     private CANifier.PWMChannel pwmChannel;
     private final double[] PWM_INPUT = new double[2];
+    private LidarNum lidarNum;
+
+    private final double COEFFICIENT, CONSTANT;
+
+    public enum LidarNum {ONE, TWO};
 
     /**
      * Creates a new LIDAR by defining both the CANifier PWM channel that the
@@ -17,9 +23,25 @@ public class LIDAR {
      * @param deviceID ID of the CANifier
      * @param channel  PWMChannel of the LIDAR
      */
-    public LIDAR(int deviceID, CANifier.PWMChannel channel) {
+    public LIDAR(int deviceID, CANifier.PWMChannel channel, LidarNum lidarNum) {
         canifier = new CANifier(deviceID);
         pwmChannel = channel;
+        this.lidarNum = lidarNum;
+
+        switch (lidarNum) {
+            case ONE:
+                CONSTANT = -5.55;
+                COEFFICIENT = 1.0;
+                break;
+            case TWO:
+                CONSTANT = -4.67;
+                COEFFICIENT = 1.02;
+                break;
+            default:
+                CONSTANT = 0.0;
+                COEFFICIENT = 0.0;
+                break;
+        }
 
         // canifier(channel.value, true);
     }
@@ -39,5 +61,16 @@ public class LIDAR {
         }; // TODO: use a conversion method in MercMath
     }
 
+    public double getfixedDistance() {
+        return fixDistance(getDistance()[0]);
+    }
 
+    public double fixDistance(double rawVal) {
+        double newVal;
+
+        //Equations are based of lines of best fit calculated from Luke's amazing data
+        newVal = COEFFICIENT * rawVal + CONSTANT;
+
+        return newVal;
+    }
 }

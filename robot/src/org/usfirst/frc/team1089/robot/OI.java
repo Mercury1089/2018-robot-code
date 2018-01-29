@@ -78,7 +78,7 @@ public class OI {
 		left_1 = new JoystickButton(leftStick, 1);
 		left_1.whenPressed(new RotateRelative(90));
 		left_2 = new JoystickButton(leftStick, 2);
-		left_2.whenPressed(new DriveDistance(24.0, .5));
+		left_2.whenPressed(new DriveDistance(24.0, .12));
 		left_3 = new JoystickButton(leftStick,3);
 
 		gamepad_a = new JoystickButton(gamepad, 1);

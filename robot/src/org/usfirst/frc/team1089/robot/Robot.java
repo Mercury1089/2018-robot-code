@@ -43,8 +43,10 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
+	    String maxOut = Config.getInstance().getProperty("driveTrain.maxOutput", "1.0");
+
 	    driveTrain.getTalonDrive().setMaxOutput(
-	    		(double) Config.getInstance().getOrDefault("driveTrain.maxOutput", 0.5)
+	    		Double.parseDouble(maxOut)
 		);
 
 		driveTrain.resetEncoders();

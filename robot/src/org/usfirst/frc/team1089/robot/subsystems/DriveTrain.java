@@ -37,11 +37,13 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     private NavX navX;
     private AnalogGyro analogGyro;
 
-	public static final double WHEEL_DIAMETER_INCHES = 4.0 ;
-	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096; //TODO Old Crossfire values
-	public static final double GEAR_RATIO = 1.0;                      //TODO Old Crossfire values
+	public static double WHEEL_DIAMETER_INCHES;
+	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096;
+	public static final double GEAR_RATIO = 1.0;
     public static final double MAX_RPM_CROSSFIRE = 454.1;
-    public static final double MAX_RPM = 0;
+    public static final double MAX_RPM_SPEEDY_BOI = 700.63;
+
+    public DriveTrainLayout curLayout;
 
 	public enum DriveTrainLayout {
 		DEFAULT,
@@ -61,7 +63,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
-		DriveTrainLayout curLayout = DriveTrainLayout.DEFAULT;
+		curLayout = DriveTrainLayout.DEFAULT;
 
 		try {
 			curLayout = DriveTrainLayout.valueOf(
@@ -74,9 +76,11 @@ public class DriveTrain extends Subsystem implements PIDOutput {
             case LEGACY:
                 vSlaveLeft = new WPI_TalonSRX(bl);
                 vSlaveRight = new WPI_TalonSRX(br);
+                WHEEL_DIAMETER_INCHES = 4.0;
                 break;
 			case DEFAULT:
 			default:
+				WHEEL_DIAMETER_INCHES = 5.0;
 				vSlaveLeft = new WPI_VictorSPX(bl);
 				vSlaveRight = new WPI_VictorSPX(br);
 				break;
@@ -215,7 +219,17 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
     public double getFeedForward() {
         final int MAX_MOTOR_OUTPUT = 1023;
-        final double NATIVE_UNITS_PER_100 = MAX_RPM * 1/600 * MAG_ENCODER_TICKS_PER_REVOLUTION;
+        double rpm;
+        switch(curLayout) {
+			case LEGACY:
+				rpm = MAX_RPM_CROSSFIRE;
+				break;
+			case DEFAULT:
+			default:
+				rpm = MAX_RPM_SPEEDY_BOI;
+				break;
+		}
+        final double NATIVE_UNITS_PER_100 = rpm * 1/600 * MAG_ENCODER_TICKS_PER_REVOLUTION;
         return MAX_MOTOR_OUTPUT/NATIVE_UNITS_PER_100;
     }
 

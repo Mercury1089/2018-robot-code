@@ -4,9 +4,12 @@ import edu.wpi.cscore.*;
 import org.usfirst.frc.team1089.config.CscoreSettings;
 import org.usfirst.frc.team1089.config.OpenCVSettings;
 import org.usfirst.frc.team1089.vision.BasicFilterPipeline;
-import org.usfirst.frc.team1089.vision.Pipeline;
 import org.usfirst.frc.team1089.vision.VisionTask;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -109,7 +112,9 @@ public class Main {
                     System.out.print('.');
                     Thread.sleep(1000);
                 } catch (Exception e) {
-
+                    // Might be a good idea to catch an interruption exception
+                    // or something of that nature.
+                    e.printStackTrace();
                 }
             }
             System.out.println("\n Goodbye.");

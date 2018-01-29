@@ -1,21 +1,11 @@
 package org.usfirst.frc.team1089.vision;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.HashMap;
 
 import org.opencv.core.*;
-import org.opencv.core.Core.*;
-import org.opencv.features2d.FeatureDetector;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
-import org.opencv.objdetect.*;
-import org.usfirst.frc.team1089.config.PipelineSettings;
+import org.usfirst.frc.team1089.config.OpenCVSettings;
 
 /**
  * Basic pipeline that filters a color
@@ -36,9 +26,9 @@ public class BasicFilterPipeline implements Pipeline<Mat, ArrayList<MatOfPoint>>
     public void process(Mat source0) {
         // Step HSV_Threshold0:
         Mat hsvThresholdInput = source0;
-        double[] hsvThresholdHue = PipelineSettings.getHSVThresholdHue();
-        double[] hsvThresholdSaturation = PipelineSettings.getHSVThresholdSat();
-        double[] hsvThresholdValue = PipelineSettings.getHSVThresholdVal();
+        double[] hsvThresholdHue = OpenCVSettings.getHSVThresholdHue();
+        double[] hsvThresholdSaturation = OpenCVSettings.getHSVThresholdSat();
+        double[] hsvThresholdValue = OpenCVSettings.getHSVThresholdVal();
         hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
         // Step Find_Contours0:
@@ -50,11 +40,11 @@ public class BasicFilterPipeline implements Pipeline<Mat, ArrayList<MatOfPoint>>
         ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
         double filterContoursMinArea = 500.0;
         double filterContoursMinPerimeter = 0.0;
-        double[] filterContoursWidth = PipelineSettings.getContoursFilterWidth();
-        double[] filterContoursHeight = PipelineSettings.getContoursFilterHeight();
-        double[] filterContoursSolidity = PipelineSettings.getContoursFilterSolidity();
-        double[] filterContoursVertices = PipelineSettings.getContoursFilterVertices();
-        double[] filterContoursRatio = PipelineSettings.getContoursFilterRatio();
+        double[] filterContoursWidth = OpenCVSettings.getContoursFilterWidth();
+        double[] filterContoursHeight = OpenCVSettings.getContoursFilterHeight();
+        double[] filterContoursSolidity = OpenCVSettings.getContoursFilterSolidity();
+        double[] filterContoursVertices = OpenCVSettings.getContoursFilterVertices();
+        double[] filterContoursRatio = OpenCVSettings.getContoursFilterRatio();
         filterContours(
                 filterContoursContours,
                 filterContoursMinArea,

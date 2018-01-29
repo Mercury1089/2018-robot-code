@@ -1,21 +1,23 @@
 package org.usfirst.frc.team1089.config;
 
+import org.opencv.core.Scalar;
+
 import java.util.Properties;
 
 /**
- * Settings pertaining specifically to the vision pipeline.
+ * Settings pertaining specifically to OpenCV processing.
  */
-public class PipelineSettings extends Config {
+public class OpenCVSettings extends Config {
     private static Properties instance;
     private static String ARRAY_DELIM = ",";
 
     public static void initialize() {
-        initialize("pipeline.properties");
+        initialize("opencv.properties");
         instance = getInstance();
     }
 
     /**
-     * Parses the {@code hsv.hue} property in the pipeline config
+     * Parses the {@code hsv.hue} property in the opencv config
      * and gets the threshold for the hue
      *
      * @return array containing min and max of hue, from 0 to 180
@@ -32,7 +34,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code hsv.saturation} property in the pipeline config
+     * Parses the {@code hsv.saturation} property in the opencv config
      * and gets the threshold for the saturation
      *
      * @return array containing min and max of saturation, from 0 to 100
@@ -50,7 +52,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code hsv.value} property in the pipeline config
+     * Parses the {@code hsv.value} property in the opencv config
      * and gets the threshold for the value
      *
      * @return array containing min and max of value, between 0 and 255
@@ -67,7 +69,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.area} property in the pipeline config
+     * Parses the {@code contours.area} property in the opencv config
      * and gets the minimum contour area.
      *
      * @return minimum area size threshold
@@ -77,7 +79,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.area} property in the pipeline config
+     * Parses the {@code contours.area} property in the opencv config
      * and gets the minimum contour perimeter.
      *
      * @return minimum perimeter length threshold
@@ -87,7 +89,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.width} property in the pipeline config
+     * Parses the {@code contours.width} property in the opencv config
      * and gets the threshold for the contour widths
      *
      * @return array containing min and max of contour widths
@@ -104,7 +106,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.height} property in the pipeline config
+     * Parses the {@code contours.height} property in the opencv config
      * and gets the threshold for the contour heights
      *
      * @return array containing min and max of contour heights
@@ -121,7 +123,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.solidity} property in the pipeline config
+     * Parses the {@code contours.solidity} property in the opencv config
      * and gets the threshold for the contour solidity
      *
      * @return array containing min and max of contour solidity, from 0 to 100
@@ -138,7 +140,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.ratio} property in the pipeline config
+     * Parses the {@code contours.ratio} property in the opencv config
      * and gets the threshold for the contour ratio (height to width)
      *
      * @return array containing min and max of contour ratio
@@ -155,7 +157,7 @@ public class PipelineSettings extends Config {
     }
 
     /**
-     * Parses the {@code contours.vertices} property in the pipeline config
+     * Parses the {@code contours.vertices} property in the opencv config
      * and gets the threshold for the contour vertices count
      *
      * @return array containing min and max of contour vertices
@@ -169,5 +171,50 @@ public class PipelineSettings extends Config {
         }
 
         return range;
+    }
+
+    /**
+     * Parses the {@code markup.strokeWidth} property in the opencv config
+     * and gets the pixel width for the line stroke
+     *
+     * @return int value for stroke width
+     */
+    public static int getStrokeWidth() {
+        return (Integer)instance.getOrDefault("markup.strokeWidth", 500);
+    }
+    /**
+     * Parses the {@code markup.boundsColor} property in the opencv config
+     * and gets the BGR values for the bounds color
+     *
+     * @return scalar representing BGR values for bounds color
+     */
+    public static Scalar getBoundsColor() {
+        String[] rangeString = parseArrayValue("markup.targetColor", ARRAY_DELIM);
+        double[] color = {0, 0, 255};
+        if (rangeString.length == 3) {
+            color[0] = Double.parseDouble(rangeString[0].trim());
+            color[1] = Double.parseDouble(rangeString[1].trim());
+            color[2] = Double.parseDouble(rangeString[2].trim());
+        }
+
+        return new Scalar(color);
+    }
+
+    /**
+     * Parses the {@code markup.crosshairColor} property in the opencv config
+     * and gets the BGR values for the crosshair color
+     *
+     * @return scalar representing BGR values for crosshair color
+     */
+    public static Scalar getCrosshairColor() {
+        String[] rangeString = parseArrayValue("markup.boundsColor", ARRAY_DELIM);
+        double[] color = {0, 0, 255};
+        if (rangeString.length == 3) {
+            color[0] = Double.parseDouble(rangeString[0].trim());
+            color[1] = Double.parseDouble(rangeString[1].trim());
+            color[2] = Double.parseDouble(rangeString[2].trim());
+        }
+
+        return new Scalar(color);
     }
 }

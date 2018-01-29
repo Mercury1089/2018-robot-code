@@ -76,4 +76,22 @@ public class CscoreSettings extends Config {
 
         return ports;
     }
+
+    /**
+     * Gets the device ID for the Pi Camera
+     *
+     * @return int value of device id
+     */
+    public static int getPiCameraID() {
+        return (Integer)instance.getOrDefault("picam.id", "1");
+    }
+
+    /**
+     * Gets the device ID for the Lifecam 3000
+     *
+     * @return int value of device id
+     */
+    public static int getLifecamID() {
+        return (Integer)instance.getOrDefault("lifecam.id", "1");
+    }
 }

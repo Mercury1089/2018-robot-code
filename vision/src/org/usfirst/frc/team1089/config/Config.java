@@ -36,7 +36,7 @@ public abstract class Config {
      *         or a string array with only "" if there is nothing.
      */
     protected static String[] parseArrayValue(String key, String delimiter) {
-        String[] arr = instance.getProperty(key).split(delimiter);
+        String[] arr = instance.getProperty(key, "").split(delimiter);
 
         if (arr.length == 0)
             return new String[] {""};

@@ -24,7 +24,7 @@ public class OpenCVSettings extends Config {
      */
     public static double[] getHSVThresholdHue() {
         String[] rangeString = parseArrayValue("hsv.hue", ARRAY_DELIM);
-        double[] range = {20, 40};
+        double[] range = {15, 45};
         if (rangeString.length == 2) {
             range[0] = Double.parseDouble(rangeString[0].trim());
             range[1] = Double.parseDouble(rangeString[1].trim());
@@ -42,7 +42,7 @@ public class OpenCVSettings extends Config {
     public static double[] getHSVThresholdSat() {
         String[] rangeString = parseArrayValue("hsv.saturation", ARRAY_DELIM);
 
-        double[] range = {200, 255};
+        double[] range = {195, 255};
         if (rangeString.length == 2) {
             range[0] = Double.parseDouble(rangeString[0].trim());
             range[1] = Double.parseDouble(rangeString[1].trim());
@@ -59,7 +59,7 @@ public class OpenCVSettings extends Config {
      */
     public static double[] getHSVThresholdVal() {
         String[] rangeString = parseArrayValue("hsv.value", ARRAY_DELIM);
-        double[] range = {67, 150};
+        double[] range = {155, 255};
         if (rangeString.length == 2) {
             range[0] = Double.parseDouble(rangeString[0].trim());
             range[1] = Double.parseDouble(rangeString[1].trim());
@@ -180,7 +180,9 @@ public class OpenCVSettings extends Config {
      * @return int value for stroke width
      */
     public static int getStrokeWidth() {
-        return (Integer)instance.getOrDefault("markup.strokeWidth", 500);
+        String value = instance.getProperty("markup.strokeWidth", "1");
+
+        return Integer.parseInt(value);
     }
     /**
      * Parses the {@code markup.boundsColor} property in the opencv config
@@ -208,7 +210,7 @@ public class OpenCVSettings extends Config {
      */
     public static Scalar getCrosshairColor() {
         String[] rangeString = parseArrayValue("markup.boundsColor", ARRAY_DELIM);
-        double[] color = {0, 0, 255};
+        double[] color = {255, 255, 255};
         if (rangeString.length == 3) {
             color[0] = Double.parseDouble(rangeString[0].trim());
             color[1] = Double.parseDouble(rangeString[1].trim());

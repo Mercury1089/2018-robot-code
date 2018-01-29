@@ -30,6 +30,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Left Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
         SmartDashboard.putNumber("Right Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
         SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[0], 10));
+        SmartDashboard.putNumber("LIDAR Fixed Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getfixedDistance(), 10));
 
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[1], 10));
 

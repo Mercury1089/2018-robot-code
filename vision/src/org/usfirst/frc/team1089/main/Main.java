@@ -4,12 +4,9 @@ import edu.wpi.cscore.*;
 import org.usfirst.frc.team1089.config.CscoreSettings;
 import org.usfirst.frc.team1089.config.OpenCVSettings;
 import org.usfirst.frc.team1089.vision.BasicFilterPipeline;
+import org.usfirst.frc.team1089.vision.MarkupMachine;
 import org.usfirst.frc.team1089.vision.VisionTask;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,6 +21,7 @@ public class Main {
         // Initialize configs beforehand
         CscoreSettings.initialize();
         OpenCVSettings.initialize();
+        MarkupMachine.configure();
 
         // Initialize thread pool
         THREAD_POOL = Executors.newFixedThreadPool(5);

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 public class RotateRelative extends PIDCommand {
 
 	private double targetHeading;
-    private final double MIN_PERCENT_VBUS = 0.4;
+    private final double MIN_PERCENT_VBUS = 0.25;
 
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;

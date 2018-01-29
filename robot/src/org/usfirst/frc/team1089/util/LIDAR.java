@@ -61,8 +61,12 @@ public class LIDAR {
         }; // TODO: use a conversion method in MercMath
     }
 
-    public double getfixedDistance() {
+    public double getFixedDistance() {
         return fixDistance(getDistance()[0]);
+    }
+
+    public double getPaddedDistance() {
+        return fixDistance(getDistance()[0]) - 2;
     }
 
     public double fixDistance(double rawVal) {

@@ -62,9 +62,7 @@ public class OI {
 
 	private Joystick leftStick, rightStick, gamepad;
 	
-	private JoystickButton left_1;
-	private JoystickButton left_2;
-	private JoystickButton left_3;
+	private JoystickButton left_1, left_2, left_3, left_4;
 	private JoystickButton gamepad_a;
 	
 	
@@ -80,6 +78,7 @@ public class OI {
 		left_2 = new JoystickButton(leftStick, 2);
 		left_2.whenPressed(new DriveDistance(24.0, .12));
 		left_3 = new JoystickButton(leftStick,3);
+		left_3.whenPressed(new DriveDistance(Robot.manipulator.getLidar()::getPaddedDistance, .12));
 
 		gamepad_a = new JoystickButton(gamepad, 1);
 		gamepad_a.whenPressed(new DriveTank());

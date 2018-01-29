@@ -21,10 +21,10 @@ public class DriveDistance extends Command {
 	private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
 
-	private double distance;
+	protected double distance;
     private DoubleSupplier distanceSupplier;
     private double endPosL, endPosR;
-	private double percentVoltage; //Voltage is NOW from [-1, 1]
+	protected double percentVoltage; //Voltage is NOW from [-1, 1]
 	
     /**
      * 
@@ -123,6 +123,7 @@ public class DriveDistance extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	System.out.println("DriveDistance interrupted");
+        System.out.println("DriveDistance interrupted");
+        Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
     }
 }

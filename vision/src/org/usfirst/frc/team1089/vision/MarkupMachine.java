@@ -25,7 +25,7 @@ public class MarkupMachine {
      * @param img the mat to draw on
      */
     public static void drawCrosshair(Mat img) {
-        int resX = img.width(), resY = img.width();
+        int resX = img.width(), resY = img.height();
         Imgproc.line(
                 img,
                 new Point(resX / 2.0, 80),

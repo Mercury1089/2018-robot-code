@@ -83,7 +83,9 @@ public class CscoreSettings extends Config {
      * @return int value of device id
      */
     public static int getPiCameraID() {
-        return (Integer)instance.getOrDefault("picam.id", "1");
+        return Integer.parseInt(
+                instance.getProperty("picam.id", "1")
+        );
     }
 
     /**
@@ -92,6 +94,8 @@ public class CscoreSettings extends Config {
      * @return int value of device id
      */
     public static int getLifecamID() {
-        return (Integer)instance.getOrDefault("lifecam.id", "1");
+        return Integer.parseInt(
+            instance.getProperty("lifecam.id", "0")
+        );
     }
 }

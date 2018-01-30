@@ -65,10 +65,6 @@ public class LIDAR {
         return fixDistance(getDistance()[0]);
     }
 
-    public double getPaddedDistance() {
-        return fixDistance(getDistance()[0]) - 2;
-    }
-
     public double fixDistance(double rawVal) {
         double newVal;
 

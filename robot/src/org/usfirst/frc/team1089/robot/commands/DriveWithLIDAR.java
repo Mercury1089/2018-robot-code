@@ -1,15 +1,28 @@
 package org.usfirst.frc.team1089.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.command.PIDCommand;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.util.LIDAR;
 
-public class DriveWithLIDAR extends Command {
-    public double currDist, percVoltage;
-    public DriveWithLIDAR(double percentVoltage) {
-        currDist = Robot.manipulator.getLidar().getPaddedDistance();
-        percVoltage = percentVoltage;
+
+/**
+ * Drives to the LIDAR's target a specified distance away using the LIDAR's distance measurements.
+ */
+public class DriveWithLIDAR extends DriveDistance {
+
+    public double minimumDistance;
+
+    /**
+     * @param minimumDistance The distance for the robot to be away from the LIDAR's target when it reaches said target.
+     */
+    public DriveWithLIDAR(double minimumDistance, double percentVoltage) {
+        super(Robot.manipulator.getLidar().getFixedDistance() - minimumDistance, percentVoltage);
+        requires(Robot.driveTrain);
+        this.minimumDistance = minimumDistance;
+        System.out.println("DriveWithLIDAR constructed with minimum distance of "  + minimumDistance);
     }
+
+
     @Override
     protected void initialize() {
         super.initialize();
@@ -17,12 +30,13 @@ public class DriveWithLIDAR extends Command {
 
     @Override
     protected void execute() {
-        super.execute();
+        Robot.driveTrain.getLeft().set(ControlMode.Position, Robot.manipulator.getLidar().getFixedDistance() - minimumDistance);
+        Robot.driveTrain.getRight().set(ControlMode.Position, Robot.manipulator.getLidar().getFixedDistance() - minimumDistance);
     }
 
     @Override
     protected boolean isFinished() {
-        return false;
+        return super.isFinished();
     }
 
     @Override

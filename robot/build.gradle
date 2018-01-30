@@ -40,18 +40,18 @@ deploy {
     artifacts {
         artifact('robotArtifact', FRCJavaArtifact) {
             targets << "roborio"
+            after('configCollectionArtifact')
+            after('trajectoryCollectionArtifact')
         }
 
         fileCollectionArtifact('configCollectionArtifact') {
             targets << 'roborio'
             files = project.configurations.config
-            after('robotArtifact')
         }
 
         fileCollectionArtifact('trajectoryCollectionArtifact') {
             targets << 'roborio'
             files = project.configurations.trajectory
-            after('robotArtifact')
         }
     }
 }

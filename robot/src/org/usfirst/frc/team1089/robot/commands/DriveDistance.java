@@ -26,7 +26,8 @@ public class DriveDistance extends Command {
     private DoubleSupplier distanceSupplier;
     private double endPosL, endPosR;
 	protected double percentVoltage; //Voltage is NOW from [-1, 1]
-	
+
+
     /**
      * 
      * @param distance in inches
@@ -36,13 +37,12 @@ public class DriveDistance extends Command {
     	requires(Robot.driveTrain);
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
-
     }
 
 	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
         requires(Robot.driveTrain);
         this.percentVoltage = percentVoltage;
-		this.distanceSupplier = distanceSupplier;
+		this.distance = distanceSupplier.getAsDouble();
 	}
 
     // Called just before this Command runs the first time

@@ -9,17 +9,6 @@ plugins {
     id "jaci.gradle.EmbeddedTools" version "2018.01.24a" apply false
 }
 
-// Hacky shuffleboard fix
-configurations {
-    shuffleboard {
-        description = 'Shuffleboard app, automatically updated from Maven'
-    }
-}
-
-dependencies {
-    shuffleboard 'edu.wpi.first.shuffleboard:app:+'
-}
-
 // allprojects = root project + subprojects
 // IDE plugins should be applied to the entire project.
 allprojects {

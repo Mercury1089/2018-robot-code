@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1089.main;
 
 import edu.wpi.cscore.*;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import org.usfirst.frc.team1089.config.CscoreSettings;
 import org.usfirst.frc.team1089.config.OpenCVSettings;
 import org.usfirst.frc.team1089.vision.BasicFilterPipeline;
@@ -13,6 +15,7 @@ import java.util.concurrent.Executors;
 public class Main {
     private static final Runtime RUNTIME;
     private static final ExecutorService THREAD_POOL;
+    private static final String ROOT_TABLE;
 
     static {
         // Get runtime
@@ -22,21 +25,21 @@ public class Main {
         CscoreSettings.initialize();
         OpenCVSettings.initialize();
         MarkupMachine.configure();
+        ROOT_TABLE = "CubeVision";
 
         // Initialize thread pool
-        THREAD_POOL = Executors.newFixedThreadPool(5);
+        THREAD_POOL = Executors.newFixedThreadPool(5, new PrefixedThreadFactory("Vision"));
     }
 
     public static void main(String[] args) {
-        // Connect NetworkTables, and get access to the publishing table
-//        NetworkTableInstance nt = NetworkTableInstance.create();
-//        nt.setServerTeam(1089);
-//        nt.startClient();
+        // Create a NetworkTableInstance that we can pull
+        // tables from, and start a client.
+        NetworkTableInstance nt = NetworkTableInstance.create();
+        nt.setServerTeam(1089);
+        nt.startClient();
 
-        //Our NetworkTable
-        //NetworkTable lifecamTable = nt.getTable(ROOT + "/CubeVision");
-
-        final String ROOT = "Vision";
+        // Get a NetworkTable from the server that we can put stuff into
+        NetworkTable rootTable = nt.getTable("CubeVision");
 
         // Set resolution and fps of all output
         int[] resolution = CscoreSettings.getResolution();
@@ -98,23 +101,14 @@ public class Main {
         // Add threads to thread pool
         THREAD_POOL.execute(new VisionTask(lifecamMarkupSource, lifecamSink, new BasicFilterPipeline()));
 
-        // Shutdown hook is set up to shutdown
-        // the thread pool.
+        // Shutdown hook is set up to shutdown the thread pool.
         // Much cleaner exit this way.
         RUNTIME.addShutdownHook(new Thread(() -> {
             System.out.print("Killing threads...");
 
             THREAD_POOL.shutdownNow();
-            while (!THREAD_POOL.isTerminated()) {
-                try {
-                    System.out.print('.');
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                    // Might be a good idea to catch an interruption exception
-                    // or something of that nature.
-                    e.printStackTrace();
-                }
-            }
+            while (!THREAD_POOL.isTerminated());
+
             System.out.println("\n Goodbye.");
         }));
     }

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.util.Config;
+import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
@@ -179,46 +180,16 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	public double getLeftEncPositionInFeet() {
 		double ticks = tMasterLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
-		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
+		return MercMath.getEncPosition(ticks);
 	}
 
 	public double getRightEncPositionInFeet() {
 		double ticks = tMasterRight.getSelectedSensorPosition(PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet
-		return ((Math.PI * WHEEL_DIAMETER_INCHES) / (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) * ticks) / 12;
+		return MercMath.getEncPosition(ticks);
 	}
-
-	/**
-     * <pre>s
-	 * public double feetToEncoderTicks(double feet)
-	 * </pre>
-	 * Returns a value in ticks based on a certain value in feet using
-	 * the Magnetic Encoder.
-	 * @param feet The value in feet
-	 * @return The value in ticks
-     */
-	public double feetToEncoderTicks(double feet) {
-		return (MAG_ENCODER_TICKS_PER_REVOLUTION * GEAR_RATIO) / (Math.PI * WHEEL_DIAMETER_INCHES) * feet * 12.0;
-	}
-
-	public double inchesToEncoderTicks(double inches) {
-        return (inches / (Math.PI * WHEEL_DIAMETER_INCHES)) * MAG_ENCODER_TICKS_PER_REVOLUTION;
-    }
-
-    /**
-     * <pre>
-     *     public double ticksPerTenthToRevsPerMinute(double ticksPerTenthSecond)
-     * </pre>
-     * Returns value in revolutions per minute given ticks per tenth of a second.
-     * @param ticksPerTenthSecond
-     * @return Revs per minute
-     */
-    public double ticksPerTenthToRevsPerMinute(double ticksPerTenthSecond) {
-	    return ticksPerTenthSecond / MAG_ENCODER_TICKS_PER_REVOLUTION * 600;
-    }
 
     public double getFeedForward() {
-        final int MAX_MOTOR_OUTPUT = 1023;
         double rpm;
         switch(curLayout) {
 			case LEGACY:
@@ -229,8 +200,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 				rpm = MAX_RPM_SPEEDY_BOI;
 				break;
 		}
-        final double NATIVE_UNITS_PER_100 = rpm * 1/600 * MAG_ENCODER_TICKS_PER_REVOLUTION;
-        return MAX_MOTOR_OUTPUT/NATIVE_UNITS_PER_100;
+        return MercMath.calculateFeedForward(rpm);
     }
 
 	public void pidWrite(double output) {

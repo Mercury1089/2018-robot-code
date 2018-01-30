@@ -27,17 +27,17 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
-        SmartDashboard.putNumber("Left Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
-        SmartDashboard.putNumber("Right Wheel RPM", Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
+        SmartDashboard.putNumber("Left Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
+        SmartDashboard.putNumber("Right Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
         SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[0], 10));
         SmartDashboard.putNumber("LIDAR Fixed Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getPaddedDistance(), 10));
 
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[1], 10));
 
-        double recentRevsPerMinLeft = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
+        double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         if(Math.abs(recentRevsPerMinLeft) > Math.abs(maxRevsPerMinLeft))
             maxRevsPerMinLeft = Math.abs(recentRevsPerMinLeft);
-        double recentRevsPerMinRight = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
+        double recentRevsPerMinRight = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         if(Math.abs(recentRevsPerMinRight) > Math.abs(maxRevsPerMinRight))
             maxRevsPerMinRight = Math.abs(recentRevsPerMinRight);
         SmartDashboard.putNumber("Left Max RPM", maxRevsPerMinLeft);

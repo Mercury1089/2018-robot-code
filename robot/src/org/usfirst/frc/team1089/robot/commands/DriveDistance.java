@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.util.MercMath;
 
 import java.util.function.DoubleSupplier;
 
@@ -50,7 +51,7 @@ public class DriveDistance extends Command {
             this.distance = distanceSupplier.getAsDouble();
         }
         //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
-		endPosL = Robot.driveTrain.inchesToEncoderTicks(distance);
+		endPosL = MercMath.inchesToEncoderTicks(distance);
 
 		// Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
 		// On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need

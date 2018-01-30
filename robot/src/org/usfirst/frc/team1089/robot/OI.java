@@ -8,10 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
-import org.usfirst.frc.team1089.robot.commands.DriveWithLIDAR;
-import org.usfirst.frc.team1089.robot.commands.RotateRelative;
-import org.usfirst.frc.team1089.robot.commands.DriveDistance;
-import org.usfirst.frc.team1089.robot.commands.DriveTank;
+import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -66,7 +63,8 @@ public class OI {
 	private JoystickButton left_1, left_2, left_3, left_4;
 	private JoystickButton gamepad_a;
 	
-	
+
+
 	private ShuffleDash shuffleboard;
 
 	public OI() {
@@ -77,11 +75,11 @@ public class OI {
 		left_1 = new JoystickButton(leftStick, 1);
 		left_1.whenPressed(new RotateRelative(90));
 		left_2 = new JoystickButton(leftStick, 2);
-		left_2.whenPressed(new DriveDistance(24.0, .12));
+		left_2.whenPressed(new DriveWithLIDAR(2, .3));
 		left_3 = new JoystickButton(leftStick,3);
-		left_3.whenPressed(new DriveWithLIDAR(2, .12));
+		left_3.whenPressed(new DriveDistance(24.0, .12));
 		gamepad_a = new JoystickButton(gamepad, 1);
-		gamepad_a.whenPressed(new DriveTank());
+		gamepad_a.whenPressed(new DriveArcade());
 		
 		
 		// Gamepad binds

@@ -11,9 +11,8 @@ import java.util.Properties;
 public abstract class Config {
     private static Properties instance;
 
-    protected static void initialize(String fileName) {
-        if (instance == null) {
-            instance = new Properties();
+    protected static void loadProperties(String fileName) {
+        if (instance != null) {
             try {
                 FileReader loader = new FileReader(fileName);
                 instance.load(loader);
@@ -24,6 +23,8 @@ public abstract class Config {
     }
 
     protected static Properties getInstance() {
+        if (instance == null)
+            instance = new Properties();
         return instance;
     }
 

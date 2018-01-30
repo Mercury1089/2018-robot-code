@@ -12,8 +12,8 @@ public class OpenCVSettings extends Config {
     private static String ARRAY_DELIM = ",";
 
     public static void initialize() {
-        initialize("opencv.properties");
         instance = getInstance();
+        loadProperties("opencv.properties");
     }
 
     /**

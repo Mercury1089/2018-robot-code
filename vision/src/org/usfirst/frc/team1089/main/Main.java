@@ -105,16 +105,8 @@ public class Main {
             System.out.print("Killing threads...");
 
             THREAD_POOL.shutdownNow();
-            while (!THREAD_POOL.isTerminated()) {
-                try {
-                    System.out.print('.');
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                    // Might be a good idea to catch an interruption exception
-                    // or something of that nature.
-                    e.printStackTrace();
-                }
-            }
+            while (!THREAD_POOL.isTerminated());
+
             System.out.println("\n Goodbye.");
         }));
     }

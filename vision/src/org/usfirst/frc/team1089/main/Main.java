@@ -99,7 +99,7 @@ public class Main {
         lifecamMarkupServer.setSource(lifecamMarkupSource);
 
         // Add threads to thread pool
-        THREAD_POOL.execute(new VisionTask(lifecamMarkupSource, lifecamSink, new BasicFilterPipeline()));
+        THREAD_POOL.execute(new VisionTask(lifecamMarkupSource, lifecamSink, new BasicFilterPipeline(), rootTable));
 
         // Shutdown hook is set up to shutdown the thread pool.
         // Much cleaner exit this way.

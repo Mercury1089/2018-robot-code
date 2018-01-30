@@ -16,6 +16,10 @@ public class RotateRelative extends PIDCommand {
 
 	private Gyro gyro;
 
+	public RotateRelative() {
+		this(0);
+	}
+
 	/**
 	 * Constructs this command with a set degree to rotate.
 	 * @param targetHeading the relative number of degrees to rotate by

@@ -1,9 +1,9 @@
 package org.usfirst.frc.team1089.vision;
 
 import edu.wpi.cscore.*;
+import edu.wpi.first.networktables.NetworkTable;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
@@ -19,20 +19,22 @@ public class VisionTask implements Runnable {
     private final CvSource RESTREAM_SOURCE;
     private final CvSink IMG_SINK;
     private final Mat IMG;
+    private final NetworkTable TABLE;
     private final Pipeline<Mat, ArrayList<MatOfPoint>> PIPELINE;
     private final ArrayList<MatOfPoint> CONTOURS;
 
     /**
      * Creates a new {@code VisionTask}
-     *
      * @param restreamSource  the CvSource to output marked up mats for restreaming
      * @param imgSink         the CvSink to pull mats from
      * @param contourPipeline the pipeline to use for processing
+     * @param table           the NetworkTable to deploy values to
      */
-    public VisionTask(CvSource restreamSource, CvSink imgSink, Pipeline<Mat, ArrayList<MatOfPoint>> contourPipeline) {
+    public VisionTask(CvSource restreamSource, CvSink imgSink, Pipeline<Mat, ArrayList<MatOfPoint>> contourPipeline, NetworkTable table) {
         RESTREAM_SOURCE = restreamSource;
         IMG_SINK = imgSink;
         PIPELINE = contourPipeline;
+        TABLE = table;
 
         IMG = new Mat();
         CONTOURS = new ArrayList<MatOfPoint>();
@@ -68,9 +70,15 @@ public class VisionTask implements Runnable {
                 // Just get the bounding rect from the first (largest) target.
                 // Don't think about it too hard.
                 BoundingRect target1 = new BoundingRect(Imgproc.boundingRect(CONTOURS.get(0)));
+                TABLE.getEntry("Center X").setNumber(target1.getCenterX());
+                TABLE.getEntry("Center Y").setNumber(target1.getCenterY());
 
                 // Draw the contours
                 MarkupMachine.drawContours(IMG, target1);
+            }
+            else{
+                TABLE.getEntry("Center X").setNumber(-1);
+                TABLE.getEntry("Center Y").setNumber(-1);
             }
 
             // Restream the marked up image

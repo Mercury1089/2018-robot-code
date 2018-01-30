@@ -3,13 +3,13 @@ package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-
+import org.usfirst.frc.team1089.robot.RobotMap.CAN;
+import org.usfirst.frc.team1089.robot.RobotMap.PWM;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
+import org.usfirst.frc.team1089.robot.subsystems.PDP;
 import org.usfirst.frc.team1089.util.Config;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import org.usfirst.frc.team1089.robot.RobotMap.*;
-import org.usfirst.frc.team1089.robot.subsystems.*;
-
-import org.usfirst.frc.team1089.util.NavX;
+import org.usfirst.frc.team1089.robot.sensors.CameraVision;
 
 
 /**
@@ -25,6 +25,7 @@ public class Robot extends IterativeRobot {
 	public static Manipulator manipulator;
 	public static OI oi;
 	public static PDP pdp;
+	public static CameraVision camera;
 
 	static {
 		Config.initialize();
@@ -54,7 +55,7 @@ public class Robot extends IterativeRobot {
 		pdp = new PDP();
 
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR);
-
+		camera = new CameraVision();
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
 	}

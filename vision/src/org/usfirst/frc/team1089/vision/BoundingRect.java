@@ -15,7 +15,7 @@ public class BoundingRect extends Rect {
         super(r.x, r.y, r.width, r.height);
     }
 
-    public double getCenterX() {
+    public double  getCenterX() {
         return x + width / 2.0;
     }
 

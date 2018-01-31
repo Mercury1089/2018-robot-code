@@ -67,6 +67,14 @@ public class MercMath {
 		return val * 60;
 	}
 
+	public static double feetToMeters(double val) {
+		return 100 * inchesToCentimeters(val / 12);
+	}
+
+	public static double metersToFeet(double val) {
+		return 1 / (100 * inchesToCentimeters(val / 12));
+	}
+
 	/*public double getLeftEncPositionInFeet() {
 		double ticks = Robot.driveTrain.getLeft().getSelectedSensorPosition(Robot.driveTrain.PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet

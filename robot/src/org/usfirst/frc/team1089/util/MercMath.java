@@ -128,7 +128,15 @@ public class MercMath {
         return revsPerMinute * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION / 600;
     }
 
-	public static double calculateFeedForward(double rpm) {
+	public static double revsPerMinuteToMetersPerSecond(double revsPerMinute) {
+		return revsPerMinute * feetToMeters(Robot.driveTrain.WHEEL_DIAMETER_INCHES * Math.PI / 12) / 60;
+	}
+
+	public static double ticksPerTenthToMetersPerSecond(double ticksPerTenth) {
+		return revsPerMinuteToMetersPerSecond(ticksPerTenthToRevsPerMinute(ticksPerTenth));
+	}
+
+		public static double calculateFeedForward(double rpm) {
 		final double MAX_MOTOR_OUTPUT = 1023;
 		final double NATIVE_UNITS_PER_100 = rpm * 1/600 * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
 		return MAX_MOTOR_OUTPUT/NATIVE_UNITS_PER_100;

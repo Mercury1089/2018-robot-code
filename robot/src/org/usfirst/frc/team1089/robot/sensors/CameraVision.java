@@ -1,14 +1,35 @@
 package org.usfirst.frc.team1089.robot.sensors;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.*;
+
+import java.util.Date;
 
 public class CameraVision {
-   static NetworkTableInstance nt = NetworkTableInstance.getDefault();
-   //TO DO 
-    public static double centerX = nt.getEntry("Center X").getDouble(-2);
-    public static double centerY = nt.getEntry("Center Y").getDouble(-2);
+    private double centerX;
+    private long lastUpdate;
+    private final long LATENCY_MS = 100L;
 
-    public Double getAngleFromCube(){
-        return 30 - centerX / 12;
+    public CameraVision() {
+        NetworkTableInstance.getDefault().getTable("CubeVision").getEntry("centerX").addListener(
+            (EntryNotification note) -> {
+                double val = note.value.getDouble();
+                centerX = val != -1 ? val : 0;
+
+                lastUpdate = System.currentTimeMillis();
+            }, EntryListenerFlags.kUpdate
+        );
     }
+
+    public double getAngleFromCube() {
+        double ratio = centerX / 320.0 - 0.5 ;
+
+        double angle = ratio * 48.0;
+
+        return angle;
+    }
+
+    public boolean isRecent () {
+        return Math.abs(System.currentTimeMillis() - lastUpdate) <= LATENCY_MS;
+    }
+
 }

@@ -191,7 +191,7 @@ public class OpenCVSettings extends Config {
      * @return scalar representing BGR values for bounds color
      */
     public static Scalar getBoundsColor() {
-        String[] rangeString = parseArrayValue("markup.targetColor", ARRAY_DELIM);
+        String[] rangeString = parseArrayValue("markup.boundsColor", ARRAY_DELIM);
         double[] color = {0, 0, 255};
         if (rangeString.length == 3) {
             color[0] = Double.parseDouble(rangeString[0].trim());
@@ -209,7 +209,7 @@ public class OpenCVSettings extends Config {
      * @return scalar representing BGR values for crosshair color
      */
     public static Scalar getCrosshairColor() {
-        String[] rangeString = parseArrayValue("markup.boundsColor", ARRAY_DELIM);
+        String[] rangeString = parseArrayValue("markup.crosshairColor", ARRAY_DELIM);
         double[] color = {255, 255, 255};
         if (rangeString.length == 3) {
             color[0] = Double.parseDouble(rangeString[0].trim());

@@ -3,24 +3,30 @@ package org.usfirst.frc.team1089.robot.commands;
 import org.usfirst.frc.team1089.robot.Robot;
 
 public class AutoAlign extends RotateRelative {
-    @Override
-    protected void initialize() {
-        requires(Robot.driveTrain);
+    public AutoAlign() {
+        super();
+
         requires(Robot.manipulator);
     }
 
     @Override
-    protected void execute() {
+    protected void initialize() {
+        updateHeading(Robot.camera.getAngleFromCube());
 
-    }
-
-    @Override
-    protected void end() {
-
+        super.initialize();
     }
 
     @Override
     protected boolean isFinished() {
-        return false;
+        boolean isFinished = super.isFinished();
+
+        if (isFinished && Robot.camera.isRecent()) {
+            if (Math.abs(Robot.camera.getAngleFromCube()) > 1) {
+                updateHeading(Robot.camera.getAngleFromCube());
+                isFinished = false;
+            }
+        }
+
+        return isFinished;
     }
 }

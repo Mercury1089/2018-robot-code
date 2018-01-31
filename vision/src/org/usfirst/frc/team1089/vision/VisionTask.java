@@ -42,6 +42,8 @@ public class VisionTask implements Runnable {
 
     public void run() {
         while (!Thread.interrupted()) {
+            double centerX = -1, centerY = -1;
+
             // Grab a frame. If it has a frame time of 0, the request timed out.
             // So we just skip the frame and continue instead.
             if (IMG_SINK.grabFrame(IMG) == 0) {
@@ -52,10 +54,6 @@ public class VisionTask implements Runnable {
             // Process the image.
             PIPELINE.process(IMG);
             PIPELINE.output(CONTOURS);
-
-            // Regardless of whether or not we see anything, we still want to see
-            // what we consider the center of the screen.
-            MarkupMachine.drawCrosshair(IMG);
 
             // Only do this part if there are contours to even look at
             if (CONTOURS.size() > 0) {
@@ -70,16 +68,22 @@ public class VisionTask implements Runnable {
                 // Just get the bounding rect from the first (largest) target.
                 // Don't think about it too hard.
                 BoundingRect target1 = new BoundingRect(Imgproc.boundingRect(CONTOURS.get(0)));
-                TABLE.getEntry("Center X").setNumber(target1.getCenterX());
-                TABLE.getEntry("Center Y").setNumber(target1.getCenterY());
+
+                // Assign values to tokens
+                centerX = target1.getCenterX();
+                centerY = target1.getCenterY();
 
                 // Draw the contours
                 MarkupMachine.drawContours(IMG, target1);
             }
-            else{
-                TABLE.getEntry("Center X").setNumber(-1);
-                TABLE.getEntry("Center Y").setNumber(-1);
-            }
+
+            // Regardless of whether or not we see anything, we still want to see
+            // what we consider the center of the screen.
+            MarkupMachine.drawCrosshair(IMG);
+
+            // Pass values to network table
+            TABLE.getEntry("centerX").setNumber(centerX);
+            TABLE.getEntry("centerY").setNumber(centerY);
 
             // Restream the marked up image
             // then release the resources within the mat.

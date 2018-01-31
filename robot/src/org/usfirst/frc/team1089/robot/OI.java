@@ -78,6 +78,8 @@ public class OI {
 		left_2.whenPressed(new DriveWithLIDAR(2, .3));
 		left_3 = new JoystickButton(leftStick,3);
 		left_3.whenPressed(new DriveDistance(24.0, .12));
+		left_4 = new JoystickButton(leftStick,4);
+		left_4.whenPressed(new GetCube());
 		gamepad_a = new JoystickButton(gamepad, 1);
 		gamepad_a.whenPressed(new DriveArcade());
 		

@@ -71,7 +71,6 @@ public class Main {
 //            picamRawServer = new MjpegServer("PICAM_RAW", PORT_PICAM_RAW),
 //            picamMarkupServer = new MjpegServer("PICAM_MARKUP", PORT_PICAM_MARKUP);
 
-
         // Our CvSources
         // These just act as recievers to mats
         CvSource lifecamMarkupSource = new CvSource("LIFECAM_MARKUP", VideoMode.PixelFormat.kMJPEG, RES_X, RES_Y, FPS);
@@ -109,7 +108,7 @@ public class Main {
             THREAD_POOL.shutdownNow();
             while (!THREAD_POOL.isTerminated());
 
-            System.out.println("\n Goodbye.");
+            System.out.println("\nGoodbye.");
         }));
     }
 }

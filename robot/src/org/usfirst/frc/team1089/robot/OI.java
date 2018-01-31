@@ -11,8 +11,6 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
-import java.io.File;
-
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -61,8 +59,9 @@ public class OI {
 	private Logger log = LogManager.getLogger(OI.class);
 
 	private Joystick leftStick, rightStick, gamepad;
-	
-	private JoystickButton left_1, left_2, left_3, left_4;
+
+	private JoystickButton left1, left2, left3, left4;
+	private JoystickButton right1, right2, right3, right4;
 	private JoystickButton gamepad_a;
 	
 
@@ -73,30 +72,35 @@ public class OI {
 		leftStick = new Joystick(DS_USB.LEFT_STICK);
 		rightStick = new Joystick(DS_USB.RIGHT_STICK);
 		gamepad = new Joystick(DS_USB.GAMEPAD);
-		
-		left_1 = new JoystickButton(leftStick, 1);
-		left_1.whenPressed(new RotateRelative(90));
-		left_2 = new JoystickButton(leftStick, 2);
-		left_2.whenPressed(new DriveWithLIDAR(2, .3));
-		left_3 = new JoystickButton(leftStick,3);
-		left_3.whenPressed(new DriveDistance(24.0, .12));
-		left_4 = new JoystickButton(leftStick,4);
-		left_4.whenPressed(new GetCube());
+
+		// Left stick button binds
+		left1 = new JoystickButton(leftStick, 1);
+		left1.whenPressed(new RotateRelative(90));
+		left2 = new JoystickButton(leftStick, 2);
+		left2.whenPressed(new DriveWithLIDAR(2, .3));
+		left3 = new JoystickButton(leftStick,3);
+		left3.whenPressed(new DriveDistance(24.0, .12));
+		left4 = new JoystickButton(leftStick,4);
+		left4.whenPressed(new GetCube());
+
+		// Right stick button binds
+		right1 = new JoystickButton(rightStick,1);
+		right1.whenPressed(new MoveOnProfile("TestTrajectoryDetailed"));
+
+		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);
 		gamepad_a.whenPressed(new DriveArcade());
-		
-		
-		// Gamepad binds
-		
+
+		// SmartDash auton choosers
 		startingPosition = new SendableChooser<>();
 		startingPosition.addObject("Left", AutonPosition.LEFT);
 		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
 		startingPosition.addObject("Right", AutonPosition.RIGHT);
 		SmartDashboard.putData("Auton Starting Position", startingPosition);
 		SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
-			
+
 		log.info("OI initialized");
-		
+
 		shuffleboard = new ShuffleDash();
 	}
 	

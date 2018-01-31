@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.util.config.Config;
 import org.usfirst.frc.team1089.util.MercMath;
@@ -67,7 +68,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
 		try {
 			curLayout = DriveTrainLayout.valueOf(
-					Config.getInstance().getProperty("driveTrain.layout", "default").toUpperCase().trim()
+					Robot.ROBOT_CONFIG.getProperty("driveTrain.layout", "default").toUpperCase().trim()
 			);
 		} catch (IllegalArgumentException e) { } // No layout exists with that name
 

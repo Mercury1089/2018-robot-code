@@ -117,7 +117,7 @@ public class MercMath {
 	}
 
 	public static double encoderTicksToInches(double ticks) {
-		return ticks / Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)
+		return ticks / Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES);
 	}
 
 	/**

@@ -21,7 +21,7 @@ public class ShuffleDash {
         SmartDashboard.putString("Alliance Color", DriverStation.getInstance().getAlliance().toString());
         if (Robot.driveTrain.getGyro() != null)
             SmartDashboard.putNumber("NavX Angle", Robot.driveTrain.getGyro().getAngle());
-
+=
         SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
@@ -31,7 +31,6 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Right Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
         SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[0], 10));
         SmartDashboard.putNumber("LIDAR Fixed Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getFixedDistance(), 10));
-
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[1], 10));
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));

@@ -5,6 +5,8 @@ package org.usfirst.frc.team1089.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 
@@ -13,6 +15,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+
+import java.io.File;
 
 /**
  * Use motion profiling to move on a specified path
@@ -26,18 +30,24 @@ public class MoveOnProfile extends Command {
     private final double PROPORTIONAL = .1;
     private final double INTEGRAL = 0;
     private final double DERIVATIVE = .05;
+    private Trajectory trajectory;
 
-	public MoveOnProfile() {
+	public MoveOnProfile(File trajectoryFile) {
         requires(Robot.driveTrain);
-		leftFront = Robot.driveTrain.getLeft();
-		rightFront = Robot.driveTrain.getRight();
-	}
+        leftFront = Robot.driveTrain.getLeft();
+        rightFront = Robot.driveTrain.getRight();
+        try {
+            trajectory = Pathfinder.readFromFile(trajectoryFile);
+        } catch (Exception e) {
+            System.out.println("Trajectory file could not be read. Check the path.");
+            e.printStackTrace();
+        }
+    }
 
 	
 	//Called just before this Command runs for the first time. 
 	protected void initialize() {
-
-	    Robot.driveTrain.getLeft().setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Robot.driveTrain.TIMEOUT_MS);
+	    /*Robot.driveTrain.getLeft().setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Robot.driveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Robot.driveTrain.TIMEOUT_MS);
 
         //TODO Put different numbers. These are random numbers. Discuss later.
@@ -58,7 +68,9 @@ public class MoveOnProfile extends Command {
         Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
 
 		leftFront.set(ControlMode.MotionProfile, 0);
-		rightFront.set(ControlMode.MotionProfile, 0);
+		rightFront.set(ControlMode.MotionProfile, 0);*/
+
+
 	}
 
 

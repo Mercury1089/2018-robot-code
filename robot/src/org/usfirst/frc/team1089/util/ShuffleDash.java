@@ -23,7 +23,7 @@ public class ShuffleDash {
         SmartDashboard.putString("Alliance Color", DriverStation.getInstance().getAlliance().toString());
         if (Robot.driveTrain.getGyro() != null)
             SmartDashboard.putNumber("NavX Angle", Robot.driveTrain.getGyro().getAngle());
-=
+
         SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());

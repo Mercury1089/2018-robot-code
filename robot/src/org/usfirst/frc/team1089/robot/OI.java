@@ -11,6 +11,8 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
+import java.io.File;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -76,8 +78,11 @@ public class OI {
 		left_1.whenPressed(new RotateRelative(90));
 		left_2 = new JoystickButton(leftStick, 2);
 		left_2.whenPressed(new DriveWithLIDAR(2, .3));
-		left_3 = new JoystickButton(leftStick,3);
-		left_3.whenPressed(new DriveDistance(24.0, .12));
+		//left_3 = new JoystickButton(leftStick,3);
+		//left_3.whenPressed(new DriveDistance(24.0, .12));
+		left_4 = new JoystickButton(leftStick, 4);
+		//left_4.whenPressed(new MoveOnProfile(new File("robot/trajectories/test_straight/test_straight_left.csv"), new File("robot/trajectories/test_straight/test_straight_right.csv")));
+
 		gamepad_a = new JoystickButton(gamepad, 1);
 		gamepad_a.whenPressed(new DriveArcade());
 		

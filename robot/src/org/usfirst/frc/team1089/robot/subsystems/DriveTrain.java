@@ -14,9 +14,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
-import org.usfirst.frc.team1089.util.Config;
+import org.usfirst.frc.team1089.util.config.Config;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;

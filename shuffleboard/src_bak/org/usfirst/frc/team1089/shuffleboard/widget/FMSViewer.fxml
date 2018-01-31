@@ -1,0 +1,18 @@
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="root" fx:controller="org.usfirst.frc.team1089.shuffleboard.controller.FMSViewer" maxHeight="-Infinity"
+          maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+          xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <Pane fx:id="enemySwitchLeft" style="-fx-border-width: 2; -fx-border-color: black;"/>
+    <Pane fx:id="enemySwitchRight" layoutX="10.0" layoutY="10.0"
+              style="-fx-border-width: 2; -fx-background-color: Red; -fx-border-color: black;"
+              GridPane.columnIndex="1"/>
+    <Pane fx:id="scaleLeft" layoutX="310.0" layoutY="10.0" style="-fx-border-width: 2; -fx-border-color: black;"
+          GridPane.rowIndex="1"/>
+    <Pane fx:id="scaleRight" layoutX="10.0" layoutY="144.0" style="-fx-border-width: 2; -fx-border-color: black;"
+              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Pane fx:id="allySwitchLeft" layoutX="310.0" layoutY="144.0"
+              style="-fx-border-width: 2; -fx-border-color: black;" GridPane.rowIndex="2"/>
+    <Pane fx:id="allySwitchRight" layoutX="10.0" layoutY="277.0"
+              style="-fx-border-width: 2; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+</VBox>

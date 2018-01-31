@@ -1,0 +1,11 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.usfirst.frc.team1089.widget.FMSWidget"
+      fx:id="root"
+      minWidth="64" minHeight="48"
+      spacing="4">
+    <Label fx:id="lblData" text="RRR"/>
+    <Label fx:id="lblAlliance" text="B"/>
+</VBox>

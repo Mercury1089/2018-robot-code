@@ -6,6 +6,5 @@
       fx:id="root"
       minWidth="64" minHeight="48"
       spacing="4">
-    <Label fx:id="lblData" text="RRR"/>
-    <Label fx:id="lblAlliance" text="B"/>
+    <Pane fx:id="switchA" style="-fx-background-color: blue"/>
 </VBox>

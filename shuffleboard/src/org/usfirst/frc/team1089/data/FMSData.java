@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class FMSData extends ComplexData<FMSData>{
+public class FMSData extends ComplexData<FMSData> {
     private final String DATA, ALLIANCE;
 
     public FMSData(@NotNull String data, @NotNull String alliance) {
@@ -30,6 +30,10 @@ public class FMSData extends ComplexData<FMSData>{
 
     public String getAlliance() {
         return ALLIANCE;
+    }
+
+    public String test(int i) {
+        return "";
     }
 
     @Override

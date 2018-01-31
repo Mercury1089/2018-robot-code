@@ -75,6 +75,10 @@ public class MercMath {
 		return 1 / (100 * inchesToCentimeters(val / 12));
 	}
 
+	public static double ticksToMeters(double ticks) {
+		return ticks / (Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES);
+	}
+
 	/*public double getLeftEncPositionInFeet() {
 		double ticks = Robot.driveTrain.getLeft().getSelectedSensorPosition(Robot.driveTrain.PRIMARY_PID_LOOP);
 		//Convert encoder ticks to feet

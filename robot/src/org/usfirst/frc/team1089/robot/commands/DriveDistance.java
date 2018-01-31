@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.util.MercMath;
 
 import java.util.function.DoubleSupplier;
 
@@ -13,7 +14,7 @@ import java.util.function.DoubleSupplier;
 public class DriveDistance extends Command {
 
 
-    private final double PROPORTIONAL = .1;
+    private final double PROPORTIONAL = .055;
     private final double INTEGRAL = 0;
     private final double DERIVATIVE = .05;
 
@@ -23,9 +24,9 @@ public class DriveDistance extends Command {
 
 	protected double distance;
     private DoubleSupplier distanceSupplier;
-    private double endPosL, endPosR;
 	protected double percentVoltage; //Voltage is NOW from [-1, 1]
-	
+
+
     /**
      * 
      * @param distance in inches
@@ -35,13 +36,12 @@ public class DriveDistance extends Command {
     	requires(Robot.driveTrain);
     	this.distance = distance;
     	this.percentVoltage = percentVoltage;
-
     }
 
 	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
         requires(Robot.driveTrain);
         this.percentVoltage = percentVoltage;
-		this.distanceSupplier = distanceSupplier;
+		this.distance = distanceSupplier.getAsDouble();
 	}
 
     // Called just before this Command runs the first time
@@ -49,18 +49,8 @@ public class DriveDistance extends Command {
         if (distanceSupplier != null) {
             this.distance = distanceSupplier.getAsDouble();
         }
-        //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
-		endPosL = Robot.driveTrain.inchesToEncoderTicks(distance);
-
-		// Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
-		// On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
-		// to negate both endPosR and endPosL.
-		// THIS MIGHT CHANGE on the 2018 robot!!
-		endPosL = -endPosL;
-		endPosR = endPosL;
 
         Robot.driveTrain.resetEncoders();
-
 
 		Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
@@ -69,13 +59,9 @@ public class DriveDistance extends Command {
         Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
 		Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
 
-
 		Robot.driveTrain.configVoltage(0, percentVoltage);
 
-		System.out.println("DriveDistance has been initialized and set to go " + endPosL + "encoder ticks");
-
-		Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
-		Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
+         updateDistance();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -125,5 +111,21 @@ public class DriveDistance extends Command {
     protected void interrupted() {
         System.out.println("DriveDistance interrupted");
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+    }
+
+    protected void updateDistance() {
+        double endPosL, endPosR;
+        //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
+        Robot.driveTrain.resetEncoders();
+        endPosL = MercMath.inchesToEncoderTicks(distance);
+        System.out.println(distance);
+        // Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
+        // On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
+        // to negate both endPosR and endPosL.
+        // THIS MIGHT CHANGE on the 2018 robot!!
+        endPosL = -endPosL;
+        endPosR = endPosL;
+        Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
+        Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
 }

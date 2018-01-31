@@ -9,8 +9,8 @@ public class CscoreSettings extends Config {
     private static Properties instance;
 
     public static void initialize() {
-        initialize("cscore.properties");
         instance = getInstance();
+        loadProperties("cscore.properties");
     }
 
     /**

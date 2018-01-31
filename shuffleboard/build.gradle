@@ -7,8 +7,16 @@ jar.baseName = 'MercuryWidgets'
 
 def shuffleboardLogDir = "/shuffleboard"
 
+// Hacky shuffleboard fix
+configurations {
+    shuffleboard {
+        description = 'Shuffleboard app, automatically updated from Maven'
+    }
+}
+
 dependencies {
-    compile 'edu.wpi.first.shuffleboard:api:+'
+    compile 'edu.wpi.first.shuffleboard:api:1.1.1'
+    shuffleboard 'edu.wpi.first.shuffleboard:app:1.1.1'
 }
 
 task runShuffleboard(type: Exec) {
@@ -17,15 +25,22 @@ task runShuffleboard(type: Exec) {
 
     // Use the shuffleboard config that is set up in the root project
     // to get the latest version of shuffleboard
-    def config = rootProject.configurations.getByName("shuffleboard")
+    def config = project.configurations.getByName("shuffleboard")
     def byteOut = new ByteArrayOutputStream()
 
     // Get shuffleboard dependency from wpiTools config
     Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
 
+    doFirst {
+        println("Running Shuffleboard from " + jarfiles.first().absolutePath)
+        println("Home dir: ${WPIToolsPlugin.shuffleboardDirectory()}")
+        println()
+    }
+
     // Exec task fields
     workingDir = WPIToolsPlugin.shuffleboardDirectory()
     commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+
 }
 
 task debugShuffleboard(type: Exec) {

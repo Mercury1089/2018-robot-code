@@ -11,12 +11,18 @@ import java.util.Properties;
 public abstract class Config {
     private static Properties instance;
 
-    protected static void initialize(String fileName) {
-        if (instance == null) {
-            instance = new Properties();
+    /**
+     * Appends the loaded properties file into this instance
+     *
+     * @param fileName the properties file to load
+     */
+    protected static void loadProperties(String fileName) {
+        Properties temp = new Properties();
+        if (instance != null) {
             try {
                 FileReader loader = new FileReader(fileName);
-                instance.load(loader);
+                temp.load(loader);
+                instance.putAll(temp);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -24,6 +30,8 @@ public abstract class Config {
     }
 
     protected static Properties getInstance() {
+        if (instance == null)
+            instance = new Properties();
         return instance;
     }
 

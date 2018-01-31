@@ -36,13 +36,16 @@ public class ShuffleDash {
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[1], 10));
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
+        SmartDashboard.putNumber("Cube Angle", Robot.camera.getAngleFromCube());
+
+        /*double recentRevsPerMinLeft = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         if(Math.abs(recentRevsPerMinLeft) > Math.abs(maxRevsPerMinLeft))
             maxRevsPerMinLeft = Math.abs(recentRevsPerMinLeft);
         double recentRevsPerMinRight = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         if(Math.abs(recentRevsPerMinRight) > Math.abs(maxRevsPerMinRight))
             maxRevsPerMinRight = Math.abs(recentRevsPerMinRight);
         SmartDashboard.putNumber("Left Max RPM", maxRevsPerMinLeft);
-        SmartDashboard.putNumber("Right Max RPM", maxRevsPerMinRight);
+        SmartDashboard.putNumber("Right Max RPM", maxRevsPerMinRight);*/
 
         //SmartDashboard.putString("Current DriveWithLIDAR method", DriveWithLIDAR.getCurrentMethod());
     }

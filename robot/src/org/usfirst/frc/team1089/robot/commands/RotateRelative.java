@@ -9,19 +9,23 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 public class RotateRelative extends PIDCommand {
 
 	private double targetHeading;
-    private final double MIN_PERCENT_VBUS = 0.25;
+    private final double MIN_PERCENT_VBUS = 0.12;
 
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
 
 	private Gyro gyro;
 
+	public RotateRelative() {
+		this(0);
+	}
+
 	/**
 	 * Constructs this command with a set degree to rotate.
 	 * @param targetHeading the relative number of degrees to rotate by
 	 */
 	public RotateRelative(double targetHeading) {
-		super(0.060, 0.05, 0.5);
+		super(0.005, 0, 0);
 		requires(Robot.driveTrain);
 
     	this.targetHeading = targetHeading;

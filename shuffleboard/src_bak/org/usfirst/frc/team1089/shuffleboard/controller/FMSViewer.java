@@ -17,19 +17,21 @@ import javafx.scene.layout.Pane;
  */
 @Description(dataTypes = String.class, name = "FMS Viewer")
 @ParametrizedController("FMSViewer.fxml")
-public class FMSViewer extends SimpleAnnotatedWidget<FMSData> {
+public final class FMSViewer extends SimpleAnnotatedWidget<FMSData> {
 
 	@FXML
-	private GridPane root; 
-	private Pane enemySwitchLeft;
-	private Pane enemySwitchRight;
-	private Pane scaleLeft;
-	private Pane scaleRight;
-	private Pane allySwitchLeft;
-	private Pane allySwitchRight;
+	private Pane root;
 
-	private String ourAlliance;
-	private String enemyAlliance;
+	@FXML
+	private Pane
+		enemySwitchLeft,
+		enemySwitchRight,
+		scaleLeft,
+		scaleRight,
+		allySwitchLeft,
+		allySwitchRight;
+
+	private String ourAlliance, enemyAlliance;
 	
 	@Override
 	public Pane getView() {
@@ -50,7 +52,7 @@ public class FMSViewer extends SimpleAnnotatedWidget<FMSData> {
 		ourAlliance = data.getAlliance() == Alliance.BLUE ? "blue" : "red";
 		enemyAlliance = data.getAlliance() == Alliance.BLUE ? "red" : "blue";
 		
-		//Set the colors of each side of both switches and the scale. 
+		// Set the colors of each side of both switches and the scale.
 		enemySwitchLeft.setStyle("-fx-background-color: " + determineColor('L', enemySwitchData) + ";");
 		enemySwitchRight.setStyle("-fx-background-color: " + determineColor('R', enemySwitchData) + ";");
 		scaleLeft.setStyle("-fx-background-color: " + determineColor('L', scaleData) + ";");

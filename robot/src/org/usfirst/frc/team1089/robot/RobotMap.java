@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1089.robot;
 
 /**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
+ * The RobotSettings is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
@@ -30,6 +30,8 @@ public class RobotMap {
 			DRIVETRAIN_MR = 2,
 			DRIVETRAIN_SL = 3,
 			DRIVETRAIN_SR = 4,
+			MANIPULATOR_L = 5,
+			MANIPULATOR_R = 6,
 			CANIFIER = 10;
 
 		private CAN() { } // Should never be constructed.

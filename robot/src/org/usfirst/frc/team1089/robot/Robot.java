@@ -3,13 +3,14 @@ package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.usfirst.frc.team1089.robot.RobotMap.CAN;
+import org.usfirst.frc.team1089.robot.RobotMap.PWM;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
+import org.usfirst.frc.team1089.robot.subsystems.PDP;
 
-import org.usfirst.frc.team1089.util.Config;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import org.usfirst.frc.team1089.robot.RobotMap.*;
-import org.usfirst.frc.team1089.robot.subsystems.*;
-
-import org.usfirst.frc.team1089.util.NavX;
+import java.io.FileReader;
+import java.util.Properties;
 
 
 /**
@@ -25,10 +26,18 @@ public class Robot extends IterativeRobot {
 	public static Manipulator manipulator;
 	public static OI oi;
 	public static PDP pdp;
+    public static final Properties ROBOT_CONFIG;
 
-	static {
-		Config.initialize();
-	}
+    static {
+        ROBOT_CONFIG = new Properties();
+
+        try {
+            FileReader reader = new FileReader("robot.properties");
+            ROBOT_CONFIG.load(reader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -43,7 +52,7 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
-	    String maxOut = Config.getInstance().getProperty("driveTrain.maxOutput", "1.0");
+	    String maxOut = ROBOT_CONFIG.getProperty("driveTrain.maxOutput", "1.0");
 
 	    driveTrain.getTalonDrive().setMaxOutput(
 	    		Double.parseDouble(maxOut)
@@ -53,12 +62,11 @@ public class Robot extends IterativeRobot {
 
 		pdp = new PDP();
 
-		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR);
+		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
 	}
-
 
 	/**
 	 * This function is called once each time the robot enters Disabled mode.

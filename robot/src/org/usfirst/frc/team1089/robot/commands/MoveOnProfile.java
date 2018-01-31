@@ -147,8 +147,7 @@ public class MoveOnProfile extends Command {
 	protected void end() {
 		Robot.driveTrain.getLeft().setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, Robot.driveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, Robot.driveTrain.TIMEOUT_MS);
-        leftFront.set(ControlMode.Velocity, 0);
-        rightFront.set(ControlMode.Velocity, 0);
+        Robot.driveTrain.stop();
     }
 
 

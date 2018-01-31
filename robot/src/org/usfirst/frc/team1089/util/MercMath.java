@@ -76,7 +76,7 @@ public class MercMath {
 	}
 
 	public static double ticksToMeters(double ticks) {
-		return ticks / (Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES);
+		return inchesToCentimeters(encoderTicksToInches(ticks)) * 100;
 	}
 
 	/*public double getLeftEncPositionInFeet() {
@@ -114,6 +114,10 @@ public class MercMath {
 
 	public static double inchesToEncoderTicks(double inches) {
 		return (inches / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
+	}
+
+	public static double encoderTicksToInches(double ticks) {
+		return ticks / Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)
 	}
 
 	/**

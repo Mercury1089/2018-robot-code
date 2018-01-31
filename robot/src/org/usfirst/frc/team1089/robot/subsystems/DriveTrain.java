@@ -31,7 +31,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	public static final int PRIMARY_PID_LOOP = 0;
 
 	private WPI_TalonSRX tMasterLeft, tMasterRight;
-	private BaseMotorController vSlaveLeft, vSlaveRight;
+	private BaseMotorController vFollowerLeft, vFollowerRight;
 
 	private TalonDrive tDrive;
     private NavX navX;
@@ -74,15 +74,15 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// At this point it's based on what the layout is
         switch(curLayout) {
             case LEGACY:
-                vSlaveLeft = new WPI_TalonSRX(bl);
-                vSlaveRight = new WPI_TalonSRX(br);
+                vFollowerLeft = new WPI_TalonSRX(bl);
+                vFollowerRight = new WPI_TalonSRX(br);
                 WHEEL_DIAMETER_INCHES = 4.0;
                 break;
 			case DEFAULT:
 			default:
 				WHEEL_DIAMETER_INCHES = 5.0;
-				vSlaveLeft = new WPI_VictorSPX(bl);
-				vSlaveRight = new WPI_VictorSPX(br);
+				vFollowerLeft = new WPI_VictorSPX(bl);
+				vFollowerRight = new WPI_VictorSPX(br);
 				break;
         }
 
@@ -92,14 +92,14 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
 		//Account for motor orientation.
 		tMasterLeft.setInverted(true);
-		vSlaveLeft.setInverted(true);
+		vFollowerLeft.setInverted(true);
 		tMasterRight.setInverted(false);
-		vSlaveRight.setInverted(false);
+		vFollowerRight.setInverted(false);
 
 		tMasterLeft.setNeutralMode(NeutralMode.Brake);
-		vSlaveLeft.setNeutralMode(NeutralMode.Brake);
+		vFollowerLeft.setNeutralMode(NeutralMode.Brake);
 		tMasterRight.setNeutralMode(NeutralMode.Brake);
-		vSlaveRight.setNeutralMode(NeutralMode.Brake);
+		vFollowerRight.setNeutralMode(NeutralMode.Brake);
 
 		//Account for encoder orientation.
 		tMasterLeft.setSensorPhase(true);
@@ -108,8 +108,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tDrive = new TalonDrive(tMasterLeft, tMasterRight);
 
 		// Set follower control on back talons. Use follow() instead of ControlMode.Follower so that Talons can follow Victors and vice versa.
-		vSlaveLeft.follow(tMasterLeft);
-		vSlaveRight.follow(tMasterRight);
+		vFollowerLeft.follow(tMasterLeft);
+		vFollowerRight.follow(tMasterRight);
 
 		// Set up feedback sensors
 		// Using CTRE_MagEncoder_Relative allows for relative ticks when encoder is zeroed out.

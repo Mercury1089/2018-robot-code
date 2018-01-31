@@ -9,7 +9,6 @@ import org.usfirst.frc.team1089.robot.sensors.CameraVision;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
-import org.usfirst.frc.team1089.util.Config;
 
 import java.io.FileReader;
 import java.util.Properties;

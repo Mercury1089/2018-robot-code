@@ -124,6 +124,10 @@ public class MercMath {
 		return ticksPerTenthSecond / Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * 600;
 	}
 
+    public static double revsPerMinuteToTicksPerTenth(double revsPerMinute) {
+        return revsPerMinute * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION / 600;
+    }
+
 	public static double calculateFeedForward(double rpm) {
 		final double MAX_MOTOR_OUTPUT = 1023;
 		final double NATIVE_UNITS_PER_100 = rpm * 1/600 * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;

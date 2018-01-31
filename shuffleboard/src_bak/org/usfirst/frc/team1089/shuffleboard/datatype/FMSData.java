@@ -6,13 +6,10 @@ import java.util.Map;
 import edu.wpi.first.shuffleboard.api.data.ComplexData;
 
 /**
- * 
- * @author Sagar P
- *
- * FMSData is a wrapper class used to bundle the String given by the FMS and the team's current alliance color for the use of the FMSViewer widget.
+ * FMSData is a wrapper class used to bundle the String given by the FMS and the team's current alliance color for the
+ * use of the FMSViewer widget.
  */
 public final class FMSData extends ComplexData<FMSData>{
-
 	private String positions;
 	private Alliance alliance; 
 	

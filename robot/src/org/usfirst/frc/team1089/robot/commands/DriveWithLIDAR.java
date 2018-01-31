@@ -12,6 +12,8 @@ public class DriveWithLIDAR extends DriveDistance {
 
     public double minimumDistance;
 
+    private static String currentMethod = "";
+
     /**
      * @param minimumDistance The distance for the robot to be away from the LIDAR's target when it reaches said target.
      */
@@ -25,22 +27,26 @@ public class DriveWithLIDAR extends DriveDistance {
 
     @Override
     protected void initialize() {
+        distance = Robot.manipulator.getLidar().getFixedDistance() - minimumDistance;
         super.initialize();
+        currentMethod = "DriveWithLIDAR.initialize();";
     }
 
     @Override
     protected void execute() {
-        Robot.driveTrain.getLeft().set(ControlMode.Position, Robot.manipulator.getLidar().getFixedDistance() - minimumDistance);
-        Robot.driveTrain.getRight().set(ControlMode.Position, Robot.manipulator.getLidar().getFixedDistance() - minimumDistance);
+        distance = Robot.manipulator.getLidar().getFixedDistance() - minimumDistance;
+        updateDistance();
+        currentMethod = "DriveWithLIDAR.execute();";
     }
 
     @Override
     protected boolean isFinished() {
-        return super.isFinished();
+        return super.isFinished() && Robot.manipulator.getLidar().getFixedDistance() - minimumDistance <= 0;
     }
 
     @Override
     protected void end() {
         super.end();
+        currentMethod = "DriveWithLIDAR.end();";
     }
 }

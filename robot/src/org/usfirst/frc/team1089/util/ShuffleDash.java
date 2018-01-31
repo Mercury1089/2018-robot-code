@@ -5,6 +5,8 @@ import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team1089.robot.commands.DriveArcade;
+import org.usfirst.frc.team1089.robot.commands.DriveWithLIDAR;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**
@@ -42,5 +44,6 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Left Max RPM", maxRevsPerMinLeft);
         SmartDashboard.putNumber("Right Max RPM", maxRevsPerMinRight);
 
+        //SmartDashboard.putString("Current DriveWithLIDAR method", DriveWithLIDAR.getCurrentMethod());
     }
 }

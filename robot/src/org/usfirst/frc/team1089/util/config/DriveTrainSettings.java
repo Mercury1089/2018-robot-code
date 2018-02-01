@@ -43,4 +43,61 @@ public class DriveTrainSettings extends Config {
 
         return Double.parseDouble(val);
     }
+
+    /**
+     * Gets the minimum percent VBus value for RotateRelative PID
+     *
+     * @return min output, represented as percent value [0.0, 1.0]
+     */
+    public static double getRotMinPVBus() {
+        String val = instance.getProperty("rotateRelative.minPercentVBus", "0.1").trim();
+
+        return Double.parseDouble(val);
+    }
+
+    /**
+     * Gets the max output voltage range for RotateRelative PID
+     *
+     * @return double array containing minimum and maximum output percent value
+     */
+    public static double[] getRotOutputRange() {
+        String[] arr = parseArrayValue("rotateRelative.outputRange", ",");
+        double[] range = {-0.5, 0.5};
+
+        if (arr.length == 2) {
+            range[0] = Double.parseDouble(arr[0]);
+            range[1] = Double.parseDouble(arr[1]);
+        }
+
+        return range;
+    }
+
+    /**
+     * Gets the absolute tolerance for RotateRelative PID
+     *
+     * @return max degree delta from target heading
+     */
+    public static double getRotAbsTolerance() {
+        String val = instance.getProperty("rotateRelative.absoluteTolerance", "1").trim();
+
+        return Double.parseDouble(val);
+    }
+
+    /**
+     * Gets the PID values for RotateRelative
+     *
+     * @return double array containing PID values
+     */
+    public static double[] getPIDValues() {
+        String[] arr = parseArrayValue("rotateRelative.PID", ",");
+        double[] pid = {0.005, 0, 0.000};
+
+        if (arr.length == 3) {
+            pid[0] = Double.parseDouble(arr[0]);
+            pid[1] = Double.parseDouble(arr[1]);
+            pid[2] = Double.parseDouble(arr[2]);
+        }
+
+        return pid;
+    }
 }

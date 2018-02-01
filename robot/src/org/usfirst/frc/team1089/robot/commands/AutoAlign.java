@@ -1,11 +1,17 @@
 package org.usfirst.frc.team1089.robot.commands;
 
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 public class AutoAlign extends RotateRelative {
-    private final int ANGLE_THRESHOLD = 1;
+    private final double ANGLE_THRESHOLD;
+
     public AutoAlign() {
         super();
+
+        // More or less will be the same value
+        // Someone should tell me if it's otherwise
+        ANGLE_THRESHOLD = DriveTrainSettings.getRotAbsTolerance();
 
         requires(Robot.manipulator);
     }

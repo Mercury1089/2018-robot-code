@@ -2,6 +2,8 @@ package org.usfirst.frc.team1089.robot.commands;
  import edu.wpi.first.wpilibj.interfaces.Gyro;
  import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+ import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 /**
  * Turns the robot a set amount of degrees relative to its current angle.
@@ -9,7 +11,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 public class RotateRelative extends PIDCommand {
 
 	private double targetHeading;
-    private final double MIN_PERCENT_VBUS = 0.13;
+    private final double MIN_PERCENT_VBUS;
 
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
@@ -25,11 +27,18 @@ public class RotateRelative extends PIDCommand {
 	 * @param targetHeading the relative number of degrees to rotate by
 	 */
 	public RotateRelative(double targetHeading) {
-		super(0.005, 0, 0.000);
+		super( // Sloppy, but configurable
+			DriveTrainSettings.getPIDValues()[0],
+			DriveTrainSettings.getPIDValues()[1],
+			DriveTrainSettings.getPIDValues()[2]
+		);
+
 		requires(Robot.driveTrain);
 
     	this.targetHeading = targetHeading;
     	this.gyro = Robot.driveTrain.getGyro();
+
+    	MIN_PERCENT_VBUS = DriveTrainSettings.getRotMinPVBus();
 
         System.out.println("RotateRelative constructed");
     }
@@ -37,13 +46,15 @@ public class RotateRelative extends PIDCommand {
     // Called just before this Command runs the first time
     protected void initialize() {
 	    gyro.reset();
-    	
+
+	    double[] outputRange = DriveTrainSettings.getRotOutputRange();
+
     	getPIDController().setInputRange(-180, 180);
-    	getPIDController().setOutputRange(-.5, .5);
+    	getPIDController().setOutputRange(outputRange[0], outputRange[1]);
 
     	//Set the controller to continuous AFTER setInputRange()
         getPIDController().setContinuous(true);
-        getPIDController().setAbsoluteTolerance(0.5);
+        getPIDController().setAbsoluteTolerance(DriveTrainSettings.getRotAbsTolerance());
 
     	getPIDController().setSetpoint(targetHeading);
 

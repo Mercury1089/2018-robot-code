@@ -5,8 +5,6 @@ import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team1089.robot.commands.DriveArcade;
-import org.usfirst.frc.team1089.robot.commands.DriveWithLIDAR;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**
@@ -31,9 +29,9 @@ public class ShuffleDash {
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
         SmartDashboard.putNumber("Left Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
         SmartDashboard.putNumber("Right Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
-        SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[0], 10));
-        SmartDashboard.putNumber("LIDAR Fixed Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getFixedDistance(), 10));
-        SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance()[1], 10));
+        SmartDashboard.putNumber("LIDAR Raw Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getRawDistance(), 10));
+        SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance(), 10));
+        SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.manipulator.getLidar().getDistance(), 10));
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));

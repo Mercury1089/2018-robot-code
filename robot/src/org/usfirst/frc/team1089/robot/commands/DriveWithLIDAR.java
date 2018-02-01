@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1089.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.command.PIDCommand;
 import org.usfirst.frc.team1089.robot.Robot;
 
 
@@ -18,7 +16,7 @@ public class DriveWithLIDAR extends DriveDistance {
      * @param minimumDistance The distance for the robot to be away from the LIDAR's target when it reaches said target.
      */
     public DriveWithLIDAR(double minimumDistance, double percentVoltage) {
-        super(Robot.manipulator.getLidar().getFixedDistance() - minimumDistance, percentVoltage);
+        super(Robot.manipulator.getLidar().getDistance() - minimumDistance, percentVoltage);
         requires(Robot.driveTrain);
         this.minimumDistance = minimumDistance;
         System.out.println("DriveWithLIDAR constructed with minimum distance of "  + minimumDistance);
@@ -27,21 +25,21 @@ public class DriveWithLIDAR extends DriveDistance {
 
     @Override
     protected void initialize() {
-        distance = Robot.manipulator.getLidar().getFixedDistance() - minimumDistance;
+        distance = Robot.manipulator.getLidar().getDistance() - minimumDistance;
         super.initialize();
         currentMethod = "DriveWithLIDAR.initialize();";
     }
 
     @Override
     protected void execute() {
-        distance = Robot.manipulator.getLidar().getFixedDistance() - minimumDistance;
+        distance = Robot.manipulator.getLidar().getDistance() - minimumDistance;
         updateDistance();
         currentMethod = "DriveWithLIDAR.execute();";
     }
 
     @Override
     protected boolean isFinished() {
-        return super.isFinished() && Robot.manipulator.getLidar().getFixedDistance() - minimumDistance <= 0;
+        return super.isFinished() && Robot.manipulator.getLidar().getDistance() - minimumDistance <= 0;
     }
 
     @Override

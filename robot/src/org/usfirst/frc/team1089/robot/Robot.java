@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
+import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
@@ -29,6 +30,7 @@ public class Robot extends IterativeRobot {
 	public static PDP pdp;
 	public static CameraVision camera;
     public static final Properties ROBOT_CONFIG;
+    public static Claw claw;
 
     static {
         ROBOT_CONFIG = new Properties();
@@ -66,6 +68,7 @@ public class Robot extends IterativeRobot {
 
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);
 		camera = new CameraVision();
+		claw = new Claw(CAN.CLAW_M);
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
 	}

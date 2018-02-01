@@ -85,7 +85,7 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnProfile("TestTrajectoryDetailed"));
+		right1.whenPressed(new MoveOnPath("TestTrajectoryDetailed"));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);

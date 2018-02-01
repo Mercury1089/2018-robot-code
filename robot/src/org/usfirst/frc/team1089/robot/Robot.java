@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
         ROBOT_CONFIG = new Properties();
 
         try {
-            FileReader reader = new FileReader("robot.properties");
+            FileReader reader = new FileReader("/home/lvuser/robot.properties");
             ROBOT_CONFIG.load(reader);
         } catch (Exception e) {
             e.printStackTrace();

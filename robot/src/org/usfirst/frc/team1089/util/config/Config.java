@@ -20,7 +20,7 @@ public abstract class Config {
         Properties temp = new Properties();
         if (instance != null) {
             try {
-                FileReader loader = new FileReader(fileName);
+                FileReader loader = new FileReader("/home/lvuser/" + fileName);
                 temp.load(loader);
                 instance.putAll(temp);
             } catch (Exception e) {

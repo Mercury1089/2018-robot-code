@@ -19,7 +19,7 @@ public class Manipulator extends Subsystem {
         victorLeft = new WPI_VictorSPX(victorLeftId);
         victorRight = new WPI_VictorSPX(victorRightId);
 
-        lidar = new LIDAR(canifierID, CANifier.PWMChannel.valueOf(pwmChannel), SensorsSettings.getEquation());
+        lidar = new LIDAR(canifierID, CANifier.PWMChannel.valueOf(pwmChannel), SensorsSettings.getLidarEquation());
     }
 
     public LIDAR getLidar() {

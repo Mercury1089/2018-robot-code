@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.util.config;
 
 import org.usfirst.frc.team1089.util.LIDAR;
 
+import java.awt.*;
 import java.util.Properties;
 
 /**
@@ -20,7 +21,7 @@ public class SensorsSettings extends Config {
      *
      * @return {@code PWMOffset} value
      */
-    public static LIDAR.PWMOffset getEquation() {
+    public static LIDAR.PWMOffset getLidarEquation() {
         String eq = instance.getProperty("lidar.offsetEquation", "default");
 
         switch (eq.toUpperCase()) {
@@ -33,5 +34,50 @@ public class SensorsSettings extends Config {
             default:
                 return LIDAR.PWMOffset.DEFAULT;
         }
+    }
+
+    /**
+     * Gets the resolution of the camera's feed
+     *
+     * @return dimension of resolution
+     */
+    public static Dimension getCameraResolution() {
+        String[] arr = parseArrayValue("camera.resolution", ",");
+        int[] res = {320, 240};
+
+        if (arr.length == 2) {
+            res[0] = Integer.parseInt(arr[0]);
+            res[1] = Integer.parseInt(arr[1]);
+        }
+
+        return new Dimension(res[0], res[1]);
+    }
+
+    /**
+     * Gets the FOV of the camera
+     *
+     * @return double array containing both horizontal and vertical FOV
+     */
+    public static double[] getCameraFOV() {
+        String[] arr = parseArrayValue("camera.FOV", ",");
+        double[] fov = {61, 34.3};
+
+        if (arr.length == 2) {
+            fov[0] = Double.parseDouble(arr[0]);
+            fov[1] = Double.parseDouble(arr[1]);
+        }
+
+        return fov;
+    }
+
+    /**
+     * Gets the latency between the RIO and the Pi's CameraServer.
+     *
+     * @return latency in ms
+     */
+    public static long getCameraServerLatency() {
+        String val = instance.getProperty("camera.latencyMS", "5000");
+
+        return Long.parseLong(val);
     }
 }

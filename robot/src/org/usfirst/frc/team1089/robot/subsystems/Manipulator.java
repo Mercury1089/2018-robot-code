@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team1089.robot.commands.TestLIDAR;
 import org.usfirst.frc.team1089.util.LIDAR;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 /**
  * Subsystem encapsulating manipulator actuators and sensors.
@@ -18,27 +19,25 @@ public class Manipulator extends Subsystem {
         victorLeft = new WPI_VictorSPX(victorLeftId);
         victorRight = new WPI_VictorSPX(victorRightId);
 
-        //TODO Read config for lidarNum rather than than hard code
-        lidar = new LIDAR(canifierID, CANifier.PWMChannel.valueOf(pwmChannel), LIDAR.PWMOffset.EQUATION_B);
-    }
-
-    @Override
-    public void periodic() {
-        lidar.updatePWMInput();
+        lidar = new LIDAR(canifierID, CANifier.PWMChannel.valueOf(pwmChannel), SensorsSettings.getEquation());
     }
 
     public LIDAR getLidar() {
         return lidar;
     }
 
-    public WPI_VictorSPX getVictorLeft()
-    {
+    public WPI_VictorSPX getVictorLeft() {
         return victorLeft;
     }
 
     public WPI_VictorSPX getVictorRight()
     {
         return victorRight;
+    }
+
+    @Override
+    public void periodic() {
+        lidar.updatePWMInput();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.util;
 import com.ctre.phoenix.CANifier;
 
-
 /**
  * Wrapper class for the entire LIDAR system that we are using to check for distance.
  */

@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.io.FileReader;
 import java.util.Properties;
@@ -25,15 +26,18 @@ import java.util.Properties;
  */
 public class Robot extends IterativeRobot {
 
+	// Subsystems
 	public static DriveTrain driveTrain;
 	public static Manipulator manipulator;
-	public static OI oi;
 	public static PDP pdp;
 	public static CameraVision camera;
     public static Claw claw;
 
+	public static OI oi;
+
     static {
 		DriveTrainSettings.initialize();
+		SensorsSettings.initialize();
     }
 
 	/**
@@ -49,9 +53,7 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
-	    driveTrain.getTalonDrive().setMaxOutput(
-	    		DriveTrainSettings.getMaxOutput()
-		);
+	    driveTrain.getTalonDrive().setMaxOutput(DriveTrainSettings.getMaxOutput());
 
 		driveTrain.resetEncoders();
 

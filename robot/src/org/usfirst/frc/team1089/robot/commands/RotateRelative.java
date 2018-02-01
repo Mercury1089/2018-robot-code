@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 public class RotateRelative extends PIDCommand {
 
 	private double targetHeading;
-    private final double MIN_PERCENT_VBUS = 0.12;
+    private final double MIN_PERCENT_VBUS = 0.13;
 
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 5;
@@ -25,7 +25,7 @@ public class RotateRelative extends PIDCommand {
 	 * @param targetHeading the relative number of degrees to rotate by
 	 */
 	public RotateRelative(double targetHeading) {
-		super(0.005, 0, 0);
+		super(0.005, 0, 0.000);
 		requires(Robot.driveTrain);
 
     	this.targetHeading = targetHeading;
@@ -34,30 +34,25 @@ public class RotateRelative extends PIDCommand {
         System.out.println("RotateRelative constructed");
     }
 
-
     // Called just before this Command runs the first time
     protected void initialize() {
 	    gyro.reset();
     	
     	getPIDController().setInputRange(-180, 180);
-    	getPIDController().setOutputRange(-.2, .2);
+    	getPIDController().setOutputRange(-.5, .5);
 
     	//Set the controller to continuous AFTER setInputRange()
         getPIDController().setContinuous(true);
-        getPIDController().setAbsoluteTolerance(1.5);
+        getPIDController().setAbsoluteTolerance(0.5);
 
     	getPIDController().setSetpoint(targetHeading);
 
 		System.out.println("RotateRelative initialized");
     }
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    }
-
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if(getPIDController().onTarget()) {
+    	if (getPIDController().onTarget()) {
     		counter++;
     	} else {
     		counter = 0;
@@ -92,8 +87,8 @@ public class RotateRelative extends PIDCommand {
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
 		System.out.println("Output after: " + output);
-		//TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
-		//and remove the negation on the next line.
+		// TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
+		// and remove the negation on the next line.
         Robot.driveTrain.pidWrite(-output);
 	}
 	

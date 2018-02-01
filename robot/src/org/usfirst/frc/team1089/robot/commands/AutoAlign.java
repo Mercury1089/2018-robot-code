@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot.commands;
 import org.usfirst.frc.team1089.robot.Robot;
 
 public class AutoAlign extends RotateRelative {
+    private final int ANGLE_THRESHOLD = 1;
     public AutoAlign() {
         super();
 
@@ -21,12 +22,11 @@ public class AutoAlign extends RotateRelative {
         boolean isFinished = super.isFinished();
 
         if (isFinished && Robot.camera.isRecent()) {
-            if (Math.abs(Robot.camera.getAngleFromCube()) > 1) {
+            if (Math.abs(Robot.camera.getAngleFromCube()) > ANGLE_THRESHOLD) {
                 updateHeading(Robot.camera.getAngleFromCube());
                 isFinished = false;
             }
         }
-
         return isFinished;
     }
 }

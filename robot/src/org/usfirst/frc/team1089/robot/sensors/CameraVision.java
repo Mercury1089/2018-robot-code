@@ -7,7 +7,7 @@ import java.util.Date;
 public class CameraVision {
     private double centerX;
     private long lastUpdate;
-    private final long LATENCY_MS = 100L;
+    private final long LATENCY_MS = 5000L;
 
     public CameraVision() {
         NetworkTableInstance.getDefault().getTable("CubeVision").getEntry("centerX").addListener(

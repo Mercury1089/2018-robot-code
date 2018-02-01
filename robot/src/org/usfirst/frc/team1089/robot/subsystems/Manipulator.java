@@ -10,7 +10,7 @@ import org.usfirst.frc.team1089.util.LIDAR;
 /**
  * Subsystem encapsulating manipulator actuators and sensors.
  */
-public class Manipulator extends Subsystem {
+public class    Manipulator extends Subsystem {
     private LIDAR lidar;
     private WPI_VictorSPX victorLeft;
     private WPI_VictorSPX victorRight;

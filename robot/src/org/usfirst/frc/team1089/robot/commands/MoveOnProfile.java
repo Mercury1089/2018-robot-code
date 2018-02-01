@@ -3,19 +3,14 @@
  */
 package org.usfirst.frc.team1089.robot.commands;
 
-import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.util.MercMath;
 
 import java.io.File;
 
@@ -27,6 +22,7 @@ public class MoveOnProfile extends Command {
 	private TalonSRX rightFront;
 
     private final double PROPORTIONAL = .1;
+    private static Logger log = LogManager.getLogger(UseClaw.class);
     private final double INTEGRAL = 0;
     private final double DERIVATIVE = .05;
     private Trajectory trajectoryR, trajectoryL;
@@ -50,7 +46,7 @@ public class MoveOnProfile extends Command {
             trajectoryR = Pathfinder.readFromCSV(new File(prefix + "_left.csv"));
             trajectoryL = Pathfinder.readFromCSV(new File(prefix + "_right.csv"));
         } catch (Exception e) {
-            System.out.println("Trajectory file could not be read. Check the path.");
+            log.info("Trajectory file could not be read. Check the path.");
             e.printStackTrace();
         }
     }

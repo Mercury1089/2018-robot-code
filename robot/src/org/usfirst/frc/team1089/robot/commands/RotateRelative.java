@@ -1,7 +1,10 @@
 package org.usfirst.frc.team1089.robot.commands;
- import edu.wpi.first.wpilibj.interfaces.Gyro;
- import org.usfirst.frc.team1089.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.robot.Robot;
 
 /**
  * Turns the robot a set amount of degrees relative to its current angle.
@@ -15,6 +18,7 @@ public class RotateRelative extends PIDCommand {
 	private final int ONTARGET_THRESHOLD = 5;
 
 	private Gyro gyro;
+	private static Logger log = LogManager.getLogger(UseClaw.class);
 
 	public RotateRelative() {
 		this(0);
@@ -31,7 +35,7 @@ public class RotateRelative extends PIDCommand {
     	this.targetHeading = targetHeading;
     	this.gyro = Robot.driveTrain.getGyro();
 
-        System.out.println("RotateRelative constructed");
+        log.info("RotateRelative constructed");
     }
 
 
@@ -48,7 +52,7 @@ public class RotateRelative extends PIDCommand {
 
     	getPIDController().setSetpoint(targetHeading);
 
-		System.out.println("RotateRelative initialized");
+		log.info("RotateRelative initialized");
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -67,14 +71,14 @@ public class RotateRelative extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-		System.out.println("RotateRelative ended");
+		log.info("RotateRelative ended");
 		Robot.driveTrain.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-		System.out.println("RotateRelative interrupted");
+		log.info("RotateRelative interrupted");
     	end();
     }
 
@@ -86,12 +90,12 @@ public class RotateRelative extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		if(getPIDController().onTarget()) {
-            System.out.println("Output before: " + output);
+           log.info("Output before: " + output);
 			output = 0;
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
-		System.out.println("Output after: " + output);
+		log.info("Output after: " + output);
 		//TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
 		//and remove the negation on the next line.
         Robot.driveTrain.pidWrite(-output);

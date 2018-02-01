@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1089.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.command.PIDCommand;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 
 
@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.robot.Robot;
 public class DriveWithLIDAR extends DriveDistance {
 
     public double minimumDistance;
+    private static Logger log = LogManager.getLogger(UseClaw.class);
 
     private static String currentMethod = "";
 
@@ -21,7 +22,7 @@ public class DriveWithLIDAR extends DriveDistance {
         super(Robot.manipulator.getLidar().getFixedDistance() - minimumDistance, percentVoltage);
         requires(Robot.driveTrain);
         this.minimumDistance = minimumDistance;
-        System.out.println("DriveWithLIDAR constructed with minimum distance of "  + minimumDistance);
+        log.info("DriveWithLIDAR constructed with minimum distance of "  + minimumDistance);
     }
 
 

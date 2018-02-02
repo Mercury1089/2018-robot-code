@@ -8,10 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -39,7 +36,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
 	private TalonDrive tDrive;
     private NavX navX;
-    private AnalogGyro analogGyro;
+    private ADXRS450_Gyro gyroSPI;
 
 	public static double WHEEL_DIAMETER_INCHES;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096;
@@ -80,7 +77,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
 		//Initialize the gyro that is currently on the robot. Comment out the initialization of the one not in use.
         navX = new NavX(SerialPort.Port.kUSB1);
-        //analogGyro = new AnalogGyro(Port#);
+        gyroSPI = new ADXRS450_Gyro();
+
 
 		//Account for motor orientation.
 		tMasterLeft.setInverted(true);
@@ -159,11 +157,13 @@ public class DriveTrain extends Subsystem implements PIDOutput {
      * @return The gyro, either the NavX or Analog Gyro, currently in use on the robot.
      */
     public Gyro getGyro() {
-        if (navX != null) {
+       /* if (navX != null) {
             return navX;
-        } else if (analogGyro != null){
-            return analogGyro;
-        } else {
+        } else */
+       if (gyroSPI != null){
+            return gyroSPI;
+        }
+        else {
             return null;
         }
     }

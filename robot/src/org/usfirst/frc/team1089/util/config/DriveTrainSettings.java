@@ -3,8 +3,11 @@ package org.usfirst.frc.team1089.util.config;
 import java.util.Properties;
 
 /**
- * Change the values in the config file, NOT this one.
- *  -Luke, 2 hours after changing the values in this file and getting no change
+ * Class that allows user to interface with drivetrain.properties
+ * config file with easy-to-access methods.
+ *
+ * Note that this class should NOT be modified; if settings need to be
+ * modified, edit the drivetrain.properties file.
  */
 public class DriveTrainSettings extends Config {
     /**
@@ -66,7 +69,7 @@ public class DriveTrainSettings extends Config {
      */
     public static double[] getRotOutputRange() {
         String[] arr = parseArrayValue("rotateRelative.outputRange", ",");
-        double[] range = {-1, 1};
+        double[] range = {-0.5, 0.5};
 
         if (arr.length == 2) {
             range[0] = Double.parseDouble(arr[0]);
@@ -94,7 +97,7 @@ public class DriveTrainSettings extends Config {
      */
     public static double[] getPIDValues() {
         String[] arr = parseArrayValue("rotateRelative.PID", ",");
-        double[] pid = {0.005, 0, 0};
+        double[] pid = {0.005, 0, 0.000};
 
         if (arr.length == 3) {
             pid[0] = Double.parseDouble(arr[0]);

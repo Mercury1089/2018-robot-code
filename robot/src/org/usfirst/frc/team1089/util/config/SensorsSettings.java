@@ -6,7 +6,11 @@ import java.awt.*;
 import java.util.Properties;
 
 /**
- * Settings specifically applied to sensors.
+ * Class that allows user to interface with sensors.properties
+ * config file with easy-to-access methods.
+ *
+ * Note that this class should NOT be modified; if settings need to be
+ * modified, edit the sensors.properties file.
  */
 public class SensorsSettings extends Config {
     private static Properties instance;

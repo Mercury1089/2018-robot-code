@@ -64,6 +64,7 @@ public class Robot extends IterativeRobot {
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);
 		camera = new CameraVision();
 		claw = new Claw(CAN.CLAW_M);
+
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
 	}

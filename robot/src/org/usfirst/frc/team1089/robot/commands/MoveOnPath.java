@@ -28,11 +28,11 @@ public class MoveOnPath extends Command {
 	private TalonSRX left;
 	private TalonSRX right;
 
+	private final int TRAJECTORY_SIZE;
     private final double PROPORTIONAL = .1;
     private final double INTEGRAL = 0;
     private final double DERIVATIVE = .05;
     private Trajectory trajectoryR, trajectoryL;
-    private int counter = 0;
 
     private MotionProfileStatus statusLeft, statusRight;
     private Notifier trajectoryProcessor = new Notifier(null);
@@ -48,6 +48,7 @@ public class MoveOnPath extends Command {
      */
 	public MoveOnPath(String prefix) {
         requires(Robot.driveTrain);
+
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
 
@@ -61,6 +62,8 @@ public class MoveOnPath extends Command {
 
         statusLeft = new MotionProfileStatus();
         statusRight = new MotionProfileStatus();
+
+	    TRAJECTORY_SIZE = trajectoryL.length();
 	}
 
 	
@@ -68,7 +71,6 @@ public class MoveOnPath extends Command {
 	protected void initialize() {
 	    //Reset if there was a profile run before.
 	    state = 0;
-	    counter = 0;
 
         left.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
         right.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
@@ -89,6 +91,8 @@ public class MoveOnPath extends Command {
         left.clearMotionProfileTrajectories();
         right.clearMotionProfileTrajectories();
 
+        fillTopBuffer();
+
         // Start processing
         trajectoryProcessor.startPeriodic(0.005);
 	}
@@ -99,59 +103,14 @@ public class MoveOnPath extends Command {
         right.getMotionProfileStatus(statusRight);
 
 	    switch (state) {
-            case 0: // Fill buffer
-                int zeroVelCount = 0;
-                double currentPosL = trajectoryL.segments[counter].position;
-                double currentPosR = trajectoryR.segments[counter].position;
-                double velocityL = trajectoryL.segments[counter].velocity;
-                double velocityR = trajectoryR.segments[counter].velocity;
-                boolean isLastPointL = trajectoryL.segments.length == counter + 1;
-                boolean isLastPointR = trajectoryR.segments.length == counter + 1;
-                boolean isZero = counter == 0;
-
-                TrajectoryPoint trajPointL = new TrajectoryPoint();
-                TrajectoryPoint trajPointR = new TrajectoryPoint();
-
-                // For each point, fill our structure and pass it to API
-                trajPointL.position = MercMath.feetToEncoderTicks(currentPosL); //Convert Revolutions to Units
-                trajPointR.position = MercMath.feetToEncoderTicks(currentPosR);
-                trajPointL.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityL); //Convert RPM to Units/100ms
-                trajPointR.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityR);
-                trajPointL.profileSlotSelect0 = DriveTrain.SLOT_0;
-                trajPointR.profileSlotSelect0 = DriveTrain.SLOT_0;
-                // TODO figure this out
-                trajPointL.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
-                trajPointR.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
-
-                // Set these to true on the first point
-                trajPointL.zeroPos = isZero;
-                trajPointR.zeroPos = isZero;
-
-                // Set these to true on the last point
-                trajPointL.isLastPoint = isLastPointL;
-                trajPointR.isLastPoint = isLastPointR;
-
-                left.pushMotionProfileTrajectory(trajPointL);
-                right.pushMotionProfileTrajectory(trajPointR);
-                counter++;
-
-                // Once the buffer is filled
-                if (isLastPointL && isLastPointR) {
-                    System.out.println("Top buffer full!");
-                    state = 1;
-                }
-                break;
-            case 1: // Process?
+            case 0: // Process?
                 if (statusLeft.btmBufferCnt >= 5 && statusRight.btmBufferCnt >= 5) {
                     left.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
                     right.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
 
                     System.out.println("hecking");
-                    state = 2;
+                    state = 1;
                 }
-                break;
-            case 2: // Debug
-
                 break;
         }
     }
@@ -159,7 +118,7 @@ public class MoveOnPath extends Command {
 
 	//Make this return true when this command no longer needs to run execute()
 	protected boolean isFinished() {
-	    if (state == 2)
+	    if (state == 1)
             return statusLeft.activePointValid && statusLeft.isLast && statusRight.activePointValid && statusRight.isLast;
 
 	    return false;
@@ -180,5 +139,42 @@ public class MoveOnPath extends Command {
         Robot.driveTrain.stop();
 
         System.out.println("MoveOnPath finished");
+    }
+
+    private void fillTopBuffer() {
+	    for (int i = 0; i < TRAJECTORY_SIZE; i++) {
+            double currentPosL = trajectoryL.segments[i].position;
+            double currentPosR = trajectoryR.segments[i].position;
+            double velocityL = trajectoryL.segments[i].velocity;
+            double velocityR = trajectoryR.segments[i].velocity;
+            boolean isLastPointL = TRAJECTORY_SIZE == i + 1;
+            boolean isLastPointR = TRAJECTORY_SIZE == i + 1;
+            boolean isZero = i == 0;
+
+            TrajectoryPoint trajPointL = new TrajectoryPoint();
+            TrajectoryPoint trajPointR = new TrajectoryPoint();
+
+            // For each point, fill our structure and pass it to API
+            trajPointL.position = MercMath.feetToEncoderTicks(currentPosL); //Convert Revolutions to Units
+            trajPointR.position = MercMath.feetToEncoderTicks(currentPosR);
+            trajPointL.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityL); //Convert RPM to Units/100ms
+            trajPointR.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityR);
+            trajPointL.profileSlotSelect0 = DriveTrain.SLOT_0;
+            trajPointR.profileSlotSelect0 = DriveTrain.SLOT_0;
+            // TODO figure this out
+            trajPointL.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
+            trajPointR.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
+
+            // Set these to true on the first point
+            trajPointL.zeroPos = isZero;
+            trajPointR.zeroPos = isZero;
+
+            // Set these to true on the last point
+            trajPointL.isLastPoint = isLastPointL;
+            trajPointR.isLastPoint = isLastPointR;
+
+            left.pushMotionProfileTrajectory(trajPointL);
+            right.pushMotionProfileTrajectory(trajPointR);
+        }
     }
 }

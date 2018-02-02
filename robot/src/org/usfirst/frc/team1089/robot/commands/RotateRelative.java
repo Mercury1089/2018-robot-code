@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.robot.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import javafx.scene.transform.Rotate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
  * Turns the robot a set amount of degrees relative to its current angle.
  */
 public class RotateRelative extends PIDCommand {
-
+	private static Logger log = LogManager.getLogger(RotateRelative.class);
 	private double targetHeading;
     private final double MIN_PERCENT_VBUS;
 

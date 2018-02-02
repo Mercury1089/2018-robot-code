@@ -10,6 +10,9 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import edu.wpi.first.wpilibj.Notifier;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -25,6 +28,7 @@ import java.io.File;
  * Use motion profiling to move on a specified path
  */
 public class MoveOnPath extends Command {
+    private Logger log = LogManager.getLogger(MoveOnPath.class);
 	private TalonSRX left;
 	private TalonSRX right;
 
@@ -32,12 +36,13 @@ public class MoveOnPath extends Command {
     private final double PROPORTIONAL = .1;
     private final double INTEGRAL = 0;
     private final double DERIVATIVE = .05;
+
     private Trajectory trajectoryR, trajectoryL;
 
     private MotionProfileStatus statusLeft, statusRight;
     private Notifier trajectoryProcessor = new Notifier(null);
 
-    private int state = 0;
+    private boolean isRunning;
 
     /**
      * Creates this command using the file prefix to determine
@@ -70,8 +75,10 @@ public class MoveOnPath extends Command {
 	//Called just before this Command runs for the first time. 
 	protected void initialize() {
 	    //Reset if there was a profile run before.
-	    state = 0;
+        isRunning = false;
+        setMotionProfileMode(SetValueMotionProfile.Disable);
 
+        // Configure PID values
         left.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
         right.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
         left.config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
@@ -81,9 +88,7 @@ public class MoveOnPath extends Command {
         left.config_kF(DriveTrain.SLOT_0, Robot.driveTrain.getFeedForward(), DriveTrain.TIMEOUT_MS);
         right.config_kF(DriveTrain.SLOT_0, Robot.driveTrain.getFeedForward(), DriveTrain.TIMEOUT_MS);
 
-        left.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
-        right.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
-
+        // Change motion control frame period
         left.changeMotionControlFramePeriod(10);
         right.changeMotionControlFramePeriod(10);
 
@@ -91,9 +96,11 @@ public class MoveOnPath extends Command {
         left.clearMotionProfileTrajectories();
         right.clearMotionProfileTrajectories();
 
+        // Fill TOP (API) level buffer
         fillTopBuffer();
 
         // Start processing
+        // i.e.: moving API points to RAM
         trajectoryProcessor.startPeriodic(0.005);
 	}
 
@@ -102,45 +109,42 @@ public class MoveOnPath extends Command {
         left.getMotionProfileStatus(statusLeft);
         right.getMotionProfileStatus(statusRight);
 
-	    switch (state) {
-            case 0: // Process?
-                if (statusLeft.btmBufferCnt >= 5 && statusRight.btmBufferCnt >= 5) {
-                    left.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
-                    right.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+        // Give a slight buffer when we process to make sure we don't bite off more than
+        // we can chew or however that metaphor goes.
+        if (!isRunning && statusLeft.btmBufferCnt >= 5 && statusRight.btmBufferCnt >= 5) {
+            setMotionProfileMode(SetValueMotionProfile.Enable);
 
-                    System.out.println("hecking");
-                    state = 1;
-                }
-                break;
+            log.log(Level.INFO, "Starting motion profile...");
+
+            isRunning = true;
         }
     }
 
-
-	//Make this return true when this command no longer needs to run execute()
 	protected boolean isFinished() {
-	    if (state == 1)
-            return statusLeft.activePointValid && statusLeft.isLast && statusRight.activePointValid && statusRight.isLast;
-
-	    return false;
+        return
+            isRunning &&
+            statusLeft.activePointValid &&
+            statusLeft.isLast &&
+            statusRight.activePointValid &&
+            statusRight.isLast;
 	}
 
 
 	//Called once after isFinished() returns true
     @Override
 	protected void end() {
-	    System.out.println("Stop processor");
-	    trajectoryProcessor.stop();
-
-        left.set(ControlMode.MotionProfile, SetValueMotionProfile.Hold.value);
-        right.set(ControlMode.MotionProfile, SetValueMotionProfile.Hold.value);
+        trajectoryProcessor.stop();
 
 		left.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, Robot.driveTrain.TIMEOUT_MS);
         right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, Robot.driveTrain.TIMEOUT_MS);
         Robot.driveTrain.stop();
 
-        System.out.println("MoveOnPath finished");
+        log.log(Level.INFO, "Finished running");
     }
 
+    /**
+     * Fill top-level (API-level) buffer with all points
+     */
     private void fillTopBuffer() {
 	    for (int i = 0; i < TRAJECTORY_SIZE; i++) {
             double currentPosL = trajectoryL.segments[i].position;
@@ -161,6 +165,7 @@ public class MoveOnPath extends Command {
             trajPointR.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityR);
             trajPointL.profileSlotSelect0 = DriveTrain.SLOT_0;
             trajPointR.profileSlotSelect0 = DriveTrain.SLOT_0;
+
             // TODO figure this out
             trajPointL.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
             trajPointR.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
@@ -176,5 +181,10 @@ public class MoveOnPath extends Command {
             left.pushMotionProfileTrajectory(trajPointL);
             right.pushMotionProfileTrajectory(trajPointR);
         }
+    }
+
+    private void setMotionProfileMode(SetValueMotionProfile value) {
+        left.set(ControlMode.MotionProfile, value.value);
+        right.set(ControlMode.MotionProfile, value.value);
     }
 }

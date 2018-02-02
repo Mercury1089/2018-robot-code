@@ -63,6 +63,7 @@ public class OI {
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4;
 	private JoystickButton gamepad_a;
+
 	
 
 

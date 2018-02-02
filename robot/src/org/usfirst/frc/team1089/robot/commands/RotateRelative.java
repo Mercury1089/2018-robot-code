@@ -14,7 +14,7 @@ public class RotateRelative extends PIDCommand {
     private final double MIN_PERCENT_VBUS;
 
 	private int counter;
-	private final int ONTARGET_THRESHOLD = 5;
+	private final int ONTARGET_THRESHOLD = 3;
 
 	private Gyro gyro;
 

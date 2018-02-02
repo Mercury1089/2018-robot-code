@@ -2,6 +2,10 @@ package org.usfirst.frc.team1089.util.config;
 
 import java.util.Properties;
 
+/**
+ * Change the values in the config file, NOT this one.
+ *  -Luke, 2 hours after changing the values in this file and getting no change
+ */
 public class DriveTrainSettings extends Config {
     /**
      * Enumeration of motor controller layouts for the drive train.
@@ -50,7 +54,7 @@ public class DriveTrainSettings extends Config {
      * @return min output, represented as percent value [0.0, 1.0]
      */
     public static double getRotMinPVBus() {
-        String val = instance.getProperty("rotateRelative.minPercentVBus", "0.1").trim();
+        String val = instance.getProperty("rotateRelative.minPercentVBus", "0.3").trim();
 
         return Double.parseDouble(val);
     }
@@ -62,7 +66,7 @@ public class DriveTrainSettings extends Config {
      */
     public static double[] getRotOutputRange() {
         String[] arr = parseArrayValue("rotateRelative.outputRange", ",");
-        double[] range = {-0.5, 0.5};
+        double[] range = {-1, 1};
 
         if (arr.length == 2) {
             range[0] = Double.parseDouble(arr[0]);
@@ -90,7 +94,7 @@ public class DriveTrainSettings extends Config {
      */
     public static double[] getPIDValues() {
         String[] arr = parseArrayValue("rotateRelative.PID", ",");
-        double[] pid = {0.005, 0, 0.000};
+        double[] pid = {0.005, 0, 0};
 
         if (arr.length == 3) {
             pid[0] = Double.parseDouble(arr[0]);

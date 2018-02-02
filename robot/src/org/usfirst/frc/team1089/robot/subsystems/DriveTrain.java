@@ -22,6 +22,7 @@ import org.usfirst.frc.team1089.util.config.Config;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.NavX;
 import org.usfirst.frc.team1089.util.TalonDrive;
+import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 /**
  * Subsystem that encapsulates the drive train.
@@ -46,12 +47,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final double MAX_RPM_CROSSFIRE = 454.1;
     public static final double MAX_RPM_SPEEDY_BOI = 700.63;
 
-    public DriveTrainLayout curLayout;
-
-	public enum DriveTrainLayout {
-		DEFAULT,
-		LEGACY;
-	}
+    public DriveTrainSettings.DriveTrainLayout curLayout;
 
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
@@ -62,17 +58,10 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	 * @param br Back-right Talon ID
 	 */
 	public DriveTrain(int fl, int fr, int bl, int br) {
-
 		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
-		curLayout = DriveTrainLayout.DEFAULT;
-
-		try {
-			curLayout = DriveTrainLayout.valueOf(
-					Robot.ROBOT_CONFIG.getProperty("driveTrain.layout", "default").toUpperCase().trim()
-			);
-		} catch (IllegalArgumentException e) { } // No layout exists with that name
+		curLayout = DriveTrainSettings.getControllerLayout();
 
 		// At this point it's based on what the layout is
         switch(curLayout) {

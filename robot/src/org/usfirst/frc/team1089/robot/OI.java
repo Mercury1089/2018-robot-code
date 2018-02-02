@@ -81,7 +81,7 @@ public class OI {
 		left3 = new JoystickButton(leftStick,3);
 		left3.whenPressed(new DriveDistance(24.0, .12));
 		left4 = new JoystickButton(leftStick,4);
-		left4.whenPressed(new GetCube());
+		left4.whenPressed(new RotateRelative(30));
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);

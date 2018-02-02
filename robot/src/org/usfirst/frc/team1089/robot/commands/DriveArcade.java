@@ -31,6 +31,7 @@ public class DriveArcade extends Command {
 	@Override
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
+		//Robot.driveTrain.getGyro().reset();
 		log.info(getName() + " command initialized");
 	}
 

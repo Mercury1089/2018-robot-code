@@ -2,6 +2,8 @@ package org.usfirst.frc.team1089.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.util.MercMath;
@@ -20,6 +22,7 @@ public class DriveDistance extends Command {
 	private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
 
+    private static Logger log = LogManager.getLogger(UseClaw.class);
 	protected double distance;
     private DoubleSupplier distanceSupplier;
 	protected double percentVoltage; //Voltage is NOW from [-1, 1]
@@ -89,7 +92,7 @@ public class DriveDistance extends Command {
 		if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
 			isFinished = true;
 			onTargetCount = 0;
-            System.out.println("DriveDistance ended");
+           log.info("DriveDistance ended");
 		}
 
 		return isFinished;
@@ -107,7 +110,7 @@ public class DriveDistance extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-        System.out.println("DriveDistance interrupted");
+        log.info("DriveDistance interrupted");
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
     }
 
@@ -116,7 +119,7 @@ public class DriveDistance extends Command {
         //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
         Robot.driveTrain.resetEncoders();
         endPosL = MercMath.inchesToEncoderTicks(distance);
-        System.out.println(distance);
+        log.info(distance);
         // Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
         // On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
         // to negate both endPosR and endPosL.

@@ -2,6 +2,13 @@ package org.usfirst.frc.team1089.util.config;
 
 import java.util.Properties;
 
+/**
+ * Class that allows user to interface with drivetrain.properties
+ * config file with easy-to-access methods.
+ *
+ * Note that this class should NOT be modified; if settings need to be
+ * modified, edit the drivetrain.properties file.
+ */
 public class DriveTrainSettings extends Config {
     /**
      * Enumeration of motor controller layouts for the drive train.

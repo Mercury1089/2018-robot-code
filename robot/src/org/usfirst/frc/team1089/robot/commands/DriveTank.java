@@ -39,7 +39,7 @@ public class DriveTank extends Command {
 		if (tDrive != null) {
 			tDrive.tankDrive(Robot.oi.getY(DS_USB.LEFT_STICK), Robot.oi.getY(DS_USB.RIGHT_STICK));
 		} else {
-			System.out.println("Talon Drive is not initialized!");
+			log.info("Talon Drive is not initialized!");
 		}
 		everySecond.run(log -> log.info("tank driving"));
 	}
@@ -54,7 +54,7 @@ public class DriveTank extends Command {
 	@Override
 	protected void end() {
 		//Robot.driveTrain.stop();
-		System.out.println("TankDrive has ended");
+		log.info("TankDrive has ended");
 	}
 
 	// Called when another command which requires one or more of the same

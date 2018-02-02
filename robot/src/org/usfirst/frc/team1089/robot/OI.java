@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.*;
+import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -62,7 +63,9 @@ public class OI {
 
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4;
-	private JoystickButton gamepad_a;
+	private JoystickButton gamepad_a, gamepad_b, gamepad_y;
+
+	private UseClaw useClaw;
 
 	
 
@@ -90,7 +93,12 @@ public class OI {
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);
+		gamepad_b = new JoystickButton(gamepad, 2);
 		gamepad_a.whenPressed(new DriveArcade());
+		gamepad_b.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+		gamepad_b.whenReleased(new UseClaw(Claw.ClawState.STOP));
+		gamepad_y.whenPressed(new UseClaw(Claw.ClawState.EJECT));
+		gamepad_y.whenReleased(new UseClaw(Claw.ClawState.STOP));
 
 		// SmartDash auton choosers
 		startingPosition = new SendableChooser<>();

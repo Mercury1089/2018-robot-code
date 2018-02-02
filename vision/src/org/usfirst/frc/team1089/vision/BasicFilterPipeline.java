@@ -1,11 +1,11 @@
 package org.usfirst.frc.team1089.vision;
 
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1089.config.OpenCVSettings;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.opencv.core.*;
-import org.opencv.imgproc.*;
-import org.usfirst.frc.team1089.config.OpenCVSettings;
 
 /**
  * Basic pipeline that filters a color

@@ -13,9 +13,6 @@ import org.usfirst.frc.team1089.robot.subsystems.PDP;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
-import java.io.FileReader;
-import java.util.Properties;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -53,6 +50,7 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
+
 	    driveTrain.getTalonDrive().setMaxOutput(DriveTrainSettings.getMaxOutput());
 
 		driveTrain.resetEncoders();
@@ -63,6 +61,7 @@ public class Robot extends IterativeRobot {
 
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);
 		camera = new CameraVision();
+		claw = new Claw(CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		claw = new Claw(CAN.CLAW_M);
 
 		// OI NEEDS to be constructed as the last line for everything to work.

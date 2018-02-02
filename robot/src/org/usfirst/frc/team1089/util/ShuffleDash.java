@@ -1,10 +1,9 @@
 package org.usfirst.frc.team1089.util;
 
-import org.usfirst.frc.team1089.robot.Robot;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**

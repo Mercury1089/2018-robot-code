@@ -1,10 +1,11 @@
 package org.usfirst.frc.team1089.robot.sensors;
 
-import edu.wpi.first.networktables.*;
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.EntryNotification;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.awt.*;
-import java.util.Date;
 
 public class CameraVision {
     private double centerX;

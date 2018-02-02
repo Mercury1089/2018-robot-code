@@ -57,8 +57,6 @@ public class MoveOnPath extends Command {
         trajectoryProcessor.setHandler(() -> {
             left.processMotionProfileBuffer();
             right.processMotionProfileBuffer();
-
-            System.out.println("Processing!");
         });
 
         statusLeft = new MotionProfileStatus();
@@ -68,18 +66,9 @@ public class MoveOnPath extends Command {
 	
 	//Called just before this Command runs for the first time. 
 	protected void initialize() {
-	    /*left.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Robot.driveTrain.TIMEOUT_MS);
-        right.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Robot.driveTrain.TIMEOUT_MS);
-
-        //TODO Put different numbers. These are random numbers. Discuss later.
-        left.configMotionCruiseVelocity(15000, Robot.driveTrain.TIMEOUT_MS);
-        right.configMotionCruiseVelocity(15000, Robot.driveTrain.TIMEOUT_MS);
-
-        left.configMotionAcceleration(6000, Robot.driveTrain.TIMEOUT_MS);
-        left.configMotionAcceleration(6000, Robot.driveTrain.TIMEOUT_MS);
-
-
-        Robot.driveTrain.configVoltage(0, .5);
+	    //Reset if there was a profile run before.
+	    state = 0;
+	    counter = 0;
 
         left.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
         right.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
@@ -87,19 +76,9 @@ public class MoveOnPath extends Command {
         right.config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
         left.config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
         right.config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
-        */
-
-        left.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
-        right.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
-        left.config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
-        right.config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
-        left.config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
-        right.config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
-
         left.config_kF(DriveTrain.SLOT_0, Robot.driveTrain.getFeedForward(), DriveTrain.TIMEOUT_MS);
         right.config_kF(DriveTrain.SLOT_0, Robot.driveTrain.getFeedForward(), DriveTrain.TIMEOUT_MS);
 
-        //Methinks this is the factor by which max velocity is decreased.
         left.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
         right.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 
@@ -112,13 +91,13 @@ public class MoveOnPath extends Command {
 
         // Start processing
         trajectoryProcessor.startPeriodic(0.005);
-
-        // Reset counter
-        counter = 0;
 	}
 
 	//Called repeatedly when this Command is scheduled to run.
 	protected void execute() {
+        left.getMotionProfileStatus(statusLeft);
+        right.getMotionProfileStatus(statusRight);
+
 	    switch (state) {
             case 0: // Fill buffer
                 int zeroVelCount = 0;
@@ -138,11 +117,8 @@ public class MoveOnPath extends Command {
                 trajPointR.position = MercMath.feetToEncoderTicks(currentPosR);
                 trajPointL.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityL); //Convert RPM to Units/100ms
                 trajPointR.velocity = MercMath.revsPerMinuteToTicksPerTenth(velocityR);
-                /*trajPointL.headingDeg = 0; *//* future feature - not used in this example*//*
-                trajPointR.headingDeg = 0;*/
-                trajPointL.profileSlotSelect0 = DriveTrain.SLOT_0; /* which set of gains would you like to use [0,3]? */
+                trajPointL.profileSlotSelect0 = DriveTrain.SLOT_0;
                 trajPointR.profileSlotSelect0 = DriveTrain.SLOT_0;
-                // point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
                 // TODO figure this out
                 trajPointL.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
                 trajPointR.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
@@ -160,14 +136,13 @@ public class MoveOnPath extends Command {
                 counter++;
 
                 // Once the buffer is filled
-                if (isLastPointL && isLastPointR)
+                if (isLastPointL && isLastPointR) {
+                    System.out.println("Top buffer full!");
                     state = 1;
+                }
                 break;
             case 1: // Process?
-                left.getMotionProfileStatus(statusLeft);
-                right.getMotionProfileStatus(statusRight);
-
-                if (statusLeft.btmBufferCnt >= 10 && statusRight.btmBufferCnt >= 10) {
+                if (statusLeft.btmBufferCnt >= 5 && statusRight.btmBufferCnt >= 5) {
                     left.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
                     right.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
 
@@ -176,8 +151,7 @@ public class MoveOnPath extends Command {
                 }
                 break;
             case 2: // Debug
-                left.getMotionProfileStatus(statusLeft);
-                right.getMotionProfileStatus(statusRight);
+
                 break;
         }
     }

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.util;
 import com.ctre.phoenix.CANifier;
 
-
 /**
  * Wrapper class for the entire LIDAR system that we are using to check for distance.
  */
@@ -9,11 +8,30 @@ public class LIDAR {
     private CANifier canifier;
     private CANifier.PWMChannel pwmChannel;
     private final double[] PWM_INPUT = new double[2];
-    private LidarNum lidarNum;
+    private PWMOffset equation;
 
-    private final double COEFFICIENT, CONSTANT;
+    public enum PWMOffset {
+        EQUATION_A(-5.55, 1.0),
+        EQUATION_B(-4.67, 1.02),
+        DEFAULT(0, 0);
 
-    public enum LidarNum {ONE, TWO};
+        private final double CONSTANT, COEFFICIENT;
+
+        PWMOffset(double c, double coeff) {
+            CONSTANT = c;
+            COEFFICIENT = coeff;
+        }
+
+        /**
+         * Applies the offset equation to the given value
+         *
+         * @param value the raw value
+         * @return the new value, with the offset function applied to it.
+         */
+        public double apply(double value) {
+            return COEFFICIENT * value + CONSTANT;
+        }
+    };
 
     /**
      * Creates a new LIDAR by defining both the CANifier PWM channel that the
@@ -23,54 +41,53 @@ public class LIDAR {
      * @param deviceID ID of the CANifier
      * @param channel  PWMChannel of the LIDAR
      */
-    public LIDAR(int deviceID, CANifier.PWMChannel channel, LidarNum lidarNum) {
+    public LIDAR(int deviceID, CANifier.PWMChannel channel, PWMOffset o) {
         canifier = new CANifier(deviceID);
         pwmChannel = channel;
-        this.lidarNum = lidarNum;
-
-        switch (lidarNum) {
-            case ONE:
-                CONSTANT = -5.55;
-                COEFFICIENT = 1.0;
-                break;
-            case TWO:
-                CONSTANT = -4.67;
-                COEFFICIENT = 1.02;
-                break;
-            default:
-                CONSTANT = 0.0;
-                COEFFICIENT = 0.0;
-                break;
-        }
+        equation = o;
 
         // canifier(channel.value, true);
     }
 
     /**
-     * Gets the distance from the LIDAR sensor
-     * @return the distance sensed from the LIDAR, in centimeters.
+     * Updates the current duty cycle and period recieved
+     * from the LIDAR.
      */
-    public double[] getDistance() {
-        // returns [PWM Value, Period]
+    public void updatePWMInput() {
         canifier.getPWMInput(pwmChannel, PWM_INPUT);
-
-        // 10 us (microseconds) to 1 cm to 1 inch
-        return new double[] {
-                PWM_INPUT[0] / 10.0 / 2.54,
-                PWM_INPUT[1]
-        }; // TODO: use a conversion method in MercMath
     }
 
-    public double getFixedDistance() {
-        return fixDistance(getDistance()[0]);
+
+    /**
+     * Gets the distance from the LIDAR sensor.
+     *
+     * @return raw distance from LIDAR, with applied offset
+     */
+    public double getDistance() {
+        // Apply offset equation
+        return equation.apply(getRawDistance());
     }
 
-    public double fixDistance(double rawVal) {
-        double newVal;
+    /**
+     * Gets the distance from the LIDAR sensor, no offset applied.
+     *
+     * @return the distance sensed from the LIDAR, in inches
+     */
+    public double getRawDistance() {
+        // Convert microseconds to cm
+        double cm = PWM_INPUT[0] / 10.0; // TODO: use a conversion method in MercMath
+        // Convert cm to in
+        double in = MercMath.centimetersToInches(cm);
 
-        //Equations are based of lines of best fit calculated from Luke's amazing data
-        newVal = COEFFICIENT * rawVal + CONSTANT;
+        return in;
+    }
 
-        return newVal;
+    /**
+     * Gets PWM period from LIDAR.
+     *
+     * @return PWM input period, in microseconds
+     */
+    public double getPeriod() {
+        return PWM_INPUT[1];
     }
 }

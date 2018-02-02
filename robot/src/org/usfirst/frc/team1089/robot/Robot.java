@@ -10,6 +10,8 @@ import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.io.FileReader;
 import java.util.Properties;
@@ -24,23 +26,18 @@ import java.util.Properties;
  */
 public class Robot extends IterativeRobot {
 
+	// Subsystems
 	public static DriveTrain driveTrain;
 	public static Manipulator manipulator;
-	public static OI oi;
 	public static PDP pdp;
 	public static CameraVision camera;
-    public static final Properties ROBOT_CONFIG;
     public static Claw claw;
 
-    static {
-        ROBOT_CONFIG = new Properties();
+	public static OI oi;
 
-        try {
-            FileReader reader = new FileReader("robot.properties");
-            ROBOT_CONFIG.load(reader);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    static {
+		DriveTrainSettings.initialize();
+		SensorsSettings.initialize();
     }
 
 	/**
@@ -56,11 +53,7 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
-	    String maxOut = ROBOT_CONFIG.getProperty("driveTrain.maxOutput", "1.0");
-
-	    driveTrain.getTalonDrive().setMaxOutput(
-	    		Double.parseDouble(maxOut)
-		);
+	    driveTrain.getTalonDrive().setMaxOutput(DriveTrainSettings.getMaxOutput());
 
 		driveTrain.resetEncoders();
 

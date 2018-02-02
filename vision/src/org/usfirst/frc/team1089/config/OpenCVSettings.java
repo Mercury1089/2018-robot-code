@@ -52,13 +52,13 @@ public class OpenCVSettings extends Config {
     }
 
     /**
-     * Parses the {@code hsv.value} property in the opencv config
-     * and gets the threshold for the value
+     * Parses the {@code hsv.luminance} property in the opencv config
+     * and gets the threshold for the luminance
      *
-     * @return array containing min and max of value, between 0 and 255
+     * @return array containing min and max of luminance, between 0 and 255
      */
-    public static double[] getHSVThresholdVal() {
-        String[] rangeString = parseArrayValue("hsv.value", ARRAY_DELIM);
+    public static double[] getHSVThresholdLum() {
+        String[] rangeString = parseArrayValue("hsv.luminance", ARRAY_DELIM);
         double[] range = {155, 255};
         if (rangeString.length == 2) {
             range[0] = Double.parseDouble(rangeString[0].trim());

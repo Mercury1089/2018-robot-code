@@ -14,7 +14,6 @@ import java.util.function.Consumer;
  * <pre>
  * // in init save it as a field
  * everySecond = new DelayableLogger(log, 1_000, TimeUnit.Milliseconds);
- * // TODO: think of better naming convention
  * 
  * // in execute call the run method with a lambda
  * everySecond.run(log -> log.info("I'm doing something!"));

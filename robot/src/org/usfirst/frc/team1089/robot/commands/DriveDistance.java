@@ -14,8 +14,6 @@ import java.util.function.DoubleSupplier;
  * Uses Talons and mag encoders to drive a set distance.
  */
 public class DriveDistance extends Command {
-
-
     private final double PROPORTIONAL = .055;
     private final double INTEGRAL = 0;
     private final double DERIVATIVE = .05;

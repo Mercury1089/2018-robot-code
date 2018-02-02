@@ -108,8 +108,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// This allows us to measure the distance from any given point to any ending point.
 		tMasterLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
 		tMasterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
-
-
 	}
 
     public TalonSRX getLeft() {

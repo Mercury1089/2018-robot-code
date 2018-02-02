@@ -1,4 +1,10 @@
 package org.usfirst.frc.team1089.robot.commands;
+
+import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.robot.Robot;
  import edu.wpi.first.wpilibj.interfaces.Gyro;
  import org.usfirst.frc.team1089.robot.Robot;
 import edu.wpi.first.wpilibj.command.PIDCommand;
@@ -40,8 +46,9 @@ public class RotateRelative extends PIDCommand {
 
     	MIN_PERCENT_VBUS = DriveTrainSettings.getRotMinPVBus();
 
-        System.out.println("RotateRelative constructed");
+        log.info("RotateRelative constructed");
     }
+
 
     // Called just before this Command runs the first time
     protected void initialize() {
@@ -50,15 +57,15 @@ public class RotateRelative extends PIDCommand {
 	    double[] outputRange = DriveTrainSettings.getRotOutputRange();
 
     	getPIDController().setInputRange(-180, 180);
-    	getPIDController().setOutputRange(outputRange[0], outputRange[1]);
+    	getPIDController().setOutputRange(-.2, .2);
 
     	//Set the controller to continuous AFTER setInputRange()
         getPIDController().setContinuous(true);
-        getPIDController().setAbsoluteTolerance(DriveTrainSettings.getRotAbsTolerance());
+        getPIDController().setAbsoluteTolerance(1.5);
 
     	getPIDController().setSetpoint(targetHeading);
 
-		System.out.println("RotateRelative initialized");
+		log.info("RotateRelative initialized");
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -73,14 +80,14 @@ public class RotateRelative extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-		System.out.println("RotateRelative ended");
+		log.info("RotateRelative ended");
 		Robot.driveTrain.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-		System.out.println("RotateRelative interrupted");
+		log.info("RotateRelative interrupted");
     	end();
     }
 
@@ -92,14 +99,17 @@ public class RotateRelative extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		if(getPIDController().onTarget()) {
-            System.out.println("Output before: " + output);
+           log.info("Output before: " + output);
 			output = 0;
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
-		System.out.println("Output after: " + output);
+		log.info("Output after: " + output);
 		// TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
 		// and remove the negation on the next line.
+		log.info("Output after: " + output);
+		//TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
+		//and remove the negation on the next line.
         Robot.driveTrain.pidWrite(-output);
 	}
 	

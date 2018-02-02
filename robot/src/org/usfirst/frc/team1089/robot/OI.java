@@ -63,6 +63,7 @@ public class OI {
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4;
 	private JoystickButton gamepad_a;
+
 	
 
 
@@ -85,7 +86,7 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("TestTrajectoryDetailed"));
+		right1.whenPressed(new MoveOnPath("TestStraightDetailed"));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);

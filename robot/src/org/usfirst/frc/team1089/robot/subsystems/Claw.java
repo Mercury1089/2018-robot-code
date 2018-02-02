@@ -38,7 +38,7 @@ public class Claw extends Subsystem {
     }
 
     public void set(ClawState state) {
-        clawMotor.set(state.speed);
+        clawMotor_M.set(state.speed);
     }
 
     public void grab(){
@@ -50,7 +50,7 @@ public class Claw extends Subsystem {
     }
 
     public void stop(){
-        clawMotor.stopMotor();
+        clawMotor_M.stopMotor();
         set(ClawState.STOP);
     }
 

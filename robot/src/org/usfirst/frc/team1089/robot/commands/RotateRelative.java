@@ -18,7 +18,6 @@ public class RotateRelative extends PIDCommand {
 	private int counter;
 	private final int ONTARGET_THRESHOLD = 3;
 
-	private static Logger log = LogManager.getLogger(UseClaw.class);
 	private Gyro gyro;
 
 	public RotateRelative() {

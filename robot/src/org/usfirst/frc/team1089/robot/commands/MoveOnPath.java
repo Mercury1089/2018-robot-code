@@ -57,8 +57,8 @@ public class MoveOnPath extends Command {
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
 
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_left.csv"));
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_right.csv"));
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_left_detailed.csv"));
+        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_right_detailed.csv"));
 
         trajectoryProcessor.setHandler(() -> {
             left.processMotionProfileBuffer();
@@ -147,10 +147,14 @@ public class MoveOnPath extends Command {
      */
     private void fillTopBuffer() {
 	    for (int i = 0; i < TRAJECTORY_SIZE; i++) {
-            double currentPosL = trajectoryL.segments[i].position;
-            double currentPosR = trajectoryR.segments[i].position;
+	        // NOTE: Encoder ticks are backwards, we need to work with that.
+            double currentPosL = -trajectoryL.segments[i].position;
+            double currentPosR = -trajectoryR.segments[i].position;
+
+            // Come at us
             double velocityL = trajectoryL.segments[i].velocity;
             double velocityR = trajectoryR.segments[i].velocity;
+
             boolean isLastPointL = TRAJECTORY_SIZE == i + 1;
             boolean isLastPointR = TRAJECTORY_SIZE == i + 1;
             boolean isZero = i == 0;

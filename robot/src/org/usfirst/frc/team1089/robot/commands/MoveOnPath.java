@@ -147,10 +147,14 @@ public class MoveOnPath extends Command {
      */
     private void fillTopBuffer() {
 	    for (int i = 0; i < TRAJECTORY_SIZE; i++) {
-            double currentPosL = trajectoryL.segments[i].position;
-            double currentPosR = trajectoryR.segments[i].position;
+	        // NOTE: Encoder ticks are backwards, we need to work with that.
+            double currentPosL = -trajectoryL.segments[i].position;
+            double currentPosR = -trajectoryR.segments[i].position;
+
+            // Come at us
             double velocityL = trajectoryL.segments[i].velocity;
             double velocityR = trajectoryR.segments[i].velocity;
+
             boolean isLastPointL = TRAJECTORY_SIZE == i + 1;
             boolean isLastPointR = TRAJECTORY_SIZE == i + 1;
             boolean isZero = i == 0;

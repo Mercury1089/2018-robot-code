@@ -57,8 +57,8 @@ public class MoveOnPath extends Command {
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
 
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_left.csv"));
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_right.csv"));
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_left_detailed.csv"));
+        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_right_detailed.csv"));
 
         trajectoryProcessor.setHandler(() -> {
             left.processMotionProfileBuffer();

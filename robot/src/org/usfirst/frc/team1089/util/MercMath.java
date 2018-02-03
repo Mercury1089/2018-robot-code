@@ -2,10 +2,13 @@ package org.usfirst.frc.team1089.util;
 
 import org.usfirst.frc.team1089.robot.Robot;
 
+import java.nio.ByteBuffer;
+
 /**
  * Class that contains various math functions.
  */
 public class MercMath {
+	private final static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
 	/**
 	 * Clamps a value between a minimum and maximum, inclusive.
@@ -79,20 +82,6 @@ public class MercMath {
 		return inchesToCentimeters(encoderTicksToInches(ticks)) * 100;
 	}
 
-	/*public double getLeftEncPositionInFeet() {
-		double ticks = Robot.driveTrain.getLeft().getSelectedSensorPosition(Robot.driveTrain.PRIMARY_PID_LOOP);
-		//Convert encoder ticks to feet
-		return ((Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES) /
-				(Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * Robot.driveTrain.GEAR_RATIO) * ticks) / 12;
-	}
-
-	public double getRightEncPositionInFeet() {
-		double ticks = Robot.driveTrain.getRight().getSelectedSensorPosition(Robot.driveTrain.PRIMARY_PID_LOOP);
-		//Convert encoder ticks to feet
-		return ((Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES) /
-				(Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * Robot.driveTrain.GEAR_RATIO) * ticks) / 12;
-	}*/
-
 	public static double getEncPosition(double ticks) {
 		return ((Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES) /
 				(Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * Robot.driveTrain.GEAR_RATIO) * ticks) / 12;
@@ -144,9 +133,36 @@ public class MercMath {
 		return revsPerMinuteToMetersPerSecond(ticksPerTenthToRevsPerMinute(ticksPerTenth));
 	}
 
-		public static double calculateFeedForward(double rpm) {
+	public static double calculateFeedForward(double rpm) {
 		final double MAX_MOTOR_OUTPUT = 1023;
 		final double NATIVE_UNITS_PER_100 = rpm * 1/600 * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
 		return MAX_MOTOR_OUTPUT/NATIVE_UNITS_PER_100;
+	}
+
+	public static String bytesToHex(byte[] bytes) {
+		char[] hexChars = new char[bytes.length * 2];
+		for (int j = 0; j < bytes.length; j++) {
+			int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+			hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+		}
+		return new String(hexChars);
+	}
+
+	// This doesn't work yet. At least that's what I recall.
+	public static String intsToHex(int[] ints) {
+		StringBuilder hexString = new StringBuilder();
+		for (int i : ints)
+			hexString.append(Integer.toHexString(i));
+
+		return hexString.toString();
+	}
+
+	// Some byte math conversion thing
+	public static String bbToString(ByteBuffer bb) {
+		final byte[] b = new byte[bb.remaining()];
+		bb.duplicate().get(b);
+		bb.rewind();
+		return MercMath.bytesToHex(b);
 	}
 }

@@ -6,13 +6,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
-import org.usfirst.frc.team1089.robot.subsystems.Claw;
-import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
-import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.robot.subsystems.*;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
-
+import org.usfirst.frc.team1089.robot.sensors.Vision;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,6 +26,8 @@ public class Robot extends IterativeRobot {
 	public static PDP pdp;
 	public static CameraVision camera;
     public static Claw claw;
+    public static Elevator elevator;
+    public static Vision vision;
 
 	public static OI oi;
 
@@ -62,6 +61,7 @@ public class Robot extends IterativeRobot {
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);
 		camera = new CameraVision();
 		claw = new Claw(CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
+		vision = new Vision();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

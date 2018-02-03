@@ -79,13 +79,13 @@ public class OI {
 		gamepad = new Joystick(DS_USB.GAMEPAD);
 
 		// Left stick button binds
-		left1 = new JoystickButton(leftStick, 1);
+		left1 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN1);
 		left1.whenPressed(new RotateRelative(90));
-		left2 = new JoystickButton(leftStick, 2);
+		left2 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN2);
 		left2.whenPressed(new DriveWithLIDAR(2, .3));
-		left3 = new JoystickButton(leftStick,3);
+		left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
 		left3.whenPressed(new DriveDistance(24.0, .12));
-		left4 = new JoystickButton(leftStick,4);
+		left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
 		left4.whenPressed(new RotateRelative(30));
 
 		// Right stick button binds
@@ -98,10 +98,10 @@ public class OI {
 		right2.whenPressed(new TestMPCrossfire());
 
 		// Gamepad button binds
-		gamepad_a = new JoystickButton(gamepad, 1);
-		gamepad_x = new JoystickButton(gamepad, 3);
-		gamepad_b = new JoystickButton(gamepad, 2);
-		gamepad_y = new JoystickButton(gamepad, 4);
+		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);
+		gamepad_b = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.B);
+		gamepad_x = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.X);
+		gamepad_y = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.Y);
 		gamepad_a.whenPressed(new DriveArcade());
 		gamepad_x.whenPressed(new DriveTank());
 		gamepad_b.whenPressed(new UseClaw(Claw.ClawState.GRAB));
@@ -127,7 +127,7 @@ public class OI {
 	 * A deadzone is applied to this value.
 	 * 
 	 * @param id the device ID of the axis.
-	 * @return Y-axis of joystick, deadzone applied.
+	 * @return y-axis of joystick, deadzone applied.
 	 */
 	public double getY(int id) {
 		double val;
@@ -151,7 +151,7 @@ public class OI {
 	 * A deadzone is applied to this value.
 	 * 
 	 * @param id the device ID of the axis.
-	 * @return X-axis of joystick, deadzone applied.
+	 * @return x-axis of joystick, deadzone applied.
 	 */
 	public double getX(int id) {
 		double val;

@@ -71,8 +71,8 @@ public class MoveOnPath extends Command {
                 break;
         }
 
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories" + name + "_left_detailed.csv"));
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories" + name + "_right_detailed.csv"));
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
+        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
 
         trajectoryProcessor.setHandler(() -> {
             left.processMotionProfileBuffer();

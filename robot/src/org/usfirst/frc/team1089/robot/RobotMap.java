@@ -34,7 +34,7 @@ public class RobotMap {
 			MANIPULATOR_R = 6,
 			TALON_CLAW_LEADER = 7,
 			TALON_CLAW_FOLLOWER = 8,
-            ELEVATOR_TALON = 9,
+			TALON_ELEVATOR = 9,
 			CANIFIER = 10;
 
 		private CAN() { } // Should never be constructed.
@@ -61,5 +61,37 @@ public class RobotMap {
 			GAMEPAD = 2;
 		
 		private DS_USB() { } // Should never be constructed.
+	}
+
+	public static class GAMEPAD_BUTTONS {
+		public static final int A = 1;
+		public static final int B = 2;
+		public static final int X = 3;
+		public static final int Y = 4;
+		public static final int LB = 5;
+		public static final int RB = 6;
+		public static final int BACK = 7;
+		public static final int START = 8;
+		public static final int L3 = 9;
+		public static final int R3 = 10;
+
+		private GAMEPAD_BUTTONS() { }
+	}
+
+	public static class JOYSTICK_BUTTONS {
+		public static final int BTN1 = 1;
+		public static final int BTN2 = 2;
+		public static final int BTN3 = 3;
+		public static final int BTN4 = 4;
+		public static final int BTN5 = 5;
+		public static final int BTN6 = 6;
+		public static final int BTN7 = 7;
+		public static final int BTN8 = 8;
+		public static final int BTN9 = 9;
+		public static final int BTN10 = 10;
+		public static final int BTN11 = 11;
+
+		public JOYSTICK_BUTTONS() {
+		}
 	}
 }

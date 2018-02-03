@@ -68,7 +68,7 @@ public class OI {
 
 	private UseClaw useClaw;
 
-	
+
 
 
 	private ShuffleDash shuffleboard;
@@ -90,7 +90,9 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
+		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.FORWARD));
+		right3 = new JoystickButton(rightStick, 3);
+		right3.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
 		right2 = new JoystickButton(rightStick, 2);
 		right2.whenPressed(new TestMPCrossfire());
 

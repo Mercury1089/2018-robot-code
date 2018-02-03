@@ -22,7 +22,7 @@ public class DriveDistance extends Command {
 	private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
 
-    private static Logger log = LogManager.getLogger(UseClaw.class);
+    private static Logger log = LogManager.getLogger(DriveDistance.class);
 	protected double distance;
     private DoubleSupplier distanceSupplier;
 	protected double percentVoltage; //Voltage is NOW from [-1, 1]

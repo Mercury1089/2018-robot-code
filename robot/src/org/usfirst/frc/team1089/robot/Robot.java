@@ -6,10 +6,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
-import org.usfirst.frc.team1089.robot.subsystems.Claw;
-import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.robot.subsystems.Manipulator;
-import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.robot.subsystems.*;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
@@ -29,6 +26,7 @@ public class Robot extends IterativeRobot {
 	public static PDP pdp;
 	public static CameraVision camera;
     public static Claw claw;
+    public static Elevator elevator;
 
 	public static OI oi;
 

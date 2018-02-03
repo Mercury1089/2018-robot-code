@@ -34,6 +34,7 @@ public class RobotMap {
 			MANIPULATOR_R = 6,
 			TALON_CLAW_LEADER = 7,
 			TALON_CLAW_FOLLOWER = 8,
+			TALON_ELEVATOR = 9,
 			CANIFIER = 10;
 
 		private CAN() { } // Should never be constructed.

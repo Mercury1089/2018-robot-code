@@ -11,7 +11,7 @@ import org.usfirst.frc.team1089.robot.Robot;
 public class DriveWithLIDAR extends DriveDistance {
 
     public double minimumDistance;
-    private static Logger log = LogManager.getLogger(UseClaw.class);
+    private static Logger log = LogManager.getLogger(DriveWithLIDAR.class);
 
     private static String currentMethod = "";
 

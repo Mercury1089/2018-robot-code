@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
+import org.usfirst.frc.team1089.robot.auton.TestMPCrossfire;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.util.ShuffleDash;
@@ -67,7 +68,7 @@ public class OI {
 
 	private UseClaw useClaw;
 
-	
+
 
 
 	private ShuffleDash shuffleboard;
@@ -88,8 +89,12 @@ public class OI {
 		left4.whenPressed(new RotateRelative(30));
 
 		// Right stick button binds
-		right1 = new JoystickButton(rightStick, RobotMap.JOYSTICK_BUTTONS.BTN1);
-		//right1.whenPressed(new MoveOnPath("SwitchMidRight"));
+		right1 = new JoystickButton(rightStick,1);
+		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.FORWARD));
+		right3 = new JoystickButton(rightStick, 3);
+		right3.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
+		right2 = new JoystickButton(rightStick, 2);
+		right2.whenPressed(new TestMPCrossfire());
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

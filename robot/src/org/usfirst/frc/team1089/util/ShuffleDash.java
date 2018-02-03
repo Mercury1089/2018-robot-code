@@ -36,6 +36,8 @@ public class ShuffleDash {
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Cube Angle", Robot.camera.getAngleFromCube());
 
+        SmartDashboard.putNumber("PixyCam: List Size", Robot.vision.getPixyCam().getRelevantPacket().get(0).getCenterX());
+
         /*double recentRevsPerMinLeft = Robot.driveTrain.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         if(Math.abs(recentRevsPerMinLeft) > Math.abs(maxRevsPerMinLeft))
             maxRevsPerMinLeft = Math.abs(recentRevsPerMinLeft);

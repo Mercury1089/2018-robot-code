@@ -121,7 +121,4 @@ public class Robot extends IterativeRobot {
 		// Keep this line; it's needed for commands.
 		Scheduler.getInstance().run();
 	}
-
-
-
 }

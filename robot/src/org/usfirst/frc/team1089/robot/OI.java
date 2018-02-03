@@ -65,11 +65,6 @@ public class OI {
 	private JoystickButton right1, right2, right3, right4;
 	private JoystickButton gamepad_a, gamepad_b, gamepad_y;
 
-	private UseClaw useClaw;
-
-	
-
-
 	private ShuffleDash shuffleboard;
 
 	public OI() {
@@ -94,6 +89,7 @@ public class OI {
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);
 		gamepad_b = new JoystickButton(gamepad, 2);
+		gamepad_y = new JoystickButton(gamepad, 4);
 		gamepad_a.whenPressed(new DriveArcade());
 		gamepad_b.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		gamepad_b.whenReleased(new UseClaw(Claw.ClawState.STOP));

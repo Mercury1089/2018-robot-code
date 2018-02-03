@@ -77,7 +77,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         navX = new NavX(SerialPort.Port.kUSB1);
         gyroSPI = new ADXRS450_Gyro();
 
-
 		//Account for motor orientation.
 		tMasterLeft.setInverted(true);
 		vFollowerLeft.setInverted(true);

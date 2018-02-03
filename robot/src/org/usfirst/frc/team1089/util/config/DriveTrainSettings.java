@@ -10,12 +10,13 @@ import java.util.Properties;
  * modified, edit the drivetrain.properties file.
  */
 public class DriveTrainSettings extends Config {
+
     /**
-     * Enumeration of motor controller layouts for the drive train.
+     * Enumeration of drivetrain layouts.
      * <p>
-     * {@code DEFAULT}: 2 Victor SPX followers, 2 Talon SRX leaders
+     * {@code DEFAULT}: 2 Victor SPX followers, 2 Talon SRX leaders, 4.0" wheel diameter
      * <p>
-     * {@code LEGACY}: 2 Talon SRX followers, 2 Talon SRX leaders
+     * {@code LEGACY}: 2 Talon SRX followers, 2 Talon SRX leaders, 4.0" wheel diameter
      */
     public enum DriveTrainLayout {
         DEFAULT,

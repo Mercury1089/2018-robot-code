@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.modifiers.TankModifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,33 +69,20 @@ public class MoveOnPath extends Command {
 
 	    TRAJECTORY_SIZE = trajectoryL.length();
 	}
-
 	
 	//Called just before this Command runs for the first time. 
 	protected void initialize() {
-	    //Reset if there was a profile run before.
-        isRunning = false;
-        setMotionProfileMode(SetValueMotionProfile.Disable);
+	    // Reset command state
+        reset();
 
         // Configure PID values
-        left.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
-        right.config_kP(DriveTrain.SLOT_0, PROPORTIONAL, DriveTrain.TIMEOUT_MS);
-        left.config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
-        right.config_kI(DriveTrain.SLOT_0, INTEGRAL, DriveTrain.TIMEOUT_MS);
-        left.config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
-        right.config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
-        left.config_kF(DriveTrain.SLOT_0, Robot.driveTrain.getFeedForward(), DriveTrain.TIMEOUT_MS);
-        right.config_kF(DriveTrain.SLOT_0, Robot.driveTrain.getFeedForward(), DriveTrain.TIMEOUT_MS);
+        configurePID(PROPORTIONAL, INTEGRAL, DERIVATIVE, Robot.driveTrain.getFeedForward());
 
         // Change motion control frame period
         left.changeMotionControlFramePeriod(10);
         right.changeMotionControlFramePeriod(10);
 
-        // Clear the trajectory buffer
-        left.clearMotionProfileTrajectories();
-        right.clearMotionProfileTrajectories();
-
-        // Fill TOP (API) level buffer
+        // Fill TOP (API-level) buffer
         fillTopBuffer();
 
         // Start processing
@@ -118,8 +106,11 @@ public class MoveOnPath extends Command {
         }
     }
 
+    @Override
 	protected boolean isFinished() {
-        return
+        // If we're running, only finish if both talons
+        // reach their last valid point
+	    return
             isRunning &&
             statusLeft.activePointValid &&
             statusLeft.isLast &&
@@ -127,14 +118,14 @@ public class MoveOnPath extends Command {
             statusRight.isLast;
 	}
 
-
-	//Called once after isFinished() returns true
     @Override
 	protected void end() {
+	    // Stop processing trajectories
         trajectoryProcessor.stop();
 
-		left.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, Robot.driveTrain.TIMEOUT_MS);
-        right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, Robot.driveTrain.TIMEOUT_MS);
+		left.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, DriveTrain.TIMEOUT_MS);
+        right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, DriveTrain.TIMEOUT_MS);
+
         Robot.driveTrain.stop();
 
         log.log(Level.INFO, "Finished running");
@@ -145,20 +136,19 @@ public class MoveOnPath extends Command {
      */
     private void fillTopBuffer() {
 	    for (int i = 0; i < TRAJECTORY_SIZE; i++) {
+            TrajectoryPoint trajPointL = new TrajectoryPoint();
+            TrajectoryPoint trajPointR = new TrajectoryPoint();
+
 	        // NOTE: Encoder ticks are backwards, we need to work with that.
             double currentPosL = -trajectoryL.segments[i].position;
             double currentPosR = -trajectoryR.segments[i].position;
 
-            // Come at us
             double velocityL = trajectoryL.segments[i].velocity;
             double velocityR = trajectoryR.segments[i].velocity;
 
             boolean isLastPointL = TRAJECTORY_SIZE == i + 1;
             boolean isLastPointR = TRAJECTORY_SIZE == i + 1;
             boolean isZero = i == 0;
-
-            TrajectoryPoint trajPointL = new TrajectoryPoint();
-            TrajectoryPoint trajPointR = new TrajectoryPoint();
 
             // For each point, fill our structure and pass it to API
             trajPointL.position = MercMath.feetToEncoderTicks(currentPosL); //Convert Revolutions to Units
@@ -168,7 +158,7 @@ public class MoveOnPath extends Command {
             trajPointL.profileSlotSelect0 = DriveTrain.SLOT_0;
             trajPointR.profileSlotSelect0 = DriveTrain.SLOT_0;
 
-            // TODO figure this out
+            // Sets the duration of each trajectory point to 20ms
             trajPointL.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
             trajPointR.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
 
@@ -180,13 +170,38 @@ public class MoveOnPath extends Command {
             trajPointL.isLastPoint = isLastPointL;
             trajPointR.isLastPoint = isLastPointR;
 
+            // Push to API level buffer
             left.pushMotionProfileTrajectory(trajPointL);
             right.pushMotionProfileTrajectory(trajPointR);
         }
     }
 
+    private void configurePID(double p, double i, double d, double f) {
+        left.config_kP(DriveTrain.SLOT_0, p, DriveTrain.TIMEOUT_MS);
+        right.config_kP(DriveTrain.SLOT_0, p, DriveTrain.TIMEOUT_MS);
+
+        left.config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
+        right.config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
+
+        left.config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
+        right.config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
+
+        left.config_kF(DriveTrain.SLOT_0, f, DriveTrain.TIMEOUT_MS);
+        right.config_kF(DriveTrain.SLOT_0, f, DriveTrain.TIMEOUT_MS);
+    }
+
     private void setMotionProfileMode(SetValueMotionProfile value) {
         left.set(ControlMode.MotionProfile, value.value);
         right.set(ControlMode.MotionProfile, value.value);
+    }
+
+    private void reset() {
+        // Reset flags and motion profile modes
+        isRunning = false;
+        setMotionProfileMode(SetValueMotionProfile.Disable);
+
+        // Clear the trajectory buffer
+        left.clearMotionProfileTrajectories();
+        right.clearMotionProfileTrajectories();
     }
 }

@@ -42,6 +42,12 @@ public class MoveOnPath extends Command {
     private Notifier trajectoryProcessor = new Notifier(null);
 
     private boolean isRunning;
+    private int dir;
+
+    public enum Direction {
+        BACKWARD,
+        FORWARD;
+    }
 
     /**
      * Creates this command using the file prefix to determine
@@ -49,11 +55,21 @@ public class MoveOnPath extends Command {
      *
      * @param name name of the trajectory
      */
-	public MoveOnPath(String name) {
+	public MoveOnPath(String name, Direction direction) {
         requires(Robot.driveTrain);
 
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
+
+        switch(direction) {
+            case BACKWARD:
+                dir = -1;
+                break;
+            case FORWARD:
+            default:
+                dir = 1;
+                break;
+        }
 
         trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories" + name + "_left_detailed.csv"));
         trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories" + name + "_right_detailed.csv"));
@@ -139,8 +155,8 @@ public class MoveOnPath extends Command {
             TrajectoryPoint trajPointR = new TrajectoryPoint();
 
 	        // NOTE: Encoder ticks are backwards, we need to work with that.
-            double currentPosL = -trajectoryL.segments[i].position;
-            double currentPosR = -trajectoryR.segments[i].position;
+            double currentPosL = -trajectoryL.segments[i].position * dir;
+            double currentPosR = -trajectoryR.segments[i].position * dir;
 
             double velocityL = trajectoryL.segments[i].velocity;
             double velocityR = trajectoryR.segments[i].velocity;

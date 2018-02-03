@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
+import org.usfirst.frc.team1089.robot.auton.TestMPCrossfire;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.util.ShuffleDash;
@@ -89,7 +90,9 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("SwitchMidRight"));
+		right1.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
+		right2 = new JoystickButton(rightStick, 2);
+		right2.whenPressed(new TestMPCrossfire());
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);

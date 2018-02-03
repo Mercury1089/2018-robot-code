@@ -26,7 +26,7 @@ dependencies {
     compile navx()
     compile pathfinder()
     nativeLib fileTree(dir: 'lib', include: '*.so')
-    trajectory fileTree(dir: 'trajectories', include: '*.csv')
+    trajectory fileTree(dir: 'trajectories', include: '**/*_detailed.csv')
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -51,7 +51,12 @@ deploy {
 
         fileCollectionArtifact('trajectoryCollectionArtifact') {
             targets << 'roborio'
+            directory = 'trajectories'
             files = project.configurations.trajectory
+
+            predeploy << {
+                execute 'rm -rf /home/lvuser/trajectories'
+            }
         }
     }
 }

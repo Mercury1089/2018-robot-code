@@ -47,17 +47,16 @@ public class MoveOnPath extends Command {
      * Creates this command using the file prefix to determine
      * the files to load.
      *
-     * @param prefix prefix to file names, file names
-     *        {@code <prefix>_left.csv, <prefix>_right.csv}
+     * @param name name of the trajectory
      */
-	public MoveOnPath(String prefix) {
+	public MoveOnPath(String name) {
         requires(Robot.driveTrain);
 
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
 
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_left_detailed.csv"));
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/" + prefix + "_right_detailed.csv"));
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories" + name + "_left_detailed.csv"));
+        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories" + name + "_right_detailed.csv"));
 
         trajectoryProcessor.setHandler(() -> {
             left.processMotionProfileBuffer();

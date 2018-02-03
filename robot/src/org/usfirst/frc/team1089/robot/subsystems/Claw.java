@@ -15,7 +15,7 @@ public class Claw extends Subsystem {
     private Logger log = LogManager.getLogger(Claw.class);
 
     public enum ClawState {
-        GRAB(0.5), EJECT(-0.5), STOP(0.0);
+        GRAB(1.0), EJECT(-1.0), STOP(0.0);
         public final double speed;
         ClawState(double speed) {
             this.speed = speed;

@@ -9,7 +9,6 @@ import org.usfirst.frc.team1089.util.DelayableLogger;
 
 import java.util.concurrent.TimeUnit;
 
-
 public class UseClaw extends Command {
 
     private Claw.ClawState targetState;

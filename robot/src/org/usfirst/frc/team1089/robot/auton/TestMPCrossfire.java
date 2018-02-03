@@ -15,8 +15,8 @@ public class TestMPCrossfire extends CommandGroup {
 
     public TestMPCrossfire() {
         addSequential(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
-        addSequential(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.FORWARD));
-        addSequential(new MoveOnPath("GrabCubeDeadReckoning", MoveOnPath.Direction.FORWARD));
+        addSequential(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));    //TODO refactor trajectory names
+        addSequential(new MoveOnPath("GrabCubeDeadReckoning", MoveOnPath.Direction.FORWARD));   //cuz this should be RIGHT
         addSequential(new MoveOnPath("GrabCubeDeadReckoning", MoveOnPath.Direction.BACKWARD));
         addSequential(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.FORWARD));
     }

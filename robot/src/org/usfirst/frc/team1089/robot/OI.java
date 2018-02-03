@@ -64,7 +64,7 @@ public class OI {
 
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4;
-	private JoystickButton gamepad_a, gamepad_b, gamepad_y;
+	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y;
 
 	private UseClaw useClaw;
 
@@ -90,17 +90,20 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.FORWARD));
+		right1.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
 		right3 = new JoystickButton(rightStick, 3);
+
 		right3.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
 		right2 = new JoystickButton(rightStick, 2);
 		right2.whenPressed(new TestMPCrossfire());
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, 1);
+		gamepad_x = new JoystickButton(gamepad, 3);
 		gamepad_b = new JoystickButton(gamepad, 2);
 		gamepad_y = new JoystickButton(gamepad, 4);
 		gamepad_a.whenPressed(new DriveArcade());
+		gamepad_x.whenPressed(new DriveTank());
 		gamepad_b.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		gamepad_b.whenReleased(new UseClaw(Claw.ClawState.STOP));
 		gamepad_y.whenPressed(new UseClaw(Claw.ClawState.EJECT));

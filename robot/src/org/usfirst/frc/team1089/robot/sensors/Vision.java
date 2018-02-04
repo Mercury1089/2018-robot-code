@@ -21,7 +21,6 @@ public class Vision extends Subsystem {
 	public void periodic() {
 		try {
 			pixyCam.readPackets();
-			System.out.println("Reading packets");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

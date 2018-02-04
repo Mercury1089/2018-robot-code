@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.util.BoundingBox;
@@ -83,14 +84,14 @@ public class PixyCam implements PIDSource {
     }
 
     // This method gathers data, then parses that data, and assigns the ints to global variables
-    public int readPackets() throws PixyException {
+    public void readPackets() throws PixyException {
         int numBlocks = getBoxes(1000);
 
         // Clear out and initialize ArrayList for PixyPackets.
         PACKETS.clear();
 
         for (int i = 0; i < PIXY_SIG_COUNT; i++)
-            PACKETS.add(new ArrayList<BoundingBox>());
+            PACKETS.add(new ArrayList<>());
 
         // Put the found BOXES into the correct spot in the return Hashmap<ArrayList<int[]>>.
         if (numBlocks > 0) {
@@ -106,7 +107,6 @@ public class PixyCam implements PIDSource {
                 int signature = BOXES.get(i)[0] - 1;
 
                 // Add the current BoundingBox to the correct location for the signature.
-                HashMap<Integer, String> test;
                 PACKETS.get(signature).add(packet);
             }
 
@@ -116,8 +116,8 @@ public class PixyCam implements PIDSource {
             // Sort packet list
             for (ArrayList<BoundingBox> list : PACKETS)
                 list.sort((BoundingBox a, BoundingBox b) -> (int) Math.signum(a.getArea() - b.getArea()));
-        }
-        return (1);
+        } else
+            log.log(Level.ERROR, "Something has gone horribly wrong!");
     }
 
     private int getBoxes(int max) {

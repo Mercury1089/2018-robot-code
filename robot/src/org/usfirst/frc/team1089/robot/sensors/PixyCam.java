@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.util.BoundingBox;
 import org.usfirst.frc.team1089.util.MercMath;
 
 import java.nio.ByteBuffer;
@@ -46,7 +47,14 @@ public class PixyCam implements PIDSource {
         // Only use ports [0 - 3]
         spiPort = (int) MercMath.clamp(spiPort, 0, 3);
 
-        SPI = new SPI(Port.valueOf("kOnboardCS" + spiPort));
+        Port pValue = Port.kOnboardCS0;
+        try {
+            pValue = Port.valueOf("kOnboardCS" + spiPort);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SPI = new SPI(pValue);
 
         PACKETS = new ArrayList<>();
         BOXES = new ArrayList<>();

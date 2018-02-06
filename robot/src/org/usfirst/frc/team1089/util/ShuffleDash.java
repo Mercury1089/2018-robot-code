@@ -2,8 +2,10 @@ package org.usfirst.frc.team1089.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**
@@ -11,7 +13,9 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
  */
 public class ShuffleDash {
     public double maxRevsPerMinRight = 0.0, maxRevsPerMinLeft = 0.0;
+    public SendableChooser<AutonPosition> startingPosition;
     public ShuffleDash() {
+        runAutonOnShuffleboard();
         new Notifier(this::updateDash).startPeriodic(0.050);
     }
 
@@ -48,5 +52,15 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Right Max RPM", maxRevsPerMinRight);*/
 
         //SmartDashboard.putString("Current DriveWithLIDAR method", DriveWithLIDAR.getCurrentMethod());
+    }
+
+    private void runAutonOnShuffleboard() {
+        startingPosition = new SendableChooser<>();
+        startingPosition.addObject("Left", AutonPosition.LEFT);
+        startingPosition.addObject("Middle", AutonPosition.MIDDLE);
+        startingPosition.addObject("Right", AutonPosition.RIGHT);
+        SmartDashboard.putData("Auton Starting Position", startingPosition);
+
+
     }
 }

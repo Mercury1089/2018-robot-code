@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1089.robot.sensors;
+package org.usfirst.frc.team1089.util;
 
 /**
  * Class that represents data packet being received from Pixy

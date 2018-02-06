@@ -73,6 +73,14 @@ task shuffleboard(overwrite: true) {
     }
 }
 
+task runProfileGenerator(type: Exec) {
+    group = 'other'
+    description = "Executes the motion profile generator app"
+
+    workingDir = "${projectDir}\\trajectories\\"
+    commandLine 'java', '-jar', "${projectDir}\\trajectories\\motion-profile-generator.jar"
+}
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.

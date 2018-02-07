@@ -21,8 +21,8 @@ public class Vision extends Subsystem {
 	@Override
 	public void periodic() {
 		try {
-			pixyCam.readPackets();
-			SmartDashboard.putNumber("PixyCam: centerX", Robot.vision.getPixyCam().getRelevantPacket().get(0).getCenterX());
+			pixyCam.getBoxes(1000);
+			SmartDashboard.putNumber("PixyCam: centerX", Robot.vision.getPixyCam().BOXES.get(0).getCenterX());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.util.BoundingBox;
@@ -28,10 +29,10 @@ public class PixyCam implements PIDSource {
     static final int PIXY_START_WORD = 0xaa55;
     static final int PIXY_START_WORDX = 0x55aa;
     static final int BLOCK_LEN = 5;
-    static final int PIXY_SIG_COUNT = 7;
+    static final int PIXY_SIGNATURE_NUM = 1;
 
-    private final ArrayList<ArrayList<BoundingBox>> PACKETS;
-    private final ArrayList<int[]> BOXES;
+    //private final ArrayList<ArrayList<BoundingBox>> PACKETS;
+    public final ArrayList<BoundingBox> BOXES;
     private ArrayDeque<Byte> outBuf = new ArrayDeque<>(); // Future use for sending commands to Pixy.
 
     private boolean skipStart = false;
@@ -55,7 +56,6 @@ public class PixyCam implements PIDSource {
 
         SPI = new SPI(pValue);
 
-        PACKETS = new ArrayList<>();
         BOXES = new ArrayList<>();
 
         // Set some SPI parameters.
@@ -82,40 +82,13 @@ public class PixyCam implements PIDSource {
         return 0;
     }
 
-    // This method gathers data, then parses that data, and assigns the ints to global variables
-    public void readPackets() throws PixyException {
-        int numBlocks = getBoxes(1000);
-
-        // Clear out and initialize ArrayList for PixyPackets.
-        PACKETS.clear();
-
-        for (int i = 0; i < PIXY_SIG_COUNT; i++)
-            PACKETS.add(new ArrayList<>());
-
-        // Put the found BOXES into the correct spot in the return Hashmap<ArrayList<int[]>>.
-        if (numBlocks > 0) {
-            for (int i = 0; i < numBlocks; i++) {
-                // Create the BoundingBox for the current BOXES.
-                // We only need x, y, width, length
-                BoundingBox packet = new BoundingBox(
-                        BOXES.get(i)[1],
-                        BOXES.get(i)[2],
-                        BOXES.get(i)[3],
-                        BOXES.get(i)[4]
-                );
-
-                int signature = 0;
-
-                // Add the current BoundingBox to the correct location for the signature.
-                PACKETS.get(signature).add(packet);
-            }
-
-            // Sort packet list
-            PACKETS.get(0).sort((BoundingBox a, BoundingBox b) -> (int) Math.signum(a.getArea() - b.getArea()));
-        }
-    }
-
-    private int getBoxes(int max) {
+    /**
+     * Reads from SPI for data "words," and parses
+     * all words into bounding boxes.
+     *
+     * @param max max number of boxes to find
+     */
+    public void getBoxes(int max) {
         // Clear out BOXES array list for reuse.
         BOXES.clear();
         long count = 0;
@@ -123,9 +96,8 @@ public class PixyCam implements PIDSource {
         // If we haven't found the start of a block, find it.
         if (!skipStart) {
             // If we can't find the start of a block, drop out.
-            if (!getStart()) {
-                return (0);
-            }
+            if (!getStart())
+                return;
         } else {
             // Clear flag that tells us to find the next block as the logic below will loop
             // the appropriate number of times to retrieve a complete block.
@@ -133,7 +105,7 @@ public class PixyCam implements PIDSource {
         }
 
         // Loop until we hit the maximum size allowed for BOXES, or until we know we have a complete set of BOXES.
-        while ((BOXES.size()) < max && (BOXES.size() < PIXY_MAXIMUM_ARRAYSIZE)) {
+        while (BOXES.size() < max && BOXES.size() < PIXY_MAXIMUM_ARRAYSIZE) {
             // Since this is our first time in, bytes 2 and 3 are the checksum, grab them and store for future use.
             // NOTE: getWord grabs the entire 16 bits in one shot.
             int checksum = getWord();
@@ -144,11 +116,11 @@ public class PixyCam implements PIDSource {
             // to skip looking for the beginning of the next block since we already found it.
             if (checksum == PIXY_START_WORD) {
                 skipStart = true;
-                return (BOXES.size());
+                return;
             }
             // See if we received a empty buffer, if so, assume end of comms for now and return what we have.
             else if (checksum == 0)
-                return (BOXES.size());
+                return;
 
             // Start constructing BOXES
             // Only need 5 slots since the first 3 slots, the double start BOXES and checksum, have been retrieved already.
@@ -159,9 +131,17 @@ public class PixyCam implements PIDSource {
             }
 
             // See if we received the data correctly.
-            if (checksum == trialsum)
+            // Also make sure the target is for the first signature
+            if (checksum == trialsum && box[0] == PIXY_SIGNATURE_NUM) {
+                BoundingBox bound = new BoundingBox(
+                    box[1],
+                    box[2],
+                    box[3],
+                    box[4]
+                );
                 // Data has been validated, add the current block of data to the overall BOXES buffer.
-                BOXES.add(box);
+                BOXES.add(bound);
+            }
 
             // Check the next word from the Pixy to confirm it's the start of the next block.
             // Pixy sends two aa55 words at start of block, this should pull the first one.
@@ -169,22 +149,13 @@ public class PixyCam implements PIDSource {
             int w = getWord();
 
             if (w != PIXY_START_WORD)
-                return (BOXES.size());
+                return;
         }
 
         // Should never get here, but if we happen to get a massive number of BOXES
         // and exceed the limit it will happen. In that case something is wrong
         // or you have a super natural Pixy and SPI link.
-        return 0;
-    }
-
-    /**
-     * Gets the largest packet list in the array
-     *
-     * @return first packet list
-     */
-    public ArrayList<BoundingBox> getRelevantPacket() {
-        return PACKETS.get(0);
+        log.log(Level.WARN, "Massive number of boxes!");
     }
 
     // region Comms

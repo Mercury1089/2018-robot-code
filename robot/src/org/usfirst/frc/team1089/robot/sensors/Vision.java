@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team1089.robot.Robot;
 
 
 public class Vision extends Subsystem {
@@ -21,6 +22,7 @@ public class Vision extends Subsystem {
 	public void periodic() {
 		try {
 			pixyCam.readPackets();
+			SmartDashboard.putNumber("PixyCam: centerX", Robot.vision.getPixyCam().getRelevantPacket().get(0).getCenterX());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

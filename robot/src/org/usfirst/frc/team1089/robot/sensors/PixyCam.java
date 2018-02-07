@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.util.BoundingBox;
@@ -15,13 +14,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PixyCam implements PIDSource {
     private static final Logger log = LogManager.getLogger(PixyCam.class);
 
     private final SPI SPI;
-    private final ArrayList<ArrayList<BoundingBox>> PACKETS;
 
     // Variables used for SPI comms, derived from https://github.com/omwah/pixy_rpi
     static final byte PIXY_SYNC_BYTE = 0x5a;
@@ -33,8 +30,9 @@ public class PixyCam implements PIDSource {
     static final int BLOCK_LEN = 5;
     static final int PIXY_SIG_COUNT = 7;
 
-    private ArrayDeque<Byte> outBuf = new ArrayDeque<>(); // Future use for sending commands to Pixy.
+    private final ArrayList<ArrayList<BoundingBox>> PACKETS;
     private final ArrayList<int[]> BOXES;
+    private ArrayDeque<Byte> outBuf = new ArrayDeque<>(); // Future use for sending commands to Pixy.
 
     private boolean skipStart = false;
     private int debug = 0; // 0 - none, 1 - SmartDashboard, 2 - log to console/file
@@ -66,6 +64,7 @@ public class PixyCam implements PIDSource {
         SPI.setClockRate(1000);
         SPI.setSampleDataOnFalling();
         SPI.setClockActiveLow();
+
     }
 
     @Override
@@ -104,20 +103,16 @@ public class PixyCam implements PIDSource {
                         BOXES.get(i)[3],
                         BOXES.get(i)[4]
                 );
-                int signature = BOXES.get(i)[0] - 1;
+
+                int signature = 0;
 
                 // Add the current BoundingBox to the correct location for the signature.
                 PACKETS.get(signature).add(packet);
             }
 
-            // Sort packet array so that the largest one is first
-            PACKETS.sort((ArrayList<BoundingBox> a, ArrayList<BoundingBox> b) -> (int) Math.signum(a.size() - b.size()));
-
             // Sort packet list
-            for (ArrayList<BoundingBox> list : PACKETS)
-                list.sort((BoundingBox a, BoundingBox b) -> (int) Math.signum(a.getArea() - b.getArea()));
-        } else
-            log.log(Level.ERROR, "Something has gone horribly wrong!");
+            PACKETS.get(0).sort((BoundingBox a, BoundingBox b) -> (int) Math.signum(a.getArea() - b.getArea()));
+        }
     }
 
     private int getBoxes(int max) {
@@ -180,7 +175,7 @@ public class PixyCam implements PIDSource {
         // Should never get here, but if we happen to get a massive number of BOXES
         // and exceed the limit it will happen. In that case something is wrong
         // or you have a super natural Pixy and SPI link.
-        return (0);
+        return 0;
     }
 
     /**
@@ -204,11 +199,10 @@ public class PixyCam implements PIDSource {
         ByteBuffer readBuf = ByteBuffer.allocateDirect(2);
         readBuf.order(ByteOrder.BIG_ENDIAN);
 
-        if (outBuf.size() > 0) {
+        if (outBuf.size() > 0)
             writeBuf.put(PIXY_SYNC_BYTE_DATA);
-        } else {
+        else
             writeBuf.put(PIXY_SYNC_BYTE);
-        }
 
         // Flip the writeBuf so it's ready to be read.
         writeBuf.flip();
@@ -249,7 +243,7 @@ public class PixyCam implements PIDSource {
                 // Could delay a bit to give time for next data block, but to get accurate time would tie up cpu.
                 // So might as well return and let caller call this getStart again.
                 return false;
-            else if (((int) w == PIXY_START_WORD) && ((int) lastw == PIXY_START_WORD))
+            else if ((int) w == PIXY_START_WORD && (int) lastw == PIXY_START_WORD)
                 return true;
 
             lastw = w;

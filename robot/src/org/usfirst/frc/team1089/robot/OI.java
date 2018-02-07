@@ -3,7 +3,6 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
@@ -90,10 +89,10 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
+		right1.whenPressed(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.BACKWARD));
 		right3 = new JoystickButton(rightStick, 3);
 
-		right3.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
+		right3.whenPressed(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		right2 = new JoystickButton(rightStick, 2);
 		right2.whenPressed(new TestMPCrossfire());
 
@@ -108,14 +107,6 @@ public class OI {
 		gamepad_b.whenReleased(new UseClaw(Claw.ClawState.STOP));
 		gamepad_y.whenPressed(new UseClaw(Claw.ClawState.EJECT));
 		gamepad_y.whenReleased(new UseClaw(Claw.ClawState.STOP));
-
-		// SmartDash auton choosers
-		startingPosition = new SendableChooser<>();
-		startingPosition.addObject("Left", AutonPosition.LEFT);
-		startingPosition.addObject("Middle", AutonPosition.MIDDLE);
-		startingPosition.addObject("Right", AutonPosition.RIGHT);
-		SmartDashboard.putData("Auton Starting Position", startingPosition);
-		SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
 
 		log.info("OI initialized");
 

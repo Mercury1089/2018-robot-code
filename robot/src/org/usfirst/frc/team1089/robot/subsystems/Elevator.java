@@ -8,7 +8,7 @@ import org.usfirst.frc.team1089.robot.commands.UseElevator;
 public class Elevator extends Subsystem {
     private WPI_TalonSRX elevator_talon;
     public Elevator() {
-//    elevator_talon = new WPI_TalonSRX(RobotMap.CAN.ELEVATOR_TALON);
+//    elevator_talon = new WPI_TalonSRX(RobotMap.CAN.TALON_ELEVATOR);
     }
 
     public enum ELEVATOR_STATE {

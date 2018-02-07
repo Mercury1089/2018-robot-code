@@ -92,7 +92,7 @@ public class AutonCommand extends CommandGroup {
                                 }
                                 break;
                             case SCORE_SWITCH:
-                                switch(scoreSide[i]) {
+                                switch(scoreSide[i]) { //TODO make sure scoreSide isn't null
                                     case FRONT:
                                         switch(autonPos) {
                                             case LEFT:

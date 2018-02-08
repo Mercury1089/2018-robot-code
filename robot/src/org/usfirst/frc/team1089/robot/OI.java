@@ -67,9 +67,6 @@ public class OI {
 
 	private UseClaw useClaw;
 
-
-
-
 	private ShuffleDash shuffleboard;
 
 	public OI() {

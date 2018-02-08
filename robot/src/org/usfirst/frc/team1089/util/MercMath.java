@@ -47,7 +47,7 @@ public class MercMath {
 	}
 
 	public static double centimetersToInches(double val) {
-		return val / 0.393700787;
+		return val / 2.54;
 	}
 
 	public static double inchesToCentimeters(double val) {

@@ -30,9 +30,9 @@ public class RotateRelative extends PIDCommand {
 	 */
 	public RotateRelative(double targetHeading) {
 		super( // Sloppy, but configurable
-			DriveTrainSettings.getPIDValues()[0],
-			DriveTrainSettings.getPIDValues()[1],
-			DriveTrainSettings.getPIDValues()[2]
+			DriveTrainSettings.getPIDValues("rotateRelative")[0],
+			DriveTrainSettings.getPIDValues("rotateRelative")[1],
+			DriveTrainSettings.getPIDValues("rotateRelative")[2]
 		);
 
 		requires(Robot.driveTrain);

@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot.auton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.robot.commands.*;
 
 /**
  * Command group that specifies the commands to be run

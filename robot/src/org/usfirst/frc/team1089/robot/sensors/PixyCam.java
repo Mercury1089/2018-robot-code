@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +18,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-public class PixyCam {
+public class PixyCam implements PIDSource {
     private static final Logger log = LogManager.getLogger(PixyCam.class);
 
     private final SPI SPI;
@@ -163,6 +164,21 @@ public class PixyCam {
         // and exceed the limit it will happen. In that case something is wrong
         // or you have a super natural Pixy and SPI link.
         log.log(Level.WARN, "Massive number of boxes!");
+    }
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+        // Don't use
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        return PIDSourceType.kDisplacement;
+    }
+
+    @Override
+    public double pidGet() {
+        return getDisplacement();
     }
 
     // region Comms

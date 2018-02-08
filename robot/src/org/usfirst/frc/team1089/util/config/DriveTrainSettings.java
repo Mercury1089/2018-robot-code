@@ -96,8 +96,8 @@ public class DriveTrainSettings extends Config {
      *
      * @return double array containing PID values
      */
-    public static double[] getPIDValues() {
-        String[] arr = parseArrayValue("rotateRelative.PID", ",");
+    public static double[] getPIDValues(String cmd) {
+        String[] arr = parseArrayValue(cmd + ".PID", ",");
         double[] pid = {0.005, 0, 0.000};
 
         if (arr.length == 3) {

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.robot.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,22 +20,23 @@ public class RotateToTarget extends PIDCommand {
 	private final double MIN_PERCENT_VBUS;
 	private final int ONTARGET_THRESHOLD = 3;
 
-	private PixyCam pixyCam;
+	private LinearDigitalFilter filter;
 
 	/**
 	 * Constructs this command with a set degree to rotate.
 	 */
 	public RotateToTarget() {
 		super( // Sloppy, but configurable
-				DriveTrainSettings.getPIDValues()[0],
-				DriveTrainSettings.getPIDValues()[1],
-				DriveTrainSettings.getPIDValues()[2]
+				DriveTrainSettings.getPIDValues("rotateToTarget")[0],
+				DriveTrainSettings.getPIDValues("rotateToTarget")[1],
+				DriveTrainSettings.getPIDValues("rotateToTarget")[2]
 		);
 
 		requires(Robot.driveTrain);
+		requires(Robot.vision);
 
 		this.targetHeading = targetHeading;
-		pixyCam = Robot.vision.getPixyCam();
+		filter = LinearDigitalFilter.movingAverage(Robot.vision.getPixyCam(), 5);
 
 		MIN_PERCENT_VBUS = DriveTrainSettings.getRotMinPVBus();
 
@@ -44,6 +46,7 @@ public class RotateToTarget extends PIDCommand {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		filter.reset();
 		double[] outputRange = DriveTrainSettings.getRotOutputRange();
 
 		getPIDController().setInputRange(-160, 160);
@@ -51,7 +54,7 @@ public class RotateToTarget extends PIDCommand {
 
 		//Set the controller to continuous AFTER setInputRange()
 		getPIDController().setContinuous(false);
-		getPIDController().setAbsoluteTolerance(10);
+		getPIDController().setAbsoluteTolerance(5);
 
 		getPIDController().setSetpoint(0);
 
@@ -83,7 +86,7 @@ public class RotateToTarget extends PIDCommand {
 
 	@Override
 	protected double returnPIDInput() {
-		return pixyCam.getDisplacement();
+		return filter.pidGet();
 	}
 
 	@Override

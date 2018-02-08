@@ -17,7 +17,7 @@ public class GetCube extends CommandGroup {
         angleTurned = Robot.vision.getPixyCam().getDisplacement();
         addSequential(new RotateToTarget());
         distanceTraveled = Robot.manipulator.getLidar().getDistance();
-        addSequential(new DriveWithLIDAR(2, .3));
+        addSequential(new DriveWithLIDAR(5, .3));
     }
     public double getAngleTurned() {
         return angleTurned;

@@ -22,7 +22,9 @@ public class Vision extends Subsystem {
 	public void periodic() {
 		try {
 			pixyCam.getBoxes(1000);
-			SmartDashboard.putNumber("PixyCam: centerX", Robot.vision.getPixyCam().BOXES.get(0).getCenterX());
+			SmartDashboard.putNumber("PixyCam: X", Robot.vision.getPixyCam().BOXES.get(0).getX());
+			SmartDashboard.putNumber("PixyCam: width", Robot.vision.getPixyCam().BOXES.get(0).getWIDTH());
+			SmartDashboard.putNumber("PixyCam: displacement", Robot.vision.getPixyCam().getDisplacement());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

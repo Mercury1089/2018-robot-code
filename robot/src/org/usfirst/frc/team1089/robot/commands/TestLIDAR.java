@@ -2,7 +2,7 @@ package org.usfirst.frc.team1089.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.util.LIDAR;
+import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 
 public class TestLIDAR extends Command {
     private LIDAR lidar;

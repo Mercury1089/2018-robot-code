@@ -1,5 +1,6 @@
-package org.usfirst.frc.team1089.util;
+package org.usfirst.frc.team1089.robot.sensors;
 import com.ctre.phoenix.CANifier;
+import org.usfirst.frc.team1089.util.MercMath;
 
 /**
  * Wrapper class for the entire LIDAR system that we are using to check for distance.

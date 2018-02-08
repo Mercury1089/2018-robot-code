@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1089.util.config;
 
-import org.usfirst.frc.team1089.util.LIDAR;
+import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 
 import java.awt.*;
 import java.util.Properties;

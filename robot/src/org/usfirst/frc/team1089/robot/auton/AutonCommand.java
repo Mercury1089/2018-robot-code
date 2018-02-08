@@ -52,6 +52,9 @@ public class AutonCommand extends CommandGroup {
         for(int i = 1; i < autonTasks.length; i++) {
             AutonTask currTask = autonTasks[i];
             AutonTask prevTask = autonTasks[i - 1];
+            if (scoreSide[i] == null)
+                return;
+
             switch(currTask) {
                 case GRAB_CUBE: //TODO we need da technician
                     if(prevTask != AutonTask.GRAB_CUBE) {
@@ -96,10 +99,10 @@ public class AutonCommand extends CommandGroup {
                                     case FRONT:
                                         switch(autonPos) {
                                             case LEFT:
-                                                addSequential(new MoveOnPath("ScaleBackLeft", MoveOnPath.Direction.BACKWARD));
+                                                addSequential(new MoveOnPath("ScaleFrontLeft", MoveOnPath.Direction.BACKWARD));
                                                 break;
                                             case RIGHT:
-                                                addSequential(new MoveOnPath("ScaleBackRight", MoveOnPath.Direction.BACKWARD));
+                                                addSequential(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.BACKWARD));
                                                 break;
                                         }
                                         break;

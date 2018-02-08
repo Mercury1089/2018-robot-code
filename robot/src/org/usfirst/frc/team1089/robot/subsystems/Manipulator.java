@@ -4,7 +4,7 @@ import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team1089.robot.commands.TestLIDAR;
-import org.usfirst.frc.team1089.util.LIDAR;
+import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 /**

@@ -3,7 +3,7 @@ package org.usfirst.frc.team1089.util;
 /**
  * Class that represents data packet being received from Pixy
  */
-public class BoundingBox {
+public class BoundingBox implements Comparable<BoundingBox>{
 	private final int X;
 	private final int Y;
 	private final int WIDTH;
@@ -16,11 +16,29 @@ public class BoundingBox {
 		HEIGHT = nH;
 	}
 
-	public int getCenterX() {
-		return WIDTH / 2 + X;
-	}
-
 	public int getArea() {
 		return WIDTH * HEIGHT;
+	}
+
+	public int getX() {
+		return X;
+	}
+
+	public int getY() {
+		return Y;
+	}
+
+	public int getWIDTH() {
+		return WIDTH;
+	}
+
+	public int getHEIGHT() {
+		return HEIGHT;
+	}
+
+	@Override
+	public int compareTo(BoundingBox boundingBox) {
+		int areaA = getArea(), areaB = boundingBox.getArea();
+		return (int)Math.signum(areaA - areaB);
 	}
 }

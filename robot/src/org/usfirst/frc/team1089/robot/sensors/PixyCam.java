@@ -10,13 +10,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.util.BoundingBox;
 import org.usfirst.frc.team1089.util.MercMath;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-public class PixyCam implements PIDSource {
+public class PixyCam {
     private static final Logger log = LogManager.getLogger(PixyCam.class);
 
     private final SPI SPI;
@@ -24,6 +25,7 @@ public class PixyCam implements PIDSource {
     // Variables used for SPI comms, derived from https://github.com/omwah/pixy_rpi
     static final byte PIXY_SYNC_BYTE = 0x5a;
     static final byte PIXY_SYNC_BYTE_DATA = 0x5b;
+    private final int RES_X;
     static final int PIXY_OUTBUF_SIZE = 6;
     static final int PIXY_MAXIMUM_ARRAYSIZE = 130;
     static final int PIXY_START_WORD = 0xaa55;
@@ -65,21 +67,22 @@ public class PixyCam implements PIDSource {
         SPI.setSampleDataOnFalling();
         SPI.setClockActiveLow();
 
-    }
-
-    @Override
-    public void setPIDSourceType(PIDSourceType pidSource) {
+        RES_X = SensorsSettings.getCameraResolution().width;
 
     }
 
-    @Override
-    public PIDSourceType getPIDSourceType() {
-        return null;
-    }
+    /**
+     * Gets object displacement from center of camera
+     *
+     * @return RES_X / 2 - BOXES.get(0).getCenterX()
+     */
+    public double getDisplacement() {
+        double val = Double.NEGATIVE_INFINITY;
 
-    @Override
-    public double pidGet() {
-        return 0;
+        if (!BOXES.isEmpty())
+            val = RES_X / 2 - BOXES.get(0).getX();
+
+        return val;
     }
 
     /**
@@ -148,8 +151,12 @@ public class PixyCam implements PIDSource {
             // The top of the loop should pull the other one.
             int w = getWord();
 
-            if (w != PIXY_START_WORD)
+            if (w != PIXY_START_WORD) {
+                // Sort array before returning
+                BOXES.sort(BoundingBox::compareTo);
+
                 return;
+            }
         }
 
         // Should never get here, but if we happen to get a massive number of BOXES

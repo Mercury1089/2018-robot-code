@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
  *
  */
 public class LogPDPInfo extends Command {
+    private Logger log = LogManager.getLogger(LogPDPInfo.class);
 	private static final DateTimeFormatter fileTimestampFormat = DateTimeFormatter.ofPattern("MMdd_HHmmss");
 	private static final DateTimeFormatter statusTimestampFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS a");
 	private static final double MILLIS_BETWEEN_LOGS = 1_000;
@@ -52,7 +53,6 @@ public class LogPDPInfo extends Command {
 	private PrintWriter writer;
 	private long lastLogTime;
 	private File outputDir;
-	private Logger log = LogManager.getLogger(LogPDPInfo.class);
 
 	public LogPDPInfo() {
 		this(new File("/home/lvuser/logs"));

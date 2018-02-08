@@ -57,7 +57,7 @@ import org.usfirst.frc.team1089.util.ShuffleDash;
 public class OI {
 	private final double DEADZONE = 0.30;
 	private SendableChooser<AutonPosition> startingPosition;
-	private Logger log = LogManager.getLogger(OI.class);
+	private static Logger log = LogManager.getLogger(OI.class);
 
 	private Joystick leftStick, rightStick, gamepad;
 

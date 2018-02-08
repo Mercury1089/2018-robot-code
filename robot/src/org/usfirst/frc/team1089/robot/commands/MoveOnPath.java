@@ -27,7 +27,7 @@ import java.io.File;
  * Use motion profiling to move on a specified path
  */
 public class MoveOnPath extends Command {
-    private Logger log = LogManager.getLogger(MoveOnPath.class);
+    private static Logger log = LogManager.getLogger(MoveOnPath.class);
 	private TalonSRX left;
 	private TalonSRX right;
 

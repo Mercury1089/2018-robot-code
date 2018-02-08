@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1089.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 
 /**
@@ -9,6 +11,7 @@ import org.usfirst.frc.team1089.robot.Robot;
  * approach the cube.
  */
 public class GetCube extends CommandGroup {
+    private static Logger log = LogManager.getLogger(GetCube.class);
     private double angleTurned, distanceTraveled;
     public GetCube() {
         angleTurned = Robot.vision.getPixyCam().getDisplacement();

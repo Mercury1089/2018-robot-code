@@ -2,7 +2,8 @@ package org.usfirst.frc.team1089.robot.auton;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc.team1089.robot.Robot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 
@@ -11,6 +12,7 @@ import org.usfirst.frc.team1089.robot.subsystems.Claw;
  * during the autonomous period.
  */
 public class AutonCommand extends CommandGroup {
+    private static Logger log = LogManager.getLogger(AutonCommand.class);
     public AutonCommand(AutonPosition autonPos, AutonTask[] autonTasks, ScoringSide[] scoreSide, InitialMiddleSwitchSide initMidSS) {
     	String data = DriverStation.getInstance().getGameSpecificMessage();
         // Add Commands here:

@@ -3,6 +3,8 @@ package org.usfirst.frc.team1089.robot.subsystems;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.TestLIDAR;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
@@ -11,6 +13,7 @@ import org.usfirst.frc.team1089.util.config.SensorsSettings;
  * Subsystem encapsulating manipulator actuators and sensors.
  */
 public class Manipulator extends Subsystem {
+    private static Logger log = LogManager.getLogger(Manipulator.class);
     private LIDAR lidar;
     private WPI_VictorSPX victorLeft;
     private WPI_VictorSPX victorRight;

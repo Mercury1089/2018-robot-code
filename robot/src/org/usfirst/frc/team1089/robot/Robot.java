@@ -3,6 +3,8 @@ package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
@@ -28,6 +30,7 @@ public class Robot extends IterativeRobot {
     public static Claw claw;
     public static Elevator elevator;
     public static Vision vision;
+	private static Logger log = LogManager.getLogger(Robot.class);
 
 	public static OI oi;
 

@@ -2,11 +2,13 @@ package org.usfirst.frc.team1089.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.usfirst.frc.team1089.robot.RobotMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.UseElevator;
 
 public class Elevator extends Subsystem {
     private WPI_TalonSRX elevator_talon;
+    private static Logger log = LogManager.getLogger(Elevator.class);
     public Elevator() {
 //    elevator_talon = new WPI_TalonSRX(RobotMap.CAN.TALON_ELEVATOR);
     }

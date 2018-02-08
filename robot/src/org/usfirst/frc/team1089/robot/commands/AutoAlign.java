@@ -1,11 +1,13 @@
 package org.usfirst.frc.team1089.robot.commands;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 public class AutoAlign extends RotateRelative {
     private final double ANGLE_THRESHOLD;
-
+    private static Logger log = LogManager.getLogger(AutoAlign.class);
     public AutoAlign() {
         super();
 

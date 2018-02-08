@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DriveArcade extends Command {
 	private TalonDrive tDrive;
-	private Logger log = LogManager.getLogger();
+	private static Logger log = LogManager.getLogger(DriveArcade.class);
 	private DelayableLogger everySecond = new DelayableLogger(log, 1_000, TimeUnit.MILLISECONDS);
 	//TODO: think of better naming convention for InfrequentLogger
 

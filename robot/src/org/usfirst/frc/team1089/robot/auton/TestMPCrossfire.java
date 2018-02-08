@@ -1,17 +1,15 @@
 package org.usfirst.frc.team1089.robot.auton;
 
-import org.usfirst.frc.team1089.robot.commands.DriveDistance;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc.team1089.robot.commands.MoveOnPath;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Command group that specifies the commands to be run
  * during the autonomous period.
  */
 public class TestMPCrossfire extends CommandGroup {
-
+    private static Logger log = LogManager.getLogger(TestMPCrossfire.class);
 
     public TestMPCrossfire() {
         addSequential(

@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1089.robot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * The RobotSettings is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -24,6 +27,7 @@ public class RobotMap {
 	/**
 	 * Class containing constants for the ports of all CAN devices.
 	 */
+	private static Logger log = LogManager.getLogger(RobotMap.class);
 	public static class CAN {
 		public static final int
             DRIVETRAIN_ML = 1,

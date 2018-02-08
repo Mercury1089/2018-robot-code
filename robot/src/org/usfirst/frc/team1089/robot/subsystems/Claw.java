@@ -12,7 +12,7 @@ public class Claw extends Subsystem {
     private WPI_TalonSRX
             clawMotor_M,
             clawMotor_S;
-    private Logger log = LogManager.getLogger(Claw.class);
+    private static Logger log = LogManager.getLogger(Claw.class);
 
     public enum ClawState {
         GRAB(1.0), EJECT(-1.0), STOP(0.0);

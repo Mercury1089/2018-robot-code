@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.DriveArcade;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.NavX;
@@ -24,6 +26,7 @@ import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
  * using the Talons.
  */
 public class DriveTrain extends Subsystem implements PIDOutput {
+	private Logger log = LogManager.getLogger(DriveTrain.class);
 	public static final int TIMEOUT_MS = 10;
 	public static final int SLOT_0 = 0;
 	public static final int PRIMARY_PID_LOOP = 0;

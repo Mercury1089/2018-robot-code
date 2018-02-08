@@ -11,8 +11,8 @@ import org.usfirst.frc.team1089.robot.Robot;
 public class GetCube extends CommandGroup {
     private double angleTurned, distanceTraveled;
     public GetCube() {
-        angleTurned = Robot.camera.getAngleFromCube();
-        addSequential(new AutoAlign());
+        angleTurned = Robot.vision.getPixyCam().getDisplacement();
+        addSequential(new RotateToTarget());
         distanceTraveled = Robot.manipulator.getLidar().getDistance();
         addSequential(new DriveWithLIDAR(2, .3));
     }

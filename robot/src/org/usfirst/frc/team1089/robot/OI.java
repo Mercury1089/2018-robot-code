@@ -90,11 +90,10 @@ public class OI {
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
 		right1.whenPressed(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.BACKWARD));
-		right3 = new JoystickButton(rightStick, 3);
-
-		right3.whenPressed(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		right2 = new JoystickButton(rightStick, 2);
 		right2.whenPressed(new TestMPCrossfire());
+		right3 = new JoystickButton(rightStick, 3);
+		right3.whenPressed(new GetCube());
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

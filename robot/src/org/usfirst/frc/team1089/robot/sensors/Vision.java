@@ -25,9 +25,7 @@ public class Vision extends Subsystem {
 			SmartDashboard.putNumber("PixyCam: X", Robot.vision.getPixyCam().BOXES.get(0).getX());
 			SmartDashboard.putNumber("PixyCam: width", Robot.vision.getPixyCam().BOXES.get(0).getWIDTH());
 			SmartDashboard.putNumber("PixyCam: displacement", Robot.vision.getPixyCam().getDisplacement());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { }
 	}
 
 	public PixyCam getPixyCam() {

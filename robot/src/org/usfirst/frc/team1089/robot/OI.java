@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonBuilder;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
-import org.usfirst.frc.team1089.robot.auton.TestMPCrossfire;
+import org.usfirst.frc.team1089.robot.auton.TestAutonBuilder;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.util.ShuffleDash;
@@ -91,7 +91,7 @@ public class OI {
 		right1 = new JoystickButton(rightStick,1);
 		right1.whenPressed(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.BACKWARD));
 		right2 = new JoystickButton(rightStick, 2);
-		right2.whenPressed(new TestMPCrossfire());
+		right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 

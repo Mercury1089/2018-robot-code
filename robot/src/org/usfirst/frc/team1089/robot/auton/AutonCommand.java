@@ -10,7 +10,7 @@ import org.usfirst.frc.team1089.robot.subsystems.Claw;
 /**
  * Command group that specifies the commands to be run
  * during the autonomous period.
- * TODO change all Crossfire trajectories to SpeedyBoi trajectories
+ *
  */
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
@@ -19,6 +19,7 @@ public class AutonCommand extends CommandGroup {
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
     private String posStr;
+
     public AutonCommand(AutonBuilder autonBuilder) {
     	String data = DriverStation.getInstance().getGameSpecificMessage();
         // Add Commands here:
@@ -82,12 +83,10 @@ public class AutonCommand extends CommandGroup {
         for(int i = 1; i < autonTasks.length; i++) {
             AutonTask currTask = autonTasks[i];
             AutonTask prevTask = autonTasks[i - 1];
-            if (scoreSide[i] == null)
-                return;
 
             switch(currTask) {
                 case GRAB_CUBE: //TODO we need da technician
-                    if(prevTask != AutonTask.GRAB_CUBE) {
+                    if(prevTask != AutonTask.GRAB_CUBE && scoreSide[i - 1] != null) {
                         switch (prevTask) {
                             case SCORE_SCALE:
                                 //scoreSide[i - 1] because it's looking for where it JUST scored.

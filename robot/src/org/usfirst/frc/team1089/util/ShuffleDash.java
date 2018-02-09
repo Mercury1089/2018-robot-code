@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
+import org.usfirst.frc.team1089.robot.auton.AutonTask;
+import org.usfirst.frc.team1089.robot.auton.ScoringSide;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**
@@ -14,6 +16,17 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 public class ShuffleDash {
     public double maxRevsPerMinRight = 0.0, maxRevsPerMinLeft = 0.0;
     public SendableChooser<AutonPosition> startingPosition;
+
+    //tOdO find out what to do here
+    /*public SendableChooser<AutonTask> autonTaskLLL_1, autonTaskLLL_2, autonTaskLLL_3, autonTaskLLL_4,
+            autonTaskLRL_1, autonTaskLRL_2, autonTaskLRL_3, autonTaskLRL_4,
+            autonTaskRLR_1, autonTaskRLR_2, autonTaskRLR_3, autonTaskRLR_4,
+            autonTaskRRR_1, autonTaskRRR_2, autonTaskRRR_3, autonTaskRRR_4;
+    public SendableChooser<ScoringSide> scoringSideLLL_1, scoringSide_2, scoringSideLLL_3, scoringSideLLL_4,
+            scoringSideLRL_1, scoringSideLRL_2, scoringSideLRL_3, scoringSideLRL_4,
+            scoringSideRLR_1, scoringSideRLR_2, scoringSideRLR_3, scoringSideRLR_4,
+            scoringSideRRR_1, scoringSideRRR_2, scoringSideRRR_3, scoringSideRRR_4;*/
+
     public ShuffleDash() {
         runAutonOnShuffleboard();
         new Notifier(this::updateDash).startPeriodic(0.050);

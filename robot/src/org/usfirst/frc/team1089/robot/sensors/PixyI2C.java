@@ -31,7 +31,10 @@ public class PixyI2C implements PIDSource {
         return (((int) upper & 0xff) << 8) | ((int) lower & 0xff);
     }
 
-    //This method gathers data, then parses that data, and assigns the ints to global variables
+    /**
+     * Read data from the Pixy
+     * @param signature the color signature to get for
+     */
     public void read(int signature) { // The signature should be which number object in
         int checksum, sig;                                                // pixymon you are trying to get data for
         byte[] rawData = new byte[32];
@@ -99,8 +102,6 @@ public class PixyI2C implements PIDSource {
     public double pidGet() {
         double val = Double.NEGATIVE_INFINITY;
         int resX = SensorsSettings.getCameraResolution().width;
-
-        read(1); // Read before trying anything.
 
         if (curTarget != null)
             val = resX / 2 - curTarget.getX();

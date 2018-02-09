@@ -94,10 +94,9 @@ public class RotateToTarget extends PIDCommand {
 		if (getPIDController().onTarget()) {
 			log.info("Output before: " + output);
 			output = 0;
-		} else if (Math.abs(output) < MIN_PERCENT_VBUS) {
+		} else if (Math.abs(output) < MIN_PERCENT_VBUS)
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
-		}
-		log.info("Output after: " + output);
+
 		log.info("Output after: " + output);
 
 		Robot.driveTrain.pidWrite(-output);

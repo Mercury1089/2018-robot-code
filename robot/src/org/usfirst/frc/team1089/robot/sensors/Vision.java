@@ -2,7 +2,6 @@ package org.usfirst.frc.team1089.robot.sensors;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.util.BoundingBox;
 
 

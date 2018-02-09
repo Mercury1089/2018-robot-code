@@ -14,6 +14,11 @@ import org.usfirst.frc.team1089.robot.subsystems.Claw;
  */
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
+    private AutonPosition workingSide;
+    private InitialMiddleSwitchSide initMidSS;
+    private AutonTask[] autonTasks;
+    private ScoringSide[] scoreSide;
+    private String posStr;
     public AutonCommand(AutonBuilder autonBuilder) {
     	String data = DriverStation.getInstance().getGameSpecificMessage();
         // Add Commands here:
@@ -33,22 +38,34 @@ public class AutonCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
 
-        AutonPosition workingSide = autonBuilder.getAutonPos();
-        InitialMiddleSwitchSide initMidSS = autonBuilder.getInitMidSS();
-        AutonTask[] autonTasks = autonBuilder.getAutonTasks();
-        ScoringSide[] scoreSide = autonBuilder.getScoreSide();
-        String posStr = workingSide.toString();
+        workingSide = autonBuilder.getAutonPos();
+        initMidSS = autonBuilder.getInitMidSS();
+        autonTasks = autonBuilder.getAutonTasks();
+        scoreSide = autonBuilder.getScoreSide();
+        posStr = workingSide.toString();
 
         switch(workingSide) {
             case LEFT:
-            case RIGHT://TODO we left off here
-                    if(data.charAt(0) == data.charAt(1) && "LEFT" == workingSide.toString() && 'L' == data.charAt(0))
-                        addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+            case RIGHT:
+                if (data.charAt(0) == data.charAt(1)) {
+                    if(data.charAt(0) == workingSide.toString().charAt(0)) {
+                        addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                         addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
-                    if(data.charAt(0) != data.charAt(1) && "LEFT" == workingSide.toString() && 'L' == data.charAt(0))
-                        addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.BACKWARD));
-                    if(data.charAt(0) == data.charAt(1))
-                        addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                    } else {
+                        addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                        switchWorkingSide();
+                        addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
+                    }
+                } else {
+                    if(data.charAt(0) == workingSide.toString().charAt(0)) {
+                        addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                        switchWorkingSide();
+                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                    } else {
+                        addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                    }
+                }
                 break;
             case MIDDLE:
                 switch(initMidSS) {
@@ -137,6 +154,18 @@ public class AutonCommand extends CommandGroup {
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                     break;
             }
+        }
+    }
+    private void switchWorkingSide() {
+        switch(workingSide) {
+            case RIGHT:
+                workingSide = AutonPosition.LEFT;
+                posStr = workingSide.toString();
+                break;
+            case LEFT:
+                workingSide = AutonPosition.RIGHT;
+                posStr = workingSide.toString();
+                break;
         }
     }
 }

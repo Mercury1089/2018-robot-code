@@ -13,12 +13,14 @@ import org.usfirst.frc.team1089.robot.Robot;
 public class GetCube extends CommandGroup {
     private static Logger log = LogManager.getLogger(GetCube.class);
     private double angleTurned, distanceTraveled;
+
     public GetCube() {
-        angleTurned = Robot.vision.getPixyCam().getDisplacement();
+        angleTurned = Robot.vision.getPixyCam().pidGet();
         addSequential(new RotateToTarget());
         distanceTraveled = Robot.manipulator.getLidar().getDistance();
         addSequential(new DriveWithLIDAR(5, .3));
     }
+
     public double getAngleTurned() {
         return angleTurned;
     }

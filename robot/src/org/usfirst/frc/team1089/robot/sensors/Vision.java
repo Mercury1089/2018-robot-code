@@ -1,34 +1,34 @@
 package org.usfirst.frc.team1089.robot.sensors;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.util.BoundingBox;
 
 
 public class Vision extends Subsystem {
-	private PixyCam pixyCam;
+	private PixyI2C pixyCam;
 
 	public Vision() {
 		// Open a pipeline to a Pixy camera.
-		pixyCam = new PixyCam(0);
+		pixyCam = new PixyI2C();
 	}
 
 	@Override
 	public void periodic() {
-		try {
-			pixyCam.getBoxes(1000);
-			SmartDashboard.putNumber("PixyCam: X", Robot.vision.getPixyCam().BOXES.get(0).getX());
-			SmartDashboard.putNumber("PixyCam: width", Robot.vision.getPixyCam().BOXES.get(0).getWIDTH());
-			SmartDashboard.putNumber("PixyCam: displacement", Robot.vision.getPixyCam().getDisplacement());
-		} catch (Exception e) { }
+		pixyCam.read(1);
+
+		BoundingBox box = pixyCam.getTarget();
+
+		SmartDashboard.putNumber("Pixy Cam: Displacement", pixyCam.pidGet());
+
+		if (box != null) {
+			SmartDashboard.putNumber("Pixy Cam: Center X", box.getX());
+			SmartDashboard.putNumber("Pixy Cam: Width", box.getWidth());
+		}
 	}
 
-	public PixyCam getPixyCam() {
+	public PixyI2C getPixyCam() {
 		return pixyCam;
 	}
 

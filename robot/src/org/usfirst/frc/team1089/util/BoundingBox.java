@@ -28,11 +28,11 @@ public class BoundingBox implements Comparable<BoundingBox>{
 		return Y;
 	}
 
-	public int getWIDTH() {
+	public int getWidth() {
 		return WIDTH;
 	}
 
-	public int getHEIGHT() {
+	public int getHeight() {
 		return HEIGHT;
 	}
 

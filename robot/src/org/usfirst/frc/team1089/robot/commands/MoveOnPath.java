@@ -57,7 +57,7 @@ public class MoveOnPath extends Command {
      */
 	public MoveOnPath(String name, Direction direction) {
         requires(Robot.driveTrain);
-
+        log.info(getName() + " Created");
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
 
@@ -103,6 +103,7 @@ public class MoveOnPath extends Command {
         // Start processing
         // i.e.: moving API points to RAM
         trajectoryProcessor.startPeriodic(0.005);
+        log.info(getName() + " Initialized");
 	}
 
 	//Called repeatedly when this Command is scheduled to run.

@@ -21,7 +21,7 @@ public class AutoAlign extends RotateRelative {
     @Override
     protected void initialize() {
         updateHeading(Robot.camera.getAngleFromCube());
-
+        log.info(getName() + " Initialized");
         super.initialize();
     }
 

@@ -19,6 +19,7 @@ public class GetCube extends CommandGroup {
         addSequential(new RotateToTarget());
         distanceTraveled = Robot.manipulator.getLidar().getDistance();
         addSequential(new DriveWithLIDAR(5, .3));
+        log.info(getName() + " Created");
     }
 
     public double getAngleTurned() {

@@ -61,13 +61,13 @@ public class DriveDistance extends Command {
 		Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, DERIVATIVE, DriveTrain.TIMEOUT_MS);
 
 		Robot.driveTrain.configVoltage(0, percentVoltage);
-
+        log.info(getName() + " Initialized");
          updateDistance();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-
+        log.info(getName() + " executing");
     }
 
     // Make this return true when this Command no longer needs to run execute()

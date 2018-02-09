@@ -30,6 +30,7 @@ public class DriveWithLIDAR extends DriveDistance {
     protected void initialize() {
         distance = Robot.manipulator.getLidar().getDistance() - minimumDistance;
         super.initialize();
+        log.info(getName() + " Initialized");
         currentMethod = "DriveWithLIDAR.initialize();";
     }
 
@@ -38,6 +39,7 @@ public class DriveWithLIDAR extends DriveDistance {
         distance = Robot.manipulator.getLidar().getDistance() - minimumDistance;
         updateDistance();
         currentMethod = "DriveWithLIDAR.execute();";
+        log.info(getName() + " executing");
     }
 
     @Override
@@ -49,5 +51,6 @@ public class DriveWithLIDAR extends DriveDistance {
     protected void end() {
         super.end();
         currentMethod = "DriveWithLIDAR.end();";
+        log.info(getName() + " Ended");
     }
 }

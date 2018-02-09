@@ -14,6 +14,7 @@ public class UseClaw extends Command {
     private Claw.ClawState targetState;
     private static Logger log = LogManager.getLogger(UseClaw.class);
     private DelayableLogger exeLog = new DelayableLogger(log, 1, TimeUnit.SECONDS);
+    private final double minimumDistance = .3, maximumDistance = 1.5;
 
     public UseClaw(Claw.ClawState state) {
         requires(Robot.claw);
@@ -40,10 +41,14 @@ public class UseClaw extends Command {
     @Override
     protected void end() {
         log.info(getName() + " ended");
+        Robot.claw.set(Claw.ClawState.STOP);
     }
 
     @Override
     protected boolean isFinished() {
-        return false;
+        if(targetState == Claw.ClawState.GRAB) {
+            return Robot.manipulator.getLidar().getDistance() - minimumDistance <= 0;
+        }
+        return maximumDistance - Robot.manipulator.getLidar().getDistance() <= 0;
     }
 }

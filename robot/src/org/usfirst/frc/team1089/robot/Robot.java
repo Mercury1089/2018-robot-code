@@ -9,8 +9,7 @@ import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
 import org.usfirst.frc.team1089.robot.subsystems.*;
-import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
-import org.usfirst.frc.team1089.util.config.SensorsSettings;
+import org.usfirst.frc.team1089.util.config.*;
 import org.usfirst.frc.team1089.robot.sensors.Vision;
 
 /**
@@ -37,6 +36,7 @@ public class Robot extends IterativeRobot {
     static {
 		DriveTrainSettings.initialize();
 		SensorsSettings.initialize();
+		ManipulatorSettings.initialize();
     }
 
 	/**

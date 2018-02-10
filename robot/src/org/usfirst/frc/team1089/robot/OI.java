@@ -89,12 +89,12 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.FORWARD));
+		right1.whenPressed(new MoveOnPath("CubePickupSetup", MoveOnPath.Direction.FORWARD));
 		right2 = new JoystickButton(rightStick, 2);
-		right2.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
+		right2.whenPressed(new MoveOnPath("CubePickupSetup", MoveOnPath.Direction.BACKWARD));
 		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
-		right3.whenPressed(new GetCube());
+		//right3.whenPressed(new GetCube());
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

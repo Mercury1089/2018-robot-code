@@ -38,13 +38,28 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     private NavX navX;
     private ADXRS450_Gyro gyroSPI;
 
-	public static double WHEEL_DIAMETER_INCHES;
+	public static final double WHEEL_DIAMETER_INCHES;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096;
-	public static final double GEAR_RATIO = 1.0;
+	public static final double GEAR_RATIO;
     public static final double MAX_RPM_CROSSFIRE = 454.1;
     public static final double MAX_RPM_SPEEDY_BOI = 700.63;
 
-    public DriveTrainSettings.DriveTrainLayout curLayout;
+    public static final DriveTrainSettings.DriveTrainLayout LAYOUT;
+
+    static {
+		LAYOUT = DriveTrainSettings.getControllerLayout();
+		GEAR_RATIO = DriveTrainSettings.getGearRatio();
+
+		switch(LAYOUT) {
+			case LEGACY:
+				WHEEL_DIAMETER_INCHES = 4.0;
+				break;
+			case DEFAULT:
+			default:
+				WHEEL_DIAMETER_INCHES = 5.0;
+				break;
+		}
+	}
 
 	/**
 	 * Creates the drivetrain, assuming that there are four talons.
@@ -55,22 +70,18 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	 * @param br Back-right Talon ID
 	 */
 	public DriveTrain(int fl, int fr, int bl, int br) {
-
 		//Use WPI_TalonSRX instead of TalonSRX to make sure it interacts properly with WPILib.
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
-		curLayout = DriveTrainSettings.getControllerLayout();
 
 		// At this point it's based on what the layout is
-        switch(curLayout) {
+        switch(LAYOUT) {
             case LEGACY:
                 vFollowerLeft = new WPI_TalonSRX(bl);
                 vFollowerRight = new WPI_TalonSRX(br);
-                WHEEL_DIAMETER_INCHES = 4.0;
                 break;
 			case DEFAULT:
 			default:
-				WHEEL_DIAMETER_INCHES = 5.0;
 				vFollowerLeft = new WPI_VictorSPX(bl);
 				vFollowerRight = new WPI_VictorSPX(br);
 				break;
@@ -182,7 +193,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
     public double getFeedForward() {
         double rpm;
-        switch(curLayout) {
+        switch(LAYOUT) {
 			case LEGACY:
 				rpm = MAX_RPM_CROSSFIRE;
 				break;

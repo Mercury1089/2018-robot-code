@@ -42,6 +42,23 @@ public class DriveTrainSettings extends Config {
     }
 
     /**
+     *
+     * @return
+     */
+    public static double getGearRatio() {
+        String[] nums = parseArrayValue("driveTrain.gearRatio", ":");
+        double driver = 1.0, driven = 1.0;
+
+        if (nums.length == 2) {
+            driver = Double.parseDouble(nums[0].trim());
+            driven = Double.parseDouble(nums[1].trim());
+        }
+
+
+        return driver / driven;
+    }
+
+    /**
      * Gets the max output for the drive train motor controllers
      *
      * @return max output, represented as percent value [0.0, 1.0]

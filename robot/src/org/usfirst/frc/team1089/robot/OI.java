@@ -81,7 +81,7 @@ public class OI {
 		left1 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN1);
 		left1.whenPressed(new RotateRelative(90));
 		left2 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN2);
-		left2.whenPressed(new DriveWithLIDAR(2, .3));
+		left2.whenPressed(new DriveWithLIDAR(4, .3));
 		left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
 		left3.whenPressed(new DriveDistance(24.0, .12));
 		left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
@@ -89,9 +89,10 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("ScaleFrontRight", MoveOnPath.Direction.BACKWARD));
+		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.FORWARD));
 		right2 = new JoystickButton(rightStick, 2);
-		right2.whenPressed(new TestAutonBuilder());
+		right2.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
+		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 

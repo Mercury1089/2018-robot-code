@@ -45,6 +45,6 @@ public class Manipulator extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new TestLIDAR());
+        setDefaultCommand(null);
     }
 }

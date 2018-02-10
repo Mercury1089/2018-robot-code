@@ -5,7 +5,17 @@ package org.usfirst.frc.team1089.robot.auton;
  *
  */
 public enum AutonPosition {
-	LEFT,
-	MIDDLE,
-	RIGHT;
+	LEFT("Left"),
+	MIDDLE("Middle"),
+	RIGHT("Right");
+
+	private final String name;
+
+	private AutonPosition(String n) {
+		name = n;
+	}
+
+	public String toString() {
+		return name;
+	}
 }

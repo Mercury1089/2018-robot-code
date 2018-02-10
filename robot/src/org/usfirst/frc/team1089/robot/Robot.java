@@ -57,8 +57,6 @@ public class Robot extends IterativeRobot {
 
 		driveTrain.resetEncoders();
 
-
-
 		pdp = new PDP();
 
 		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);

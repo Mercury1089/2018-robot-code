@@ -34,7 +34,7 @@ public class Claw extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new UseClaw(ClawState.STOP));
+        setDefaultCommand(null);
     }
 
     public void set(ClawState state) {

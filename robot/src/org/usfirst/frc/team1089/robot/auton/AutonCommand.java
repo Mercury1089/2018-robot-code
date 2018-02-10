@@ -51,20 +51,20 @@ public class AutonCommand extends CommandGroup {
                 if (data.charAt(0) == data.charAt(1)) {
                     if(data.charAt(0) == workingSide.toString().charAt(0)) {
                         addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
-                        addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
+                        addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
                     } else {
                         addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                         switchWorkingSide();
-                        addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
+                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     }
                 } else {
                     if(data.charAt(0) == workingSide.toString().charAt(0)) {
                         addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                         switchWorkingSide();
-                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     } else {
                         addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
-                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     }
                 }
                 break;
@@ -87,31 +87,7 @@ public class AutonCommand extends CommandGroup {
             switch(currTask) {
                 case GRAB_CUBE: //TODO we need da technician
                     if(prevTask != AutonTask.GRAB_CUBE && scoreSide[i - 1] != null) {
-                        switch (prevTask) {
-                            case SCORE_SCALE:
-                                //scoreSide[i - 1] because it's looking for where it JUST scored.
-                                if(workingSide != AutonPosition.MIDDLE && scoreSide[i - 1] != ScoringSide.BACK) {
-                                    switch(scoreSide[i - 1]) {
-                                        case FRONT:
-                                            addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
-                                            break;
-                                        case MID: //TODO make SIDE return position
-                                            addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.BACKWARD));
-                                            break;
-                                    }
-                                }
-                                break;
-                            case SCORE_SWITCH:
-                                switch(scoreSide[i]) { //TODO make sure scoreSide isn't null
-                                    case FRONT:
-                                        addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
-                                        break;
-                                    case MID:
-                                        addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.BACKWARD));
-                                        break;
-                                }
-                                break;
-                        }
+
                         //addSequential(new MoveOnPath(""));
                         //TODO auto cube grab method. putting the following here if that doesn't happen:
                         //TODO if not going to change, then add a drive distance so that it doesn't turn into a wall.
@@ -129,9 +105,11 @@ public class AutonCommand extends CommandGroup {
                         switch(scoreSide[i]) {
                             case FRONT:
                                 addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
+                                addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
                                 break;
                             case MID: //TODO make SIDE profiles
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.FORWARD));
+                                addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.BACKWARD));
                                 break;
                         }
                     }
@@ -141,11 +119,22 @@ public class AutonCommand extends CommandGroup {
                     if(workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.FRONT) {
                         switch (scoreSide[i]) {
                             case BACK:
-                                addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                                if(data.charAt(0) == data.charAt(1)) {
+                                    addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                                    addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                } else {
+                                    addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                                    addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                                }
                                 //TODO elevator stuff
                                 break;
                             case MID: //The side placement positions are the initial pickup setups, but the other way.
-                                addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
+                                if(data.charAt(0) == data.charAt(1)) {
+                                    addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
+                                    addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.BACKWARD));
+                                } else {
+                                    //TODO possibly make OppMid delivery thing
+                                }
                                 //TODO elevator stuff
                                 break;
                         }

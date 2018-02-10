@@ -9,11 +9,14 @@ import org.usfirst.frc.team1089.util.DelayableLogger;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Command that utilizes the claw depending on the state given.
+ */
 public class UseClaw extends Command {
+    private static final Logger LOG = LogManager.getLogger(UseClaw.class);
 
     private Claw.ClawState targetState;
-    private static Logger log = LogManager.getLogger(UseClaw.class);
-    private DelayableLogger exeLog = new DelayableLogger(log, 1, TimeUnit.SECONDS);
+    private DelayableLogger exeLog = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
     private final double minimumDistance = .3, maximumDistance = 1.5;
 
     public UseClaw(Claw.ClawState state) {
@@ -24,7 +27,7 @@ public class UseClaw extends Command {
 
     @Override
     protected void initialize() {
-        log.info(getName() + " initialized");
+        LOG.info(getName() + " initialized");
     }
 
     @Override
@@ -35,20 +38,20 @@ public class UseClaw extends Command {
 
     @Override
     protected void interrupted() {
-        log.info(getName() + " interrupted");
+        LOG.info(getName() + " interrupted");
     }
 
     @Override
     protected void end() {
-        log.info(getName() + " ended");
+        LOG.info(getName() + " ended");
         Robot.claw.set(Claw.ClawState.STOP);
     }
 
     @Override
     protected boolean isFinished() {
-        if(targetState == Claw.ClawState.GRAB) {
-            return Robot.manipulator.getLidar().getDistance() - minimumDistance <= 0;
-        }
-        return maximumDistance - Robot.manipulator.getLidar().getDistance() <= 0;
+        if (targetState == Claw.ClawState.GRAB)
+            return Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
+
+        return maximumDistance - Robot.claw.getLidar().getDistance() <= 0;
     }
 }

@@ -25,8 +25,6 @@ public class UseElevator extends Command {
 
     @Override
     protected void initialize() {
-
-
         Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
         log.info(getName() + " initialized");
     }

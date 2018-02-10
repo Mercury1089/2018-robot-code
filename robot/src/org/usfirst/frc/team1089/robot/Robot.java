@@ -23,7 +23,6 @@ public class Robot extends IterativeRobot {
 
 	// Subsystems
 	public static DriveTrain driveTrain;
-	public static Manipulator manipulator;
 	public static PDP pdp;
 	public static CameraVision camera;
     public static Claw claw;
@@ -57,13 +56,10 @@ public class Robot extends IterativeRobot {
 
 		driveTrain.resetEncoders();
 
-
-
 		pdp = new PDP();
 
-		manipulator = new Manipulator(CAN.CANIFIER, PWM.LIDAR, CAN.MANIPULATOR_L, CAN.MANIPULATOR_R);
 		camera = new CameraVision();
-		claw = new Claw(CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
+		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		elevator = new Elevator(CAN.TALON_ELEVATOR);
 		vision = new Vision();
 

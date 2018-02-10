@@ -18,7 +18,7 @@ public class TestLIDAR extends Command {
     }
 
     protected void execute() {
-        log.info(getName() + " Executing");
+        //log.info(getName() + " Executing");
         //System.out.println("" + lidar.getDistance()[0] + " in.");
     }
 

@@ -1,9 +1,11 @@
 package org.usfirst.frc.team1089.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;
 
@@ -13,16 +15,19 @@ public class UseElevator extends Command {
     private static Logger log = LogManager.getLogger(UseElevator.class);
     private DelayableLogger exeLog = new DelayableLogger(log, 1, TimeUnit.SECONDS);
 
-    Elevator.ELEVATOR_STATE target_state;
+    private Elevator.ELEVATOR_STATE targetState;
 
-    public UseElevator(Elevator.ELEVATOR_STATE target_state) {
+    public UseElevator(Elevator.ELEVATOR_STATE targetState) {
         requires(Robot.elevator);
-        setName(target_state + "Elevator");
-        this.target_state = target_state;
+        setName(targetState + "Elevator");
+        this.targetState = targetState;
     }
 
     @Override
     protected void initialize() {
+
+
+        Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
         log.info(getName() + " initialized");
     }
 

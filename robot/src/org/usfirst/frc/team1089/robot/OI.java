@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.auton.TestAutonBuilder;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
+import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -93,6 +94,7 @@ public class OI {
 		right2 = new JoystickButton(rightStick, 2);
 		right2.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
 		//right2.whenPressed(new TestAutonBuilder());
+		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 
@@ -101,12 +103,10 @@ public class OI {
 		gamepad_b = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.B);
 		gamepad_x = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.X);
 		gamepad_y = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.Y);
-		gamepad_a.whenPressed(new DriveArcade());
-		gamepad_x.whenPressed(new DriveTank());
-		gamepad_b.whenPressed(new UseClaw(Claw.ClawState.GRAB));
-		gamepad_b.whenReleased(new UseClaw(Claw.ClawState.STOP));
-		gamepad_y.whenPressed(new UseClaw(Claw.ClawState.EJECT));
-		gamepad_y.whenReleased(new UseClaw(Claw.ClawState.STOP));
+		gamepad_a.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.STOP));
+		gamepad_x.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SWITCH));
+		gamepad_b.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_HIGH));
+		gamepad_y.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_LOW));
 
 		log.info("OI initialized");
 

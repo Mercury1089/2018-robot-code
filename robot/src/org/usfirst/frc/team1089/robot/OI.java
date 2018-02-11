@@ -90,9 +90,9 @@ public class OI {
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
+		right1.whenPressed(new MoveOnPath("StraightProfile", MoveOnPath.Direction.FORWARD));
 		right2 = new JoystickButton(rightStick, 2);
-		right2.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right2.whenPressed(new MoveOnPath("CircleProfile", MoveOnPath.Direction.FORWARD));
 		//right2.whenPressed(new TestAutonBuilder());
 		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);

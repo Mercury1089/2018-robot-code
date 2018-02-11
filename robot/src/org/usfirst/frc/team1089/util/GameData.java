@@ -15,7 +15,8 @@ public class GameData {
 
     public GameData() {
         String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
-        if(gameSpecificMessage != null) {
+        plateSides = new PlateSide[3];
+        if (gameSpecificMessage != null) {
             for (int i = 0; i < gameSpecificMessage.length(); i++) {
                 switch (gameSpecificMessage.charAt(i)) {
                     case 'L':
@@ -37,7 +38,13 @@ public class GameData {
 
         }
         return gameData;
+    }
 
+    public PlateSide getSwitchSide() {
+        return plateSides[0];
+    }
 
+    public PlateSide getScaleSide() {
+        return plateSides[1];
     }
 }

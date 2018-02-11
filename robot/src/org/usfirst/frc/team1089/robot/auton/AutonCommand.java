@@ -6,11 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
+import org.usfirst.frc.team1089.util.GameData;
 
 /**
  * Command group that specifies the commands to be run
  * during the autonomous period.
- *
  */
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
@@ -21,7 +21,8 @@ public class AutonCommand extends CommandGroup {
     private String posStr;
 
     public AutonCommand(AutonBuilder autonBuilder) {
-    	String data = DriverStation.getInstance().getGameSpecificMessage();
+        String data = DriverStation.getInstance().getGameSpecificMessage();
+        GameData gameData = GameData.getInstance();
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -45,11 +46,11 @@ public class AutonCommand extends CommandGroup {
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();
 
-        switch(workingSide) {
+        switch (workingSide) {
             case LEFT:
             case RIGHT:
-                if (data.charAt(0) == data.charAt(1)) {
-                    if(data.charAt(0) == workingSide.toString().charAt(0)) {
+                if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                    if (data.charAt(0) == workingSide.toString().charAt(0)) {
                         addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                         addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
                     } else {
@@ -58,7 +59,7 @@ public class AutonCommand extends CommandGroup {
                         addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     }
                 } else {
-                    if(data.charAt(0) == workingSide.toString().charAt(0)) {
+                    if (data.charAt(0) == workingSide.toString().charAt(0)) {
                         addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                         switchWorkingSide();
                         addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
@@ -69,7 +70,7 @@ public class AutonCommand extends CommandGroup {
                 }
                 break;
             case MIDDLE:
-                switch(initMidSS) {
+                switch (initMidSS) {
                     case LEFT_MID:
                     case RIGHT_MID:
                         String initMidStr = initMidSS.toString();
@@ -80,13 +81,13 @@ public class AutonCommand extends CommandGroup {
                 break;
         }
 
-        for(int i = 1; i < autonTasks.length; i++) {
+        for (int i = 1; i < autonTasks.length; i++) {
             AutonTask currTask = autonTasks[i];
             AutonTask prevTask = autonTasks[i - 1];
 
-            switch(currTask) {
+            switch (currTask) {
                 case GRAB_CUBE: //TODO we need da technician
-                    if(prevTask != AutonTask.GRAB_CUBE && scoreSide[i - 1] != null) {
+                    if (prevTask != AutonTask.GRAB_CUBE && scoreSide[i - 1] != null) {
 
                         //addSequential(new MoveOnPath(""));
                         //TODO auto cube grab method. putting the following here if that doesn't happen:
@@ -101,8 +102,8 @@ public class AutonCommand extends CommandGroup {
                     }
                     break;
                 case SCORE_SCALE:
-                    if(workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.BACK) {
-                        switch(scoreSide[i]) {
+                    if (workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.BACK) {
+                        switch (scoreSide[i]) {
                             case FRONT:
                                 addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
@@ -116,10 +117,10 @@ public class AutonCommand extends CommandGroup {
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                     break;
                 case SCORE_SWITCH:
-                    if(workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.FRONT) {
+                    if (workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.FRONT) {
                         switch (scoreSide[i]) {
                             case BACK:
-                                if(data.charAt(0) == data.charAt(1)) {
+                                if (data.charAt(0) == data.charAt(1)) {
                                     addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
                                 } else {
@@ -129,7 +130,7 @@ public class AutonCommand extends CommandGroup {
                                 //TODO elevator stuff
                                 break;
                             case MID: //The side placement positions are the initial pickup setups, but the other way.
-                                if(data.charAt(0) == data.charAt(1)) {
+                                if (data.charAt(0) == data.charAt(1)) {
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.BACKWARD));
                                 } else {
@@ -144,8 +145,9 @@ public class AutonCommand extends CommandGroup {
             }
         }
     }
+
     private void switchWorkingSide() {
-        switch(workingSide) {
+        switch (workingSide) {
             case RIGHT:
                 workingSide = AutonPosition.LEFT;
                 posStr = workingSide.toString();

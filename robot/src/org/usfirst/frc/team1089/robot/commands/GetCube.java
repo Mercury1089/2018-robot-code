@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.subsystems.Claw;
 
 /**
  * Command group that calls both the AutoAlign command
@@ -17,8 +18,9 @@ public class GetCube extends CommandGroup {
     public GetCube() {
         angleTurned = Robot.vision.getPixyCam().pidGet();
         addSequential(new RotateToTarget());
-        distanceTraveled = Robot.manipulator.getLidar().getDistance();
-        addSequential(new DriveWithLIDAR(5, .3));
+        distanceTraveled = Robot.claw.getLidar().getDistance();
+        addParallel(new UseClaw(Claw.ClawState.GRAB));
+        addSequential(new DriveWithLIDAR(8, .3));
         log.info(getName() + " Created");
     }
 

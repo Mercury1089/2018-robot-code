@@ -65,7 +65,7 @@ public class OI {
 
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4;
-	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y;
+	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb;
 
 	private UseClaw useClaw;
 
@@ -86,13 +86,13 @@ public class OI {
 		left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
 		left3.whenPressed(new DriveDistance(24.0, .12));
 		left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
-		left4.whenPressed(new RotateRelative(30));
+		left4.whenPressed(new GetCube());
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		right1.whenPressed(new MoveOnPath("StraightProfile", MoveOnPath.Direction.FORWARD));
+		right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
 		right2 = new JoystickButton(rightStick, 2);
-		right2.whenPressed(new MoveOnPath("CircleProfile", MoveOnPath.Direction.FORWARD));
+		right2.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
 		//right2.whenPressed(new TestAutonBuilder());
 		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
@@ -103,10 +103,16 @@ public class OI {
 		gamepad_b = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.B);
 		gamepad_x = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.X);
 		gamepad_y = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.Y);
-		gamepad_a.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.STOP));
-		gamepad_x.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SWITCH));
+		//gamepad_a.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.STOP));
+		//gamepad_x.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SWITCH));
+		gamepad_a.whenPressed(new DriveArcade());
+		gamepad_x.whenPressed(new DriveTank());
 		gamepad_b.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_HIGH));
 		gamepad_y.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_LOW));
+		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);
+		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+		gamepad_rb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.RB);
+		gamepad_rb.whenPressed(new UseClaw(Claw.ClawState.EJECT));
 
 		log.info("OI initialized");
 

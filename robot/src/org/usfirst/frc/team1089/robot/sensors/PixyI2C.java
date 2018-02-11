@@ -14,10 +14,12 @@ public class PixyI2C implements PIDSource {
     private BoundingBox curTarget;
     private final I2C PIXY;
     private final BoundingBox[] BOXES;
+    private final int DISPLACEMENT_OFFSET;
 
     public PixyI2C() {
         PIXY = new I2C(I2C.Port.kOnboard, 0x54);
         BOXES = new BoundingBox[7];
+        DISPLACEMENT_OFFSET = 20;
     }
 
     /**
@@ -104,7 +106,7 @@ public class PixyI2C implements PIDSource {
         int resX = SensorsSettings.getCameraResolution().width;
 
         if (curTarget != null)
-            val = resX / 2 - curTarget.getX();
+            val = resX / 2 - curTarget.getX() + DISPLACEMENT_OFFSET;
 
         return val;
     }

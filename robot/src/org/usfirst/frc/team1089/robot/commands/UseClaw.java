@@ -17,7 +17,7 @@ public class UseClaw extends Command {
 
     private Claw.ClawState targetState;
     private DelayableLogger exeLog = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
-    private final double minimumDistance = .3, maximumDistance = 1.5;
+    private final double minimumDistance = 8, maximumDistance = 18;
 
     public UseClaw(Claw.ClawState state) {
         requires(Robot.claw);
@@ -44,6 +44,10 @@ public class UseClaw extends Command {
     @Override
     protected void end() {
         LOG.info(getName() + " ended");
+        if((targetState == Claw.ClawState.GRAB))
+            Robot.claw.setHasCube(true);
+        else if (targetState == Claw.ClawState.EJECT)
+            Robot.claw.setHasCube(false);
         Robot.claw.set(Claw.ClawState.STOP);
     }
 

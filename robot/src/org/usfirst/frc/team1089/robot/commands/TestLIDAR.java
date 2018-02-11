@@ -10,11 +10,11 @@ public class TestLIDAR extends Command {
     private LIDAR lidar;
     private Logger log = LogManager.getLogger(TestLIDAR.class);
     public TestLIDAR() {
-        requires(Robot.manipulator);
+        requires(Robot.claw);
     }
 
     protected void initialize() {
-        lidar = Robot.manipulator.getLidar();
+        lidar = Robot.claw.getLidar();
     }
 
     protected void execute() {

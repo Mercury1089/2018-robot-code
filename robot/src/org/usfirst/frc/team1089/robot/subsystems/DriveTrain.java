@@ -48,6 +48,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
     static {
 		LAYOUT = DriveTrainSettings.getControllerLayout();
+        System.out.println("DriveTrain Layout: " + LAYOUT);
 		GEAR_RATIO = DriveTrainSettings.getGearRatio();
 
 		switch(LAYOUT) {
@@ -107,6 +108,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         tMasterRight.setSensorPhase(true);
 
         tDrive = new TalonDrive(tMasterLeft, tMasterRight);
+        tDrive.setMaxOutput(0.25);
 
         // Set follower control on back talons. Use follow() instead of ControlMode.Follower so that Talons can follow Victors and vice versa.
         vFollowerLeft.follow(tMasterLeft);

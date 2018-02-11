@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public class TalonDrive {
 	private final WPI_TalonSRX TALON_LEFT, TALON_RIGHT;
-	public double maxOutput = 1.0;
+	public double maxOutput = 0.5;
 	
 	/**
 	 * Creates a drive train, assuming there is one Talon for the left side

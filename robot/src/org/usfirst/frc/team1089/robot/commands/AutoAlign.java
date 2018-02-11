@@ -15,7 +15,7 @@ public class AutoAlign extends RotateRelative {
         // Someone should tell me if it's otherwise
         ANGLE_THRESHOLD = DriveTrainSettings.getRotAbsTolerance();
 
-        requires(Robot.manipulator);
+        requires(Robot.claw);
     }
 
     @Override

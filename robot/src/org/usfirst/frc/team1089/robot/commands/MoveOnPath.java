@@ -7,6 +7,7 @@ import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Notifier;
@@ -94,6 +95,9 @@ public class MoveOnPath extends Command {
 	    // Reset command state
         reset();
 
+        left.setNeutralMode(NeutralMode.Brake);
+        right.setNeutralMode(NeutralMode.Coast);
+
         // Configure PID values
         configurePID(PROPORTIONAL, INTEGRAL, DERIVATIVE, Robot.driveTrain.getFeedForward());
 
@@ -147,6 +151,8 @@ public class MoveOnPath extends Command {
         right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, DriveTrain.TIMEOUT_MS);
 
         Robot.driveTrain.stop();
+        left.setNeutralMode(NeutralMode.Coast);
+        right.setNeutralMode(NeutralMode.Coast);
 
         log.log(Level.INFO, "Finished running");
     }

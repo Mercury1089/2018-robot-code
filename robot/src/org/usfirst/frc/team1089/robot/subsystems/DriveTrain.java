@@ -56,7 +56,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 				break;
 			case DEFAULT:
 			default:
-				WHEEL_DIAMETER_INCHES = 5.0;
+				WHEEL_DIAMETER_INCHES = 5.125;
 				break;
 		}
 	}

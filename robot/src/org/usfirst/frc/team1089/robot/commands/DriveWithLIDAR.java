@@ -3,12 +3,13 @@ package org.usfirst.frc.team1089.robot.commands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.util.DistanceStore;
 
 
 /**
  * Drives to the LIDAR's target a specified distance away using the LIDAR's distance measurements.
  */
-public class DriveWithLIDAR extends DriveDistance {
+public class DriveWithLIDAR extends DriveDistance implements DistanceStore {
 
     public double minimumDistance;
     private static Logger log = LogManager.getLogger(DriveWithLIDAR.class);

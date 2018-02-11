@@ -39,7 +39,7 @@ public class MoveOnPath extends Command {
     private Trajectory trajectoryR, trajectoryL;
 
     private MotionProfileStatus statusLeft, statusRight;
-    private Notifier trajectoryProcessor = new Notifier(null);
+    private static Notifier trajectoryProcessor;
 
     private boolean isRunning;
     private int dir;
@@ -57,7 +57,9 @@ public class MoveOnPath extends Command {
      */
 	public MoveOnPath(String name, Direction direction) {
         requires(Robot.driveTrain);
-        log.info(getName() + " Created");
+        setName("MoveOnPath-" + name);
+        log.info(getName() + " created");
+
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
 
@@ -74,10 +76,12 @@ public class MoveOnPath extends Command {
         trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
         trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
 
-        trajectoryProcessor.setHandler(() -> {
-            left.processMotionProfileBuffer();
-            right.processMotionProfileBuffer();
-        });
+        if (trajectoryProcessor == null) {
+            trajectoryProcessor = new Notifier(() -> {
+                left.processMotionProfileBuffer();
+                right.processMotionProfileBuffer();
+            });
+        }
 
         statusLeft = new MotionProfileStatus();
         statusRight = new MotionProfileStatus();
@@ -219,5 +223,7 @@ public class MoveOnPath extends Command {
         // Clear the trajectory buffer
         left.clearMotionProfileTrajectories();
         right.clearMotionProfileTrajectories();
+
+        log.log(Level.INFO, "Cleared trajectories; check: " + statusLeft.btmBufferCnt);
     }
 }

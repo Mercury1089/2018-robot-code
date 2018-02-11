@@ -97,7 +97,7 @@ public class MercMath {
 	 * @return The value in ticks
 	 */
 	public static double feetToEncoderTicks(double feet) {
-		return (Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION * Robot.driveTrain.GEAR_RATIO) /
+		return (Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION/* * Robot.driveTrain.GEAR_RATIO*/) /
 				(Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES) * feet * 12.0;
 	}
 

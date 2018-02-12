@@ -38,28 +38,17 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     private NavX navX;
     private ADXRS450_Gyro gyroSPI;
 
-	public static final double WHEEL_DIAMETER_INCHES;
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096;
 	public static final double GEAR_RATIO;
-    public static final double MAX_RPM_CROSSFIRE = 454.1;
-    public static final double MAX_RPM_SPEEDY_BOI = 700.63;
-
+    public static final double MAX_RPM;
+    public static final double WHEEL_DIAMETER_INCHES;
     public static final DriveTrainSettings.DriveTrainLayout LAYOUT;
 
     static {
-		LAYOUT = DriveTrainSettings.getControllerLayout();
-        System.out.println("DriveTrain Layout: " + LAYOUT);
-		GEAR_RATIO = DriveTrainSettings.getGearRatio();
-
-		switch(LAYOUT) {
-			case LEGACY:
-				WHEEL_DIAMETER_INCHES = 4.0;
-				break;
-			case DEFAULT:
-			default:
-				WHEEL_DIAMETER_INCHES = 5.125;
-				break;
-		}
+        LAYOUT = DriveTrainSettings.getControllerLayout();
+        GEAR_RATIO = DriveTrainSettings.getGearRatio();
+        MAX_RPM = DriveTrainSettings.getMaxRPM();
+        WHEEL_DIAMETER_INCHES = DriveTrainSettings.getWheelDiameter();
 	}
 
 	/**
@@ -75,7 +64,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		tMasterLeft = new WPI_TalonSRX(fl);
 		tMasterRight = new WPI_TalonSRX(fr);
 
-		// At this point it's based on what the layout is
+        // At this point it's based on what the layout is
         switch(LAYOUT) {
             case LEGACY:
                 vFollowerLeft = new WPI_TalonSRX(bl);
@@ -194,17 +183,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     public double getFeedForward() {
-        double rpm;
-        switch(LAYOUT) {
-			case LEGACY:
-				rpm = MAX_RPM_CROSSFIRE;
-				break;
-			case DEFAULT:
-			default:
-				rpm = MAX_RPM_SPEEDY_BOI;
-				break;
-		}
-        return MercMath.calculateFeedForward(rpm);
+        return MercMath.calculateFeedForward(MAX_RPM);
     }
 
     public void pidWrite(double output) {

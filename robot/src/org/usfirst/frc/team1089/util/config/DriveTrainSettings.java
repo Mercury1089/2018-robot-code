@@ -14,9 +14,9 @@ public class DriveTrainSettings extends Config {
     /**
      * Enumeration of drivetrain layouts.
      * <p>
-     * {@code DEFAULT}: 2 Victor SPX followers, 2 Talon SRX leaders, 4.0" wheel diameter
+     * {@code DEFAULT}: 2 Victor SPX followers, 2 Talon SRX leaders
      * <p>
-     * {@code LEGACY}: 2 Talon SRX followers, 2 Talon SRX leaders, 4.0" wheel diameter
+     * {@code LEGACY}: 2 Talon SRX followers, 2 Talon SRX leaders
      */
     public enum DriveTrainLayout {
         DEFAULT,
@@ -42,8 +42,9 @@ public class DriveTrainSettings extends Config {
     }
 
     /**
+     * Gets the gear ratio of the drive train's gearbox
      *
-     * @return
+     * @return double representing the calculated gear ratio
      */
     public static double getGearRatio() {
         String[] nums = parseArrayValue("driveTrain.gearRatio", ":");
@@ -56,6 +57,28 @@ public class DriveTrainSettings extends Config {
 
 
         return driver / driven;
+    }
+
+    /**
+     * Gets the diameter of the wheels on the drive train
+     *
+     * @return wheel diameter, in inches
+     */
+    public static double getWheelDiameter() {
+        String val = instance.getProperty("driveTrain.wheelDiameter", "5.125").trim();
+
+        return Double.parseDouble(val);
+    }
+
+    /**
+     * Gets the max RPM of the drive train
+     *
+     * @return max RPM of drive train
+     */
+    public static double getMaxRPM() {
+        String val = instance.getProperty("driveTrain.maxRPM", "700.63").trim();
+
+        return Double.parseDouble(val);
     }
 
     /**

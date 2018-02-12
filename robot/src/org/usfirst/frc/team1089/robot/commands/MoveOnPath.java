@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.util.MercMath;
+import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 import java.io.File;
 
@@ -33,9 +34,6 @@ public class MoveOnPath extends Command {
 	private TalonSRX right;
 
 	private final int TRAJECTORY_SIZE;
-    private final double PROPORTIONAL = .1;
-    private final double INTEGRAL = 0;
-    private final double DERIVATIVE = .05;
 
     private Trajectory trajectoryR, trajectoryL;
 
@@ -99,7 +97,8 @@ public class MoveOnPath extends Command {
         right.setNeutralMode(NeutralMode.Coast);
 
         // Configure PID values
-        configurePID(PROPORTIONAL, INTEGRAL, DERIVATIVE, Robot.driveTrain.getFeedForward());
+        double[] pid = DriveTrainSettings.getPIDValues("moveOnPath");
+        configurePID(pid[0], pid[1], pid[2], Robot.driveTrain.getFeedForward());
 
         // Change motion control frame period
         left.changeMotionControlFramePeriod(10);

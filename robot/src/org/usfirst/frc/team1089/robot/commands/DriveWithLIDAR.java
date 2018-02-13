@@ -54,4 +54,6 @@ public class DriveWithLIDAR extends DriveDistance implements DistanceStore {
         currentMethod = "DriveWithLIDAR.end();";
         log.info(getName() + " Ended");
     }
+
+    public double getLastDistance() {return 0;}
 }

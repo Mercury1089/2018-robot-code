@@ -5,20 +5,24 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.util.History;
+import org.usfirst.frc.team1089.util.HistoryOriginator;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 /**
  * Turns the robot a set amount of degrees relative to its current angle.
  */
-public class RotateRelative extends PIDCommand {
+public class RotateRelative extends PIDCommand implements HistoryOriginator {
 	private static Logger log = LogManager.getLogger(RotateRelative.class);
-	private double targetHeading;
-    private final double MIN_PERCENT_VBUS;
-
-	private int counter;
+	private final double MIN_PERCENT_VBUS;
 	private final int ONTARGET_THRESHOLD = 3;
 
+	private double targetHeading;
+	private int counter;
+
 	private Gyro gyro;
+	private HistoryOriginator originator;
+	private HistoryTreatment treatment;
 
 	public RotateRelative() {
 		this(0);
@@ -45,14 +49,26 @@ public class RotateRelative extends PIDCommand {
         log.info("RotateRelative constructed");
     }
 
+	public RotateRelative(HistoryOriginator o, HistoryTreatment t) {
+		this(0);
+
+		originator = o;
+		treatment = t;
+	}
 
     // Called just before this Command runs the first time
     protected void initialize() {
 	    gyro.reset();
-
 	    double[] outputRange = DriveTrainSettings.getRotOutputRange();
 
-    	getPIDController().setInputRange(-180, 180);
+    	if (originator != null) {
+			targetHeading = (Double) originator.getHistory().getValue();
+
+			if (treatment == HistoryTreatment.REVERSE)
+				targetHeading *= -1;
+		}
+
+	    getPIDController().setInputRange(-180, 180);
     	getPIDController().setOutputRange(-.2, .2);
 
     	//Set the controller to continuous AFTER setInputRange()
@@ -112,5 +128,15 @@ public class RotateRelative extends PIDCommand {
 	protected void updateHeading(double heading) {
 		this.targetHeading = heading;
 		getPIDController().setSetpoint(this.targetHeading);
+	}
+
+	@Override
+	public History<Double> getHistory() {
+		return new History<>(targetHeading);
+	}
+
+	@Override
+	public CommandType getType() {
+		return CommandType.DISTANCE;
 	}
 }

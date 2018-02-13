@@ -35,7 +35,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     private BaseMotorController vFollowerLeft, vFollowerRight;
 
     private TalonDrive tDrive;
-    private NavX navX;
+    // private NavX navX;
     private ADXRS450_Gyro gyroSPI;
 
 	public static final int MAG_ENCODER_TICKS_PER_REVOLUTION = 4096;
@@ -78,7 +78,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         }
 
         //Initialize the gyro that is currently on the robot. Comment out the initialization of the one not in use.
-        navX = new NavX(SerialPort.Port.kUSB1);
+        // navX = new NavX(SerialPort.Port.kUSB1);
         gyroSPI = new ADXRS450_Gyro();
 
         //Account for motor orientation.

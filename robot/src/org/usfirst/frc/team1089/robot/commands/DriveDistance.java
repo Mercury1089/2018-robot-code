@@ -6,97 +6,112 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.util.DelayableLogger;
+import org.usfirst.frc.team1089.util.History;
+import org.usfirst.frc.team1089.util.HistoryOriginator;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
-
-import java.util.function.DoubleSupplier;
 
 /**
  * Uses Talons and mag encoders to drive a set distance.
  */
-public class DriveDistance extends Command {
-	private final double MOVE_THRESHOLD = 500;
-	private final int ON_TARGET_MINIMUM_COUNT = 10;
+public class DriveDistance extends Command implements HistoryOriginator {
+    private final double MOVE_THRESHOLD = 500;
+    private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
 
     private static Logger log = LogManager.getLogger(DriveDistance.class);
-	protected double distance;
-    private DoubleSupplier distanceSupplier;
-	protected double percentVoltage; //Voltage is NOW from [-1, 1]
+    // private static final DelayableLogger SLOW_LOG = DelayableLogger
+    protected double distance;
+    protected double percentVoltage; // Voltage is NOW from [-1, 1]
+
+    private double distanceTraveled = Double.NEGATIVE_INFINITY;
+    private HistoryOriginator originator;
+    private HistoryTreatment treatment;
 
     /**
-     * 
-     * @param distance in inches
-     * @param percentVoltage -1.0 to 1.0
+     * @param dist  distance to travel, in inches
+     * @param pVolt voLtage to use when driving, -1.0 to 1.0
      */
-    public DriveDistance(double distance, double percentVoltage) {
-    	requires(Robot.driveTrain);
-    	this.distance = distance;
-    	this.percentVoltage = percentVoltage;
+    public DriveDistance(double dist, double pVolt) {
+        requires(Robot.driveTrain);
+        distance = dist;
+        percentVoltage = pVolt;
     }
 
-	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
-        requires(Robot.driveTrain);
-        this.percentVoltage = percentVoltage;
-		this.distance = distanceSupplier.getAsDouble();
-	}
+    public DriveDistance(HistoryOriginator o, HistoryTreatment t, double pVolt) {
+        this(0, pVolt);
+
+        originator = o;
+        treatment = t;
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
         double[] pid = DriveTrainSettings.getPIDValues("driveDistance");
 
-        if (distanceSupplier != null) {
-            this.distance = distanceSupplier.getAsDouble();
-        }
+//        if (originator != null) {
+//            distance = (Double) originator.getHistory().getValue();
+//
+//            if (treatment == HistoryTreatment.REVERSE)
+//                distance *= -1;
+//        }
 
         Robot.driveTrain.resetEncoders();
 
         setPID(pid[0], pid[1], pid[2]);
 
-		Robot.driveTrain.configVoltage(0, percentVoltage);
+        Robot.driveTrain.configVoltage(0, percentVoltage);
         log.info(getName() + " Initialized");
-         updateDistance();
+        updateDistance();
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-        log.info(getName() + " executing");
-    }
+//    protected void execute() {
+//        log.info(getName() + " executing");
+//    }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-		boolean isFinished = false;
+        boolean isFinished = false;
 
         double leftError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
         double rightError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
-		boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
+        boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
 
-		if (isOnTarget) {
-			onTargetCount++;
-		} else {
-			if (onTargetCount > 0) {
-				onTargetCount = 0;
-			} else {
-				// we are definitely moving
-			}
-		}
+        if (isOnTarget) {
+            onTargetCount++;
+        } else {
+            if (onTargetCount > 0) {
+                onTargetCount = 0;
+            } else {
+                // we are definitely moving
+            }
+        }
 
-		if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
-			isFinished = true;
-			onTargetCount = 0;
-           log.info("DriveDistance ended");
-		}
+        if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
+            isFinished = true;
+            onTargetCount = 0;
+            log.info("DriveDistance ended");
+        }
 
-		return isFinished;
+        return isFinished;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.stop();
-    	Robot.driveTrain.resetEncoders();
+        Robot.driveTrain.stop();
 
-    	//The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
-		Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+        // Get the average encoder position
+        // then convert to inches
+        distanceTraveled = Robot.driveTrain.getLeftEncPositionInFeet() + Robot.driveTrain.getRightEncPositionInFeet();
+        distanceTraveled /= 2.0;
+        distanceTraveled *= 12;
+
+        Robot.driveTrain.resetEncoders();
+
+        //The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
+        Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
     }
 
     // Called when another command which requires one or more of the same
@@ -107,7 +122,7 @@ public class DriveDistance extends Command {
     }
 
     protected void updateDistance() {
-        double endPosL, endPosR;
+        double endPosL = 0, endPosR = 0;
         //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
         Robot.driveTrain.resetEncoders();
         endPosL = MercMath.inchesToEncoderTicks(distance);
@@ -118,6 +133,7 @@ public class DriveDistance extends Command {
         // THIS MIGHT CHANGE on the 2018 robot!!
         endPosL = -endPosL;
         endPosR = endPosL;
+
         Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
         Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
@@ -136,5 +152,18 @@ public class DriveDistance extends Command {
         Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
+    }
+
+    @Override
+    public History<Double> getHistory() {
+        if (distanceTraveled > Double.NEGATIVE_INFINITY)
+            return new History<>(distanceTraveled);
+
+        return null;
+    }
+
+    @Override
+    public CommandType getType() {
+        return CommandType.DISTANCE;
     }
 }

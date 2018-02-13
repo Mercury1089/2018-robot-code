@@ -99,7 +99,7 @@ public class OI {
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 
-		DriveDistance cmd = new DriveDistance(24, 0.3);
+		DriveWithLIDAR cmd = new DriveWithLIDAR(19, 0.3);
 		right4 = new JoystickButton(rightStick, 4);
 		right4.whenPressed(cmd);
 		right5 = new JoystickButton(rightStick, 5);

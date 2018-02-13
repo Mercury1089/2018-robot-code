@@ -12,6 +12,8 @@ import org.usfirst.frc.team1089.util.HistoryOriginator;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Uses Talons and mag encoders to drive a set distance.
  */
@@ -21,7 +23,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
     private int onTargetCount;
 
     private static Logger log = LogManager.getLogger(DriveDistance.class);
-    // private static final DelayableLogger SLOW_LOG = DelayableLogger
+    private static final DelayableLogger SLOW_LOG = new DelayableLogger(log, 1, TimeUnit.SECONDS);
     protected double distance;
     protected double percentVoltage; // Voltage is NOW from [-1, 1]
 
@@ -57,13 +59,11 @@ public class DriveDistance extends Command implements HistoryOriginator {
 //                distance *= -1;
 //        }
 
-        Robot.driveTrain.resetEncoders();
+        setPIDF(pid[0], pid[1], pid[2], 0);
 
-        setPID(pid[0], pid[1], pid[2]);
-
-        Robot.driveTrain.configVoltage(0, percentVoltage);
-        log.info(getName() + " Initialized");
         updateDistance();
+        Robot.driveTrain.configVoltage(0, percentVoltage);
+        log.info(getName() + " initialized");
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -78,6 +78,8 @@ public class DriveDistance extends Command implements HistoryOriginator {
         double leftError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
         double rightError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
         boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
+
+        SLOW_LOG.run(logger -> logger.info("leftError: " + leftError));
 
         if (isOnTarget) {
             onTargetCount++;
@@ -140,18 +142,21 @@ public class DriveDistance extends Command implements HistoryOriginator {
 
     /**
      * Sets PID values on both leader talons
-     *
-     * @param p proportional value
+     *  @param p proportional value
      * @param i integral value
      * @param d derivative value
+     * @param f feed-forward value
      */
-    private void setPID(double p, double i, double d) {
+    private void setPIDF(double p, double i, double d, double f) {
         Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, p, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, p, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getLeft().config_kF(DriveTrain.SLOT_0, f, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getRight().config_kF(DriveTrain.SLOT_0, f, DriveTrain.TIMEOUT_MS);
+
     }
 
     @Override

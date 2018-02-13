@@ -99,11 +99,11 @@ public class OI {
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 
-		RotateToTarget rtt = new RotateToTarget();
+		DriveDistance cmd = new DriveDistance(24, 0.3);
 		right4 = new JoystickButton(rightStick, 4);
-		right4.whenPressed(rtt);
+		right4.whenPressed(cmd);
 		right5 = new JoystickButton(rightStick, 5);
-		right5.whenPressed(new RotateRelative(rtt, HistoryOriginator.HistoryTreatment.REVERSE));
+		right5.whenPressed(new DriveDistance(cmd, HistoryOriginator.HistoryTreatment.REVERSE, 0.3));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

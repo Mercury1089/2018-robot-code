@@ -13,12 +13,12 @@ import java.util.concurrent.TimeUnit;
 
 public class UseElevator extends Command {
     private static Logger log = LogManager.getLogger(UseElevator.class);
-    private DelayableLogger exeLog = new DelayableLogger(log, 1, TimeUnit.SECONDS);
+    private DelayableLogger exeLog = new DelayableLogger(log, 10, TimeUnit.SECONDS);
 
     private Elevator.ELEVATOR_STATE targetState;
 
     public UseElevator(Elevator.ELEVATOR_STATE targetState) {
-        requires(Robot.elevator);
+        // requires(Robot.elevator);
         setName(targetState + "Elevator");
         this.targetState = targetState;
     }

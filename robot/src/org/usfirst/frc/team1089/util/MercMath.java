@@ -88,20 +88,18 @@ public class MercMath {
 	}
 
 	/**
-	 * <pre>s
-	 * public double feetToEncoderTicks(double feet)
-	 * </pre>
 	 * Returns a value in ticks based on a certain value in feet using
 	 * the Magnetic Encoder.
+	 *
 	 * @param feet The value in feet
 	 * @return The value in ticks
 	 */
 	public static double feetToEncoderTicks(double feet) {
-		return feet / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES / 12) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
+		return inchesToEncoderTicks(feet * 12);
 	}
 
 	public static double inchesToEncoderTicks(double inches) {
-		return (inches / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES)) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
+		return inches / (Math.PI * Robot.driveTrain.WHEEL_DIAMETER_INCHES) * Robot.driveTrain.MAG_ENCODER_TICKS_PER_REVOLUTION;
 	}
 
 	public static double encoderTicksToInches(double ticks) {

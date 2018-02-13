@@ -15,31 +15,30 @@ import java.util.function.DoubleSupplier;
  * Uses Talons and mag encoders to drive a set distance.
  */
 public class DriveDistance extends Command {
-	private final double MOVE_THRESHOLD = 500;
-	private final int ON_TARGET_MINIMUM_COUNT = 10;
+    private final double MOVE_THRESHOLD = 500;
+    private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
 
     private static Logger log = LogManager.getLogger(DriveDistance.class);
-	protected double distance;
+    protected double distance;
     private DoubleSupplier distanceSupplier;
-	protected double percentVoltage; //Voltage is NOW from [-1, 1]
+    protected double percentVoltage; //Voltage is NOW from [-1, 1]
 
     /**
-     * 
-     * @param distance in inches
+     * @param distance       in inches
      * @param percentVoltage -1.0 to 1.0
      */
     public DriveDistance(double distance, double percentVoltage) {
-    	requires(Robot.driveTrain);
-    	this.distance = distance;
-    	this.percentVoltage = percentVoltage;
+        requires(Robot.driveTrain);
+        this.distance = distance;
+        this.percentVoltage = percentVoltage;
     }
 
-	public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
+    public DriveDistance(DoubleSupplier distanceSupplier, double percentVoltage) {
         requires(Robot.driveTrain);
         this.percentVoltage = percentVoltage;
-		this.distance = distanceSupplier.getAsDouble();
-	}
+        this.distance = distanceSupplier.getAsDouble();
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
@@ -53,9 +52,9 @@ public class DriveDistance extends Command {
 
         setPID(pid[0], pid[1], pid[2]);
 
-		Robot.driveTrain.configVoltage(0, percentVoltage);
+        Robot.driveTrain.configVoltage(0, percentVoltage);
         log.info(getName() + " Initialized");
-         updateDistance();
+        updateDistance();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -65,38 +64,38 @@ public class DriveDistance extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-		boolean isFinished = false;
+        boolean isFinished = false;
 
         double leftError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
         double rightError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
-		boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
+        boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
 
-		if (isOnTarget) {
-			onTargetCount++;
-		} else {
-			if (onTargetCount > 0) {
-				onTargetCount = 0;
-			} else {
-				// we are definitely moving
-			}
-		}
+        if (isOnTarget) {
+            onTargetCount++;
+        } else {
+            if (onTargetCount > 0) {
+                onTargetCount = 0;
+            } else {
+                // we are definitely moving
+            }
+        }
 
-		if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
-			isFinished = true;
-			onTargetCount = 0;
-           log.info("DriveDistance ended");
-		}
+        if (onTargetCount > ON_TARGET_MINIMUM_COUNT) {
+            isFinished = true;
+            onTargetCount = 0;
+            log.info("DriveDistance ended");
+        }
 
-		return isFinished;
+        return isFinished;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.stop();
-    	Robot.driveTrain.resetEncoders();
+        Robot.driveTrain.stop();
+        Robot.driveTrain.resetEncoders();
 
-    	//The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
-		Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+        //The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
+        Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
     }
 
     // Called when another command which requires one or more of the same

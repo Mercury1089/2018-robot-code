@@ -12,6 +12,7 @@ import org.usfirst.frc.team1089.robot.auton.TestAutonBuilder;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
+import org.usfirst.frc.team1089.util.HistoryOriginator;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -64,7 +65,7 @@ public class OI {
 	private Joystick leftStick, rightStick, gamepad;
 
 	private JoystickButton left1, left2, left3, left4;
-	private JoystickButton right1, right2, right3, right4;
+	private JoystickButton right1, right2, right3, right4, right5;
 	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb;
 
 	private UseClaw useClaw;
@@ -97,6 +98,12 @@ public class OI {
 		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
+
+		RotateToTarget rtt = new RotateToTarget();
+		right4 = new JoystickButton(rightStick, 4);
+		right4.whenPressed(rtt);
+		right5 = new JoystickButton(rightStick, 5);
+		right5.whenPressed(new RotateRelative(rtt, HistoryOriginator.HistoryTreatment.REVERSE));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

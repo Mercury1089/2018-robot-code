@@ -29,7 +29,6 @@ public class DriveWithLIDAR extends DriveDistance {
         LOG.info(getName() + " initialized");
     }
 
-
     @Override
     protected void execute() {
         distance = Robot.claw.getLidar().getDistance() - minimumDistance;

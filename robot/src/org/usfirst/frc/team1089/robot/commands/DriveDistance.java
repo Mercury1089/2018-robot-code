@@ -14,6 +14,8 @@ import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.usfirst.frc.team1089.robot.subsystems.DriveTrain.PRIMARY_PID_LOOP;
+
 /**
  * Uses Talons and mag encoders to drive a set distance.
  */
@@ -64,7 +66,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
         setPIDF(pid[0], pid[1], pid[2], 0);
 
         updateDistance();
-        Robot.driveTrain.configVoltage(0, percentVoltage);
+        Robot.driveTrain.configVoltage(.2, percentVoltage);
         log.info(getName() + " initialized");
     }
 
@@ -77,8 +79,8 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected boolean isFinished() {
         boolean isFinished = false;
 
-        double leftError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
-        double rightError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
+        double leftError = Robot.driveTrain.getLeft().getClosedLoopError(PRIMARY_PID_LOOP);
+        double rightError = Robot.driveTrain.getRight().getClosedLoopError(PRIMARY_PID_LOOP);
         boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
 
         SLOW_LOG.run(logger -> logger.info("leftError: " + leftError));
@@ -107,7 +109,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
         Robot.driveTrain.stop();
 
         // Convert the average encoder position to inches
-        distanceTraveled += Robot.driveTrain.getLeftEncPositionInFeet() * 12;
+        distanceTraveled = Robot.driveTrain.getLeftEncPositionInFeet() * 12.0;
 
         // Negate distanceTraveled since encoder position is read backwards
         distanceTraveled *= -1;
@@ -131,14 +133,14 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void updateDistance() {
         double endPosL = 0, endPosR = 0;
         // End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
-        if (distanceTraveled > Double.NEGATIVE_INFINITY) {
-            log.info("Current Distance: " + distanceTraveled + ", Update distance: " + (distanceTraveled + Robot.driveTrain.getLeftEncPositionInFeet() * 12));
-            distanceTraveled += Robot.driveTrain.getLeftEncPositionInFeet() * 12;
-        } else {
-            distanceTraveled = 0;
-        }
+//        if (distanceTraveled > Double.NEGATIVE_INFINITY) {
+//            log.info("Current Distance: " + distanceTraveled + ", Update distance: " + (distanceTraveled + Robot.driveTrain.getLeftEncPositionInFeet() * 12));
+//            distanceTraveled += Robot.driveTrain.getLeftEncPositionInFeet() * 12;
+//        } else {
+//            distanceTraveled = 0;
+//        }
 
-        Robot.driveTrain.resetEncoders();
+//        Robot.driveTrain.resetEncoders();
         endPosL = MercMath.inchesToEncoderTicks(distance);
         log.info(distance);
 
@@ -148,6 +150,9 @@ public class DriveDistance extends Command implements HistoryOriginator {
         // THIS MIGHT CHANGE on the 2018 robot!!
         endPosL = -endPosL;
         endPosR = endPosL;
+
+        endPosL += Robot.driveTrain.getLeftEncPositionInTicks();
+        endPosR += Robot.driveTrain.getRightEncPositionInTicks();
 
         Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
         Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);

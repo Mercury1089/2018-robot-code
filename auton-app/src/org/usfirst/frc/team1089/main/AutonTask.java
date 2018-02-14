@@ -1,4 +1,4 @@
-package AutonBuilder;
+package org.usfirst.frc.team1089.main;
 
 public enum AutonTask {
     GRAB_CUBE,

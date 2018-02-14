@@ -150,7 +150,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
 
     /**
      * Sets PID values on both leader talons
-     *  @param p proportional value
+     * @param p proportional value
      * @param i integral value
      * @param d derivative value
      * @param f feed-forward value

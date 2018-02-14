@@ -57,10 +57,10 @@ public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 		filter.reset();
 		gyro.reset();
 
-		double[] outputRange = DriveTrainSettings.getRotOutputRange();
+		double[] outputRange = DriveTrainSettings.getOutputRange("rotateRelative");
 
 		getPIDController().setInputRange(-160, 160);
-		getPIDController().setOutputRange(-.2, .2);
+		getPIDController().setOutputRange(outputRange[0], outputRange[1]);
 
 		//Set the controller to continuous AFTER setInputRange()
 		getPIDController().setContinuous(false);

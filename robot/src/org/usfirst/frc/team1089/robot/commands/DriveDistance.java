@@ -52,7 +52,9 @@ public class DriveDistance extends Command implements HistoryOriginator {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        double[] pid = DriveTrainSettings.getPIDValues("driveDistance");
+        double[]
+            pid = DriveTrainSettings.getPIDValues("driveDistance"),
+            volts = DriveTrainSettings.getOutputRange("driveDistance");
 
         distanceTraveled = Double.NEGATIVE_INFINITY;
 
@@ -64,9 +66,10 @@ public class DriveDistance extends Command implements HistoryOriginator {
         }
 
         setPIDF(pid[0], pid[1], pid[2], 0);
+        Robot.driveTrain.configVoltage(volts[0], volts[1]);
 
         updateDistance();
-        Robot.driveTrain.configVoltage(.2, percentVoltage);
+
         log.info(getName() + " initialized");
     }
 

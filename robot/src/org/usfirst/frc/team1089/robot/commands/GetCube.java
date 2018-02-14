@@ -22,6 +22,7 @@ public class GetCube extends CommandGroup {
         addParallel(new UseClaw(Claw.ClawState.GRAB));
         addSequential(new DriveWithLIDAR(8, .3));
         log.info(getName() + " Created");
+        //TODO updated history code
     }
 
     public double getAngleTurned() {

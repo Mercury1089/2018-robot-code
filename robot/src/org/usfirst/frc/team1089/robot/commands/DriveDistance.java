@@ -70,11 +70,6 @@ public class DriveDistance extends Command implements HistoryOriginator {
         log.info(getName() + " initialized");
     }
 
-    // Called repeatedly when this Command is scheduled to run
-//    protected void execute() {
-//        log.info(getName() + " executing");
-//    }
-
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         boolean isFinished = false;
@@ -132,15 +127,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
 
     protected void updateDistance() {
         double endPosL = 0, endPosR = 0;
-        // End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
-//        if (distanceTraveled > Double.NEGATIVE_INFINITY) {
-//            log.info("Current Distance: " + distanceTraveled + ", Update distance: " + (distanceTraveled + Robot.driveTrain.getLeftEncPositionInFeet() * 12));
-//            distanceTraveled += Robot.driveTrain.getLeftEncPositionInFeet() * 12;
-//        } else {
-//            distanceTraveled = 0;
-//        }
 
-//        Robot.driveTrain.resetEncoders();
         endPosL = MercMath.inchesToEncoderTicks(distance);
         log.info(distance);
 

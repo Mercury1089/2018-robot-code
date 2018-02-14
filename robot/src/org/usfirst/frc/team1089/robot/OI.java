@@ -103,9 +103,9 @@ public class OI {
 		DriveWithLIDAR dwl = new DriveWithLIDAR(20, 0.2);
 
 		right4 = new JoystickButton(rightStick, 4);
-		right4.whenPressed(dd);
+		right4.whenPressed(dwl);
 		right5 = new JoystickButton(rightStick, 5);
-		right5.whenPressed(new DriveDistance(dd, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
+		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

@@ -25,7 +25,7 @@ public class DriveWithLIDAR extends DriveDistance {
 
     @Override
     protected void initialize() {
-        super.end();
+        super.initialize();
         LOG.info(getName() + " initialized");
     }
 

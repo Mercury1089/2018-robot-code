@@ -28,6 +28,7 @@ public class Robot extends IterativeRobot {
 	// Subsystems
 	public static DriveTrain driveTrain;
 	public static PDP pdp;
+	public static LED ledIndicators;
 	public static CameraVision camera;
     public static Claw claw;
     public static Elevator elevator;
@@ -68,6 +69,7 @@ public class Robot extends IterativeRobot {
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		// elevator = new Elevator(CAN.TALON_ELEVATOR);
 		vision = new Vision();
+		ledIndicators = new LED();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

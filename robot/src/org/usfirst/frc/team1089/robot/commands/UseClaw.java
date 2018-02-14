@@ -28,6 +28,7 @@ public class UseClaw extends Command {
     @Override
     protected void initialize() {
         LOG.info(getName() + " initialized");
+        Robot.claw.setEjecting(targetState == Claw.ClawState.EJECT);
     }
 
     @Override
@@ -44,10 +45,13 @@ public class UseClaw extends Command {
     @Override
     protected void end() {
         LOG.info(getName() + " ended");
-        if((targetState == Claw.ClawState.GRAB))
+        if((targetState == Claw.ClawState.GRAB)) {
             Robot.claw.setHasCube(true);
-        else if (targetState == Claw.ClawState.EJECT)
+        }
+        else if (targetState == Claw.ClawState.EJECT) {
             Robot.claw.setHasCube(false);
+            Robot.claw.setEjecting(false);
+        }
         Robot.claw.set(Claw.ClawState.STOP);
     }
 

@@ -12,6 +12,10 @@ import org.usfirst.frc.team1089.util.HistoryOriginator;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
+import java.util.concurrent.TimeUnit;
+
+import static org.usfirst.frc.team1089.robot.subsystems.DriveTrain.PRIMARY_PID_LOOP;
+
 /**
  * Uses Talons and mag encoders to drive a set distance.
  */
@@ -21,7 +25,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
     private int onTargetCount;
 
     private static Logger log = LogManager.getLogger(DriveDistance.class);
-    // private static final DelayableLogger SLOW_LOG = DelayableLogger
+    private static final DelayableLogger SLOW_LOG = new DelayableLogger(log, 1, TimeUnit.SECONDS);
     protected double distance;
     protected double percentVoltage; // Voltage is NOW from [-1, 1]
 
@@ -50,34 +54,31 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void initialize() {
         double[] pid = DriveTrainSettings.getPIDValues("driveDistance");
 
-//        if (originator != null) {
-//            distance = (Double) originator.getHistory().getValue();
-//
-//            if (treatment == HistoryTreatment.REVERSE)
-//                distance *= -1;
-//        }
+        distanceTraveled = Double.NEGATIVE_INFINITY;
 
-        Robot.driveTrain.resetEncoders();
+        if (originator != null) {
+            distance = (Double) originator.getHistory().getValue();
 
-        setPID(pid[0], pid[1], pid[2]);
+            if (treatment == HistoryTreatment.REVERSE)
+                distance *= -1;
+        }
 
-        Robot.driveTrain.configVoltage(0, percentVoltage);
-        log.info(getName() + " Initialized");
+        setPIDF(pid[0], pid[1], pid[2], 0);
+
         updateDistance();
+        Robot.driveTrain.configVoltage(.2, percentVoltage);
+        log.info(getName() + " initialized");
     }
-
-    // Called repeatedly when this Command is scheduled to run
-//    protected void execute() {
-//        log.info(getName() + " executing");
-//    }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         boolean isFinished = false;
 
-        double leftError = Robot.driveTrain.getLeft().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
-        double rightError = Robot.driveTrain.getRight().getClosedLoopError(DriveTrain.PRIMARY_PID_LOOP);
+        double leftError = Robot.driveTrain.getLeft().getClosedLoopError(PRIMARY_PID_LOOP);
+        double rightError = Robot.driveTrain.getRight().getClosedLoopError(PRIMARY_PID_LOOP);
         boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
+
+        SLOW_LOG.run(logger -> logger.info("leftError: " + leftError));
 
         if (isOnTarget) {
             onTargetCount++;
@@ -102,16 +103,18 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void end() {
         Robot.driveTrain.stop();
 
-        // Get the average encoder position
-        // then convert to inches
-        distanceTraveled = Robot.driveTrain.getLeftEncPositionInFeet() + Robot.driveTrain.getRightEncPositionInFeet();
-        distanceTraveled /= 2.0;
-        distanceTraveled *= 12;
+        // Convert the average encoder position to inches
+        distanceTraveled = Robot.driveTrain.getLeftEncPositionInFeet() * 12.0;
+
+        // Negate distanceTraveled since encoder position is read backwards
+        distanceTraveled *= -1;
 
         Robot.driveTrain.resetEncoders();
 
         //The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+
+        log.info("Final Distance: " + distanceTraveled);
     }
 
     // Called when another command which requires one or more of the same
@@ -119,14 +122,15 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void interrupted() {
         log.info("DriveDistance interrupted");
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+        this.end();
     }
 
     protected void updateDistance() {
         double endPosL = 0, endPosR = 0;
-        //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
-        Robot.driveTrain.resetEncoders();
+
         endPosL = MercMath.inchesToEncoderTicks(distance);
         log.info(distance);
+
         // Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
         // On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
         // to negate both endPosR and endPosL.
@@ -134,24 +138,30 @@ public class DriveDistance extends Command implements HistoryOriginator {
         endPosL = -endPosL;
         endPosR = endPosL;
 
+        endPosL += Robot.driveTrain.getLeftEncPositionInTicks();
+        endPosR += Robot.driveTrain.getRightEncPositionInTicks();
+
         Robot.driveTrain.getLeft().set(ControlMode.Position, endPosL);
         Robot.driveTrain.getRight().set(ControlMode.Position, endPosR);
     }
 
     /**
      * Sets PID values on both leader talons
-     *
-     * @param p proportional value
+     *  @param p proportional value
      * @param i integral value
      * @param d derivative value
+     * @param f feed-forward value
      */
-    private void setPID(double p, double i, double d) {
+    private void setPIDF(double p, double i, double d, double f) {
         Robot.driveTrain.getLeft().config_kP(DriveTrain.SLOT_0, p, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kP(DriveTrain.SLOT_0, p, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getLeft().config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kI(DriveTrain.SLOT_0, i, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getLeft().config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
         Robot.driveTrain.getRight().config_kD(DriveTrain.SLOT_0, d, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getLeft().config_kF(DriveTrain.SLOT_0, f, DriveTrain.TIMEOUT_MS);
+        Robot.driveTrain.getRight().config_kF(DriveTrain.SLOT_0, f, DriveTrain.TIMEOUT_MS);
+
     }
 
     @Override

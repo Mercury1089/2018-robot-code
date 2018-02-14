@@ -101,11 +101,13 @@ public class OI {
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 
-		DriveDistance cmd = new DriveDistance(24, 0.3);
+		DriveDistance dd = new DriveDistance(24, 0.2);
+		DriveWithLIDAR dwl = new DriveWithLIDAR(20, 0.2);
+
 		right4 = new JoystickButton(rightStick, 4);
-		right4.whenPressed(cmd);
+		right4.whenPressed(dwl);
 		right5 = new JoystickButton(rightStick, 5);
-		right5.whenPressed(new DriveDistance(cmd, HistoryOriginator.HistoryTreatment.REVERSE, 0.3));
+		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

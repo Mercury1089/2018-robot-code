@@ -8,6 +8,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 
 public class AutonBuilderController {
@@ -64,17 +65,37 @@ public class AutonBuilderController {
         middleRadioButton.setToggleGroup(radioGroup);
         rightRadioButton.setToggleGroup(radioGroup);
 
-        Callback<TableColumn<TaskConfig, AutonTask>, ComboBoxTableCell> autonTaskCellFactory = param -> {
+        Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
             ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(AutonTask.values()));
             comboBoxTableCell.setEditable(true);
+            comboBoxTableCell.setComboBoxEditable(true);
             return comboBoxTableCell;
         };
 
-        Callback<TableColumn<TaskConfig, ScoringSide>, ComboBoxTableCell> scoringSideCellFactory = param -> {
+        Callback<TableColumn<TaskConfig, ScoringSide>, TableCell> scoringSideCellFactory = param -> {
             ComboBoxTableCell<TaskConfig, ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(ScoringSide.values()));
             comboBoxTableCell.setEditable(true);
+            comboBoxTableCell.setComboBoxEditable(true);
             return comboBoxTableCell;
         };
+
+        taskColLLL.setSortable(false);
+        sideColLLL.setSortable(false);
+        taskColLRL.setSortable(false);
+        sideColLRL.setSortable(false);
+        taskColRLR.setSortable(false);
+        sideColRLR.setSortable(false);
+        taskColRRR.setSortable(false);
+        sideColRRR.setSortable(false);
+
+        taskColLLL.setResizable(false);
+        sideColLLL.setResizable(false);
+        taskColLRL.setResizable(false);
+        sideColLRL.setResizable(false);
+        taskColRLR.setResizable(false);
+        sideColRLR.setResizable(false);
+        taskColRRR.setResizable(false);
+        sideColRRR.setResizable(false);
 
         taskColLLL.setCellFactory(autonTaskCellFactory);
         taskColLRL.setCellFactory(autonTaskCellFactory);
@@ -86,21 +107,26 @@ public class AutonBuilderController {
         sideColRLR.setCellFactory(scoringSideCellFactory);
         sideColRRR.setCellFactory(scoringSideCellFactory);
 
+
         taskColLLL.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("autonTask"));
         taskColLRL.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("autonTask"));
         taskColRLR.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("autonTask"));
         taskColRRR.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("autonTask"));
 
-        taskColLLL.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("scoringSide"));
-        taskColLRL.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("scoringSide"));
-        taskColRLR.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("scoringSide"));
-        taskColRRR.setCellValueFactory(new PropertyValueFactory<TaskConfig, AutonTask>("scoringSide"));
+        sideColLLL.setCellValueFactory(new PropertyValueFactory<TaskConfig, ScoringSide>("scoringSide"));
+        sideColLRL.setCellValueFactory(new PropertyValueFactory<TaskConfig, ScoringSide>("scoringSide"));
+        sideColRLR.setCellValueFactory(new PropertyValueFactory<TaskConfig, ScoringSide>("scoringSide"));
+        sideColRRR.setCellValueFactory(new PropertyValueFactory<TaskConfig, ScoringSide>("scoringSide"));
+
+        dataLLL.add(new TaskConfig(null, null));
+        dataLRL.add(new TaskConfig(null, null));
+        dataRLR.add(new TaskConfig(null, null));
+        dataRRR.add(new TaskConfig(null, null));
 
         tableLLL.setItems(dataLLL);
         tableLRL.setItems(dataLRL);
         tableRLR.setItems(dataRLR);
         tableRRR.setItems(dataRRR);
-
 
     }
 }

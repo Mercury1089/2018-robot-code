@@ -8,27 +8,27 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.usfirst.frc.team1089.main.AutonBuilderController">
    <children>
-      <TableView fx:id="tableLLL" layoutX="2.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
+      <TableView fx:id="tableLLL" editable="true" layoutX="2.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
         <columns>
           <TableColumn fx:id="taskColLLL" prefWidth="106.0" text="Task" />
           <TableColumn fx:id="sideColLLL" prefWidth="104.0" text="Side" />
         </columns>
       </TableView>
-      <TableView fx:id="tableLRL" layoutX="213.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
+      <TableView fx:id="tableLRL" editable="true" layoutX="213.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
          <columns>
             <TableColumn fx:id="taskColLRL" prefWidth="106.0" text="Task" />
             <TableColumn fx:id="sideColLRL" prefWidth="104.0" text="Side" />
          </columns>
       </TableView>
-      <TableView fx:id="tableRLR" layoutX="424.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
+      <TableView fx:id="tableRLR" editable="true" layoutX="424.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
          <columns>
             <TableColumn fx:id="taskColRLR" prefWidth="106.0" text="Task" />
             <TableColumn fx:id="sideColRLR" prefWidth="104.0" text="Side" />
          </columns>
       </TableView>
-      <TableView fx:id="tableRRR" layoutX="635.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
+      <TableView fx:id="tableRRR" editable="true" layoutX="635.0" layoutY="109.0" prefHeight="480.0" prefWidth="211.0">
          <columns>
             <TableColumn fx:id="taskColRRR" prefWidth="106.0" text="Task" />
             <TableColumn fx:id="sideColRRR" prefWidth="104.0" text="Side" />
@@ -39,7 +39,7 @@
             <Font size="35.0" />
          </font>
       </Label>
-      <RadioButton fx:id="keftRadioButton" layoutX="328.0" layoutY="22.0" mnemonicParsing="false" text="Left" />
+      <RadioButton fx:id="leftRadioButton" layoutX="328.0" layoutY="22.0" mnemonicParsing="false" text="Left" />
       <RadioButton fx:id="middleRadioButton" layoutX="391.0" layoutY="22.0" mnemonicParsing="false" text="Middle" />
       <RadioButton fx:id="rightRadioButton" layoutX="465.0" layoutY="22.0" mnemonicParsing="false" text="Right" />
       <Label fx:id="labelLRL" layoutX="213.0" layoutY="56.0" prefHeight="51.0" prefWidth="211.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="         LRL      " textAlignment="CENTER">

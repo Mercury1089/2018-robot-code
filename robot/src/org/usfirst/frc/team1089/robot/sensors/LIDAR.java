@@ -39,11 +39,11 @@ public class LIDAR {
      * LIDAR is connected to, as well as the ID of the CANifier that the
      * LIDAR is connected to.
      *
-     * @param deviceID ID of the CANifier
+     * @param cFier    CANifier that LIDAR is connected to
      * @param channel  PWMChannel of the LIDAR
      */
-    public LIDAR(int deviceID, CANifier.PWMChannel channel, PWMOffset o) {
-        canifier = new CANifier(deviceID);
+    public LIDAR(CANifier cFier, CANifier.PWMChannel channel, PWMOffset o) {
+        canifier = cFier;
         pwmChannel = channel;
         equation = o;
 

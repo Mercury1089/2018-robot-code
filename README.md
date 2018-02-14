@@ -33,6 +33,9 @@ by using the name of the task as an argument to the command
 deployed to the roboRIO. Found in the `/robot/` subfolder.
 - `:shuffleboard` - Custom Shuffleboard widgets subproject. 
 Found in the `/shuffleboard/` subfolder.
-- `:vision` - Vision processing subproject, containing code to process.
+- `:vision` - Vision processing subproject, containing code to process
 vision on a coprocessor, specifically a Raspberry Pi. Found in the 
 `/vision/` subfolder.
+- `:auton-app` - Auton configuration application subproject, 
+containing code to generate autons with a GUI. Found in the 
+`/auton-app/` subfolder.

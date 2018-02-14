@@ -15,7 +15,7 @@ import org.usfirst.frc.team1089.util.GameData;
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
     private AutonPosition workingSide;
-    private InitialMiddleSwitchSide initMidSS;
+    private InitialMiddleSwitchSide initialMidSwitchSide;
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
     private String posStr;
@@ -41,16 +41,28 @@ public class AutonCommand extends CommandGroup {
         // arm.
 
         workingSide = autonBuilder.getAutonPos();
-        initMidSS = autonBuilder.getInitMidSS();
+        GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
+        switch (workingSide.toString().charAt(0)) {
+            case 'L':
+                comparableWorkingSide = GameData.PlateSide.LEFT;
+                break;
+            case 'R':
+                comparableWorkingSide = GameData.PlateSide.RIGHT;
+                break;
+            default:
+                comparableWorkingSide = GameData.PlateSide.UNKNOWN;
+        }
+        initialMidSwitchSide = autonBuilder.getInitMidSS();
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();
+        int cubesPickedUp = 0;      //Number of cubes picked up from the working side after the robot has scored in switch
 
         switch (workingSide) {
             case LEFT:
             case RIGHT:
                 if (gameData.getSwitchSide() == gameData.getScaleSide()) {
-                    if (data.charAt(0) == workingSide.toString().charAt(0)) {
+                    if (gameData.getSwitchSide() == comparableWorkingSide) {
                         addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                         addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
                     } else {
@@ -59,7 +71,7 @@ public class AutonCommand extends CommandGroup {
                         addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     }
                 } else {
-                    if (data.charAt(0) == workingSide.toString().charAt(0)) {
+                    if (gameData.getSwitchSide() == comparableWorkingSide) {
                         addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                         switchWorkingSide();
                         addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
@@ -68,12 +80,13 @@ public class AutonCommand extends CommandGroup {
                         addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     }
                 }
+                addSequential(new DriveDistance(43.5, .5));
                 break;
             case MIDDLE:
-                switch (initMidSS) {
+                switch (initialMidSwitchSide) {
                     case LEFT_MID:
                     case RIGHT_MID:
-                        String initMidStr = initMidSS.toString();
+                        String initMidStr = initialMidSwitchSide.toString();
                         addSequential(new MoveOnPath("SwitchMid" + initMidStr.substring(0, initMidStr.indexOf("_")),
                                 MoveOnPath.Direction.FORWARD));
                         break;
@@ -82,33 +95,42 @@ public class AutonCommand extends CommandGroup {
         }
 
         for (int i = 1; i < autonTasks.length; i++) {
-            AutonTask currTask = autonTasks[i];
-            AutonTask prevTask = autonTasks[i - 1];
+            AutonTask taskToComplete = autonTasks[i];           //The task to execute
+            AutonTask previousTask = autonTasks[i - 1];         //The task just executed
+            ScoringSide sideToScoreOn = scoreSide[i];           //The side to score on
+            ScoringSide previousSide = scoreSide[i - 1];        //The side just scored on
 
-            switch (currTask) {
-                case GRAB_CUBE: //TODO we need da technician
-                    if (prevTask != AutonTask.GRAB_CUBE && scoreSide[i - 1] != null) {
-
+            switch (taskToComplete) {
+                case GRAB_CUBE:
+                    if (previousTask != AutonTask.GRAB_CUBE && previousSide != null) {
                         //addSequential(new MoveOnPath(""));
                         //TODO auto cube grab method. putting the following here if that doesn't happen:
                         //TODO if not going to change, then add a drive distance so that it doesn't turn into a wall.
-                        GetCube getCube = new GetCube();
+                        /*GetCube getCube = new GetCube();
                         addSequential(getCube);
                         addSequential(new UseClaw(Claw.ClawState.GRAB));
                         double dist = getCube.getDistanceTraveled();
                         addSequential(new DriveDistance(-dist, 0.5));
                         double ang = getCube.getAngleTurned();
-                        addSequential(new RotateRelative(-ang));    //TODO use this and distance to make a profile to follow
+                        addSequential(new RotateRelative(-ang));*/    //TODO use this and distance to make a profile to follow
+
+                        //TODO double check these values and document (symbolic constants)
+                        if (cubesPickedUp == 0) {
+                            addSequential(new RotateRelative(Math.atan(38.825/12.25)));
+                        } else if (cubesPickedUp > 0) {
+                            addSequential(new RotateRelative(90 + Math.atan(38.825/(28.1*cubesPickedUp+12.25))));
+                        }
+                        cubesPickedUp++;
                     }
                     break;
                 case SCORE_SCALE:
-                    if (workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.BACK) {
-                        switch (scoreSide[i]) {
+                    if (workingSide != AutonPosition.MIDDLE && sideToScoreOn != ScoringSide.BACK) {
+                        switch (sideToScoreOn) {
                             case FRONT:
                                 addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
                                 break;
-                            case MID: //TODO make SIDE profiles
+                            case MID:
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.BACKWARD));
                                 break;
@@ -117,10 +139,10 @@ public class AutonCommand extends CommandGroup {
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                     break;
                 case SCORE_SWITCH:
-                    if (workingSide != AutonPosition.MIDDLE && scoreSide[i] != ScoringSide.FRONT) {
-                        switch (scoreSide[i]) {
+                    if (workingSide != AutonPosition.MIDDLE && sideToScoreOn != ScoringSide.FRONT) {
+                        switch (sideToScoreOn) {
                             case BACK:
-                                if (data.charAt(0) == data.charAt(1)) {
+                                if (gameData.getSwitchSide() == gameData.getScaleSide()) {
                                     addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
                                 } else {
@@ -130,7 +152,7 @@ public class AutonCommand extends CommandGroup {
                                 //TODO elevator stuff
                                 break;
                             case MID: //The side placement positions are the initial pickup setups, but the other way.
-                                if (data.charAt(0) == data.charAt(1)) {
+                                if (gameData.getSwitchSide() == gameData.getScaleSide()) {
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.BACKWARD));
                                 } else {

@@ -45,4 +45,6 @@ public class DriveWithLIDAR extends DriveDistance {
         super.end();
         LOG.info(getName() + " ended");
     }
+
+    public double getLastDistance() {return 0;}
 }

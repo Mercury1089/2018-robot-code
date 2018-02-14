@@ -52,12 +52,14 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void initialize() {
         double[] pid = DriveTrainSettings.getPIDValues("driveDistance");
 
-//        if (originator != null) {
-//            distance = (Double) originator.getHistory().getValue();
-//
-//            if (treatment == HistoryTreatment.REVERSE)
-//                distance *= -1;
-//        }
+        distanceTraveled = Double.NEGATIVE_INFINITY;
+
+        if (originator != null) {
+            distance = (Double) originator.getHistory().getValue();
+
+            if (treatment == HistoryTreatment.REVERSE)
+                distance *= -1;
+        }
 
         setPIDF(pid[0], pid[1], pid[2], 0);
 
@@ -104,16 +106,18 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void end() {
         Robot.driveTrain.stop();
 
-        // Get the average encoder position
-        // then convert to inches
-        distanceTraveled = Robot.driveTrain.getLeftEncPositionInFeet() + Robot.driveTrain.getRightEncPositionInFeet();
-        distanceTraveled /= 2.0;
-        distanceTraveled *= 12;
+        // Convert the average encoder position to inches
+        distanceTraveled += Robot.driveTrain.getLeftEncPositionInFeet() * 12;
+
+        // Negate distanceTraveled since encoder position is read backwards
+        distanceTraveled *= -1;
 
         Robot.driveTrain.resetEncoders();
 
         //The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+
+        log.info("Final Distance: " + distanceTraveled);
     }
 
     // Called when another command which requires one or more of the same
@@ -121,14 +125,23 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected void interrupted() {
         log.info("DriveDistance interrupted");
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+        this.end();
     }
 
     protected void updateDistance() {
         double endPosL = 0, endPosR = 0;
-        //End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
+        // End position has to be calculated in initialize() because of the DistanceSupplier constructor rewriting the distance field.
+        if (distanceTraveled > Double.NEGATIVE_INFINITY) {
+            log.info("Current Distance: " + distanceTraveled + ", Update distance: " + (distanceTraveled + Robot.driveTrain.getLeftEncPositionInFeet() * 12));
+            distanceTraveled += Robot.driveTrain.getLeftEncPositionInFeet() * 12;
+        } else {
+            distanceTraveled = 0;
+        }
+
         Robot.driveTrain.resetEncoders();
         endPosL = MercMath.inchesToEncoderTicks(distance);
         log.info(distance);
+
         // Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
         // On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
         // to negate both endPosR and endPosL.

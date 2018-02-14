@@ -3,6 +3,8 @@ package org.usfirst.frc.team1089.robot.subsystems;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +25,8 @@ public class Claw extends Subsystem {
             clawMotor_S;
 
     private LIDAR lidar;
-    private  boolean hasCube;
+    private CANifier canifier;
+    private boolean hasCube;
 
     public enum ClawState {
         GRAB(1.0), EJECT(-1.0), STOP(0.0);
@@ -33,7 +36,9 @@ public class Claw extends Subsystem {
         }
     }
 
-    public Claw(int canifier, int pwm, int leader, int follower) {
+    public Claw(int canID, int pwm, int leader, int follower) {
+        canifier = new CANifier(canID);
+
         clawMotor_S = new WPI_VictorSPX(follower);
         clawMotor_M = new WPI_VictorSPX(leader);
 
@@ -64,6 +69,10 @@ public class Claw extends Subsystem {
 
     public void set(ClawState state) {
         clawMotor_M.set(state.speed);
+    }
+
+    public CANifier getCanifier() {
+        return canifier;
     }
 
     public LIDAR getLidar() {

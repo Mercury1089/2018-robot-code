@@ -170,16 +170,20 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         }
     }
 
+    public double getLeftEncPositionInTicks() {
+        return tMasterLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
+    }
+
+    public double getRightEncPositionInTicks() {
+        return tMasterRight.getSelectedSensorPosition(PRIMARY_PID_LOOP);
+    }
+
     public double getLeftEncPositionInFeet() {
-        double ticks = tMasterLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
-        //Convert encoder ticks to feet
-        return MercMath.getEncPosition(ticks);
+        return MercMath.getEncPosition(getLeftEncPositionInTicks());
     }
 
     public double getRightEncPositionInFeet() {
-        double ticks = tMasterRight.getSelectedSensorPosition(PRIMARY_PID_LOOP);
-        //Convert encoder ticks to feet
-        return MercMath.getEncPosition(ticks);
+        return MercMath.getEncPosition(getRightEncPositionInTicks());
     }
 
     public double getFeedForward() {

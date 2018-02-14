@@ -65,7 +65,7 @@ public class OI {
 	private Joystick leftStick, rightStick, gamepad;
 
 	private JoystickButton left1, left2, left3, left4;
-	private JoystickButton right1, right2, right3, right4, right5;
+	private JoystickButton right1, right2, right3, right4, right5, right6, right7, right10, right11;
 	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb;
 
 	private UseClaw useClaw;
@@ -101,11 +101,22 @@ public class OI {
 		right3 = new JoystickButton(rightStick, 3);
 		right3.whenPressed(new GetCube());
 
-		DriveDistance cmd = new DriveDistance(24, 0.3);
+		DriveDistance dd = new DriveDistance(24, 0.2);
+		DriveWithLIDAR dwl = new DriveWithLIDAR(20, 0.2);
+
 		right4 = new JoystickButton(rightStick, 4);
-		right4.whenPressed(cmd);
+		right4.whenPressed(dwl);
 		right5 = new JoystickButton(rightStick, 5);
-		right5.whenPressed(new DriveDistance(cmd, HistoryOriginator.HistoryTreatment.REVERSE, 0.3));
+		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
+
+		right6 = new JoystickButton(rightStick, 6);
+		right6.whenPressed(new MoveOnPath("CircleProfile", MoveOnPath.Direction.FORWARD));
+		right7 = new JoystickButton(rightStick, 7);
+		right7.whenPressed(new MoveOnPath("CircleProfile", MoveOnPath.Direction.BACKWARD));
+		right10 = new JoystickButton(rightStick, 10);
+		right10.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right11 = new JoystickButton(rightStick, 11);
+		right11.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.BACKWARD));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

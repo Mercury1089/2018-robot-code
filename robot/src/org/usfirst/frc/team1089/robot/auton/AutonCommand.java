@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.util.GameData;
+import org.usfirst.frc.team1089.util.HistoryOriginator;
 
 /**
  * Command group that specifies the commands to be run
@@ -19,6 +20,10 @@ public class AutonCommand extends CommandGroup {
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
     private String posStr;
+    private final double
+            CUBE_PICKUP_X_OFFSET = 38.825,
+            CUBE_PICKUP_Y_CONSTANT_OFFSET = 12.25,
+            CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1;
 
     public AutonCommand(AutonBuilder autonBuilder) {
         String data = DriverStation.getInstance().getGameSpecificMessage();
@@ -40,23 +45,27 @@ public class AutonCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
 
+        int cubesPickedUp = 0, rotationFactor;;      //Number of cubes picked up
         workingSide = autonBuilder.getAutonPos();
         GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
-        switch (workingSide.toString().charAt(0)) {
-            case 'L':
+        switch (workingSide) {
+            case LEFT:
                 comparableWorkingSide = GameData.PlateSide.LEFT;
+                rotationFactor = 1;
                 break;
-            case 'R':
+            case RIGHT:
                 comparableWorkingSide = GameData.PlateSide.RIGHT;
+                rotationFactor = -1;
                 break;
+            case MIDDLE:
             default:
                 comparableWorkingSide = GameData.PlateSide.UNKNOWN;
+                rotationFactor = 0;
         }
         initialMidSwitchSide = autonBuilder.getInitMidSS();
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();
-        int cubesPickedUp = 0;      //Number of cubes picked up from the working side after the robot has scored in switch
 
         switch (workingSide) {
             case LEFT:
@@ -94,6 +103,13 @@ public class AutonCommand extends CommandGroup {
                 break;
         }
 
+        RotateRelative rotateRelative;
+        DriveDistance driveDistance;
+
+        addSequential(new DriveDistance(43.5, .5));
+        rotateRelative = new RotateRelative(getCubeTurnAngleScale(cubesPickedUp, rotationFactor, 0));
+        addSequential(rotateRelative);
+
         for (int i = 1; i < autonTasks.length; i++) {
             AutonTask taskToComplete = autonTasks[i];           //The task to execute
             AutonTask previousTask = autonTasks[i - 1];         //The task just executed
@@ -103,36 +119,28 @@ public class AutonCommand extends CommandGroup {
             switch (taskToComplete) {
                 case GRAB_CUBE:
                     if (previousTask != AutonTask.GRAB_CUBE && previousSide != null) {
-                        //addSequential(new MoveOnPath(""));
-                        //TODO auto cube grab method. putting the following here if that doesn't happen:
-                        //TODO if not going to change, then add a drive distance so that it doesn't turn into a wall.
-                        /*GetCube getCube = new GetCube();
-                        addSequential(getCube);
-                        addSequential(new UseClaw(Claw.ClawState.GRAB));
-                        double dist = getCube.getDistanceTraveled();
-                        addSequential(new DriveDistance(-dist, 0.5));
-                        double ang = getCube.getAngleTurned();
-                        addSequential(new RotateRelative(-ang));*/    //TODO use this and distance to make a profile to follow
-
-                        //TODO double check these values and document (symbolic constants)
-                        if (cubesPickedUp == 0) {
-                            addSequential(new RotateRelative(Math.atan(38.825/12.25)));
-                        } else if (cubesPickedUp > 0) {
-                            addSequential(new RotateRelative(90 + Math.atan(38.825/(28.1*cubesPickedUp+12.25))));
+                        if (cubesPickedUp != 0) {
+                            addSequential(new RotateRelative(rotateRelative, HistoryOriginator.HistoryTreatment.REVERSE));
                         }
-                        cubesPickedUp++;
+                        addSequential(new GetCube());
+                        cubesPickedUp++;       //This value is used to determine a dead-reckoning turn angle.
                     }
                     break;
                 case SCORE_SCALE:
                     if (workingSide != AutonPosition.MIDDLE && sideToScoreOn != ScoringSide.BACK) {
                         switch (sideToScoreOn) {
                             case FRONT:
-                                addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
-                                addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
+                                //addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
+                                //addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
+                                addSequential(new RotateRelative(getCubeTurnAngleScale(cubesPickedUp, rotationFactor, 90)));
+                                addSequential(new DriveDistance(51.825, .5));
+                                addSequential(new DriveDistance(-51.825, .5));
                                 break;
                             case MID:
+                                addSequential(new DriveDistance(-43.5, .5));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.BACKWARD));
+                                addSequential(new DriveDistance(43.5, .5));
                                 break;
                         }
                     }
@@ -140,11 +148,13 @@ public class AutonCommand extends CommandGroup {
                     break;
                 case SCORE_SWITCH:
                     if (workingSide != AutonPosition.MIDDLE && sideToScoreOn != ScoringSide.FRONT) {
+                        addSequential(new RotateRelative());
                         switch (sideToScoreOn) {
                             case BACK:
                                 if (gameData.getSwitchSide() == gameData.getScaleSide()) {
-                                    addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
-                                    addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                    //addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                                    //addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                    addSequential(new RotateRelative(rotateRelative, HistoryOriginator.HistoryTreatment.REVERSE));
                                 } else {
                                     addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.BACKWARD));
@@ -180,4 +190,29 @@ public class AutonCommand extends CommandGroup {
                 break;
         }
     }
+
+    private double getCubeTurnAngleScale(int cubesPickedUp, int rotationFactor, int addDeg) {
+        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+    }
+    private double getCubeTurnAngleSwitch(int cubesPickedUp, int rotationFactor, int addDeg) {
+        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+    }
+
+    /*private DriveDistance generateDriveAndStore(double dist, double pVolt) {
+        historyDriveDistance = new DriveDistance(dist, pVolt);
+        return historyDriveDistance;
+    }
+
+    private RotateRelative generateRotationAndStore(double ang) {
+        historyRotateRelative = new RotateRelative(ang);
+        return historyRotateRelative;
+    }
+
+    private DriveDistance getHistoryDriveDistanceReverse(double pVolt) {
+        return new DriveDistance(historyDriveDistance, HistoryOriginator.HistoryTreatment.REVERSE, pVolt);
+    }
+
+    private RotateRelative getHistoryRotateRelativeReverse() {
+        return new RotateRelative(historyRotateRelative, HistoryOriginator.HistoryTreatment.REVERSE);
+    }*/
 }

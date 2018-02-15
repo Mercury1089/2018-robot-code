@@ -94,7 +94,7 @@ public class MoveOnPath extends Command {
         reset();
 
         left.setNeutralMode(NeutralMode.Brake);
-        right.setNeutralMode(NeutralMode.Coast);
+        right.setNeutralMode(NeutralMode.Brake);
 
         // Configure PID values
         double[] pid = DriveTrainSettings.getPIDValues("moveOnPath");
@@ -224,6 +224,7 @@ public class MoveOnPath extends Command {
         // Reset flags and motion profile modes
         isRunning = false;
         setMotionProfileMode(SetValueMotionProfile.Disable);
+        Robot.driveTrain.resetEncoders();
 
         // Clear the trajectory buffer
         left.clearMotionProfileTrajectories();

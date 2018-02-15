@@ -59,7 +59,7 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
     // Called just before this Command runs the first time
     protected void initialize() {
 	    gyro.reset();
-	    double[] outputRange = DriveTrainSettings.getRotOutputRange();
+	    double[] outputRange = DriveTrainSettings.getOutputRange("rotateRelative");
 
     	if (originator != null) {
 			targetHeading = (Double) originator.getHistory().getValue();
@@ -69,7 +69,7 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
 		}
 
 	    getPIDController().setInputRange(-180, 180);
-    	getPIDController().setOutputRange(-.2, .2);
+    	getPIDController().setOutputRange(outputRange[0], outputRange[1]);
 
     	//Set the controller to continuous AFTER setInputRange()
         getPIDController().setContinuous(true);

@@ -16,6 +16,8 @@ public class PixyI2C implements PIDSource {
     private final BoundingBox[] BOXES;
     private final int DISPLACEMENT_OFFSET;
 
+    private final int MIN_BOX_WIDTH = 100; //Arbitrary value, change to what minimum value of width can be for cube to be cassified as "In range"
+
     public PixyI2C() {
         PIXY = new I2C(I2C.Port.kOnboard, 0x54);
         BOXES = new BoundingBox[7];
@@ -109,6 +111,10 @@ public class PixyI2C implements PIDSource {
             val = resX / 2 - curTarget.getX() + DISPLACEMENT_OFFSET;
 
         return val;
+    }
+
+    public boolean inRange() {
+        return (curTarget != null && curTarget.getWidth() >= MIN_BOX_WIDTH);
     }
 }
 

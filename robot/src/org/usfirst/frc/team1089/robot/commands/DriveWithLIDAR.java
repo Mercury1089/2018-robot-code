@@ -43,7 +43,7 @@ public class DriveWithLIDAR extends DriveDistance {
     @Override
     protected void end() {
         super.end();
-        LOG.info(getName() + " ended");
+        LOG.info(getName() + "DriveWthLidar ended");
     }
 
     public double getLastDistance() {return 0;}

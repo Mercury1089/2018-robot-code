@@ -27,6 +27,7 @@ public class Claw extends Subsystem {
     private LIDAR lidar;
     private CANifier canifier;
     private boolean hasCube;
+    private boolean ejecting;
 
     public enum ClawState {
         GRAB(1.0), EJECT(-1.0), STOP(0.0);
@@ -85,5 +86,13 @@ public class Claw extends Subsystem {
 
     public void setHasCube(boolean b){
         hasCube = b;
+    }
+
+    public boolean getEjecting() {
+        return ejecting;
+    }
+
+    public void setEjecting(boolean b){
+        ejecting = b;
     }
 }

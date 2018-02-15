@@ -104,12 +104,13 @@ public class DriveTrainSettings extends Config {
     }
 
     /**
-     * Gets the max output voltage range for RotateRelative PID
+     * Gets the min and max value for any DriveTrain command's PID
      *
-     * @return double array containing minimum and maximum output percent value
+     * @param cmd the command to get the output range for
+     * @return double array containing minimum and maximum output PID range
      */
-    public static double[] getRotOutputRange() {
-        String[] arr = parseArrayValue("rotateRelative.outputRange", ",");
+    public static double[] getOutputRange(String cmd) {
+        String[] arr = parseArrayValue(cmd + ".outputRange", ",");
         double[] range = {-0.5, 0.5};
 
         if (arr.length == 2) {

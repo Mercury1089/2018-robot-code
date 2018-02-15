@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -200,6 +201,17 @@ public class OI {
 	}
 
 	private void buildAuton() {
+
+	}
+
+	public void rumbleController(boolean rumble) {
+		if (rumble) {
+			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 1.0);
+			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
+		} else {
+			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
+		}
 
 	}
 }

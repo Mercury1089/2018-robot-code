@@ -206,11 +206,11 @@ public class OI {
 
 	public void rumbleController(boolean rumble) {
 		if (rumble) {
-			gamepad.setRumble(RumbleType.kLeftRumble, 1.0);
-			gamepad.setRumble(RumbleType.kRightRumble, 1.0);
+			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 1.0);
+			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
 		} else {
-			gamepad.setRumble(RumbleType.kLeftRumble, 0.0);
-			gamepad.setRumble(RumbleType.kRightRumble, 0.0);
+			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
 		}
 
 	}

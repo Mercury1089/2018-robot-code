@@ -1,15 +1,11 @@
 package org.usfirst.frc.team1089.robot.subsystems;
 
 import com.ctre.phoenix.CANifier;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
@@ -23,8 +19,8 @@ public class Claw extends Subsystem {
     public final double MIN_INCHES = 8.0;
 
     private WPI_VictorSPX
-            clawMotor_M,
-            clawMotor_S;
+        clawMotor_M,
+        clawMotor_S;
 
     private LIDAR lidar;
     private CANifier canifier;
@@ -33,9 +29,9 @@ public class Claw extends Subsystem {
 
     public enum ClawState {
         GRAB(1.0), EJECT(-1.0), STOP(0.0);
-        public final double speed;
+        public final double SPEED;
         ClawState(double speed) {
-            this.speed = speed;
+            SPEED = speed;
         }
     }
 
@@ -102,7 +98,7 @@ public class Claw extends Subsystem {
     }
 
     public void set(ClawState state) {
-        clawMotor_M.set(state.speed);
+        clawMotor_M.set(state.SPEED);
     }
 
     public CANifier getCanifier() {

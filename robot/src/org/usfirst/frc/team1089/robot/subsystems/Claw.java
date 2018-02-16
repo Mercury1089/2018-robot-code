@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 import org.usfirst.frc.team1089.util.MercMath;
@@ -19,6 +20,7 @@ import org.usfirst.frc.team1089.util.config.SensorsSettings;
  */
 public class Claw extends Subsystem {
     private static Logger log = LogManager.getLogger(Claw.class);
+    public final double MIN_INCHES = 8.0;
 
     private WPI_VictorSPX
             clawMotor_M,
@@ -61,6 +63,34 @@ public class Claw extends Subsystem {
     @Override
     public void periodic() {
         lidar.updatePWMInput();
+
+        boolean rumble = false;
+
+        if (Robot.vision.getPixyCam().inRange()) { //Cube is in range to auto pickup
+            //set green (R: 28.2%, G: 91%, B: 14.9%)
+            canifier.setLEDOutput(.282, CANifier.LEDChannel.LEDChannelA);
+            canifier.setLEDOutput(.91, CANifier.LEDChannel.LEDChannelB);
+            canifier.setLEDOutput(.149, CANifier.LEDChannel.LEDChannelC);
+
+            rumble = true;
+        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { //Have cube?
+            //set orange (R: 100%, G: 74.5%, B: 3.9%)
+            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelA);
+            canifier.setLEDOutput(.745, CANifier.LEDChannel.LEDChannelB);
+            canifier.setLEDOutput(.39, CANifier.LEDChannel.LEDChannelC);
+        } else if (Robot.claw.getEjecting()) { //Robo is ejecting cube
+            //set red (R: 100%, G: 3.9%, B: 3.9%)
+            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelA);
+            canifier.setLEDOutput(.39, CANifier.LEDChannel.LEDChannelB);
+            canifier.setLEDOutput(.39, CANifier.LEDChannel.LEDChannelC);
+        } else { //default case
+            // set white (All values max power, maximum)
+            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelA);
+            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelB);
+            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelC);
+        }
+
+        Robot.oi.rumbleController(rumble);
     }
 
     @Override

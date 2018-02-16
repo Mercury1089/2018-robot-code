@@ -38,9 +38,11 @@ public class DriveDistance extends Command implements HistoryOriginator {
      * @param pVolt voLtage to use when driving, -1.0 to 1.0
      */
     public DriveDistance(double dist, double pVolt) {
+        log.info(getName() + " Beginning constructor");
         requires(Robot.driveTrain);
         distance = dist;
         percentVoltage = pVolt;
+        log.info(getName() + " Constructed");
     }
 
     public DriveDistance(HistoryOriginator o, HistoryTreatment t, double pVolt) {

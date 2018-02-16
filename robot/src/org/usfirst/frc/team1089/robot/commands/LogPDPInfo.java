@@ -59,6 +59,7 @@ public class LogPDPInfo extends Command {
 	}
 
 	public LogPDPInfo(File outputDir) {
+		log.info(getName() + " Beginning constructor");
 		this.outputDir = outputDir;
 		requires(Robot.pdp);
 		log.debug("LogPDPInfo command created");

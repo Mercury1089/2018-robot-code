@@ -7,21 +7,22 @@ import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 public class AutoAlign extends RotateRelative {
     private final double ANGLE_THRESHOLD;
-    private static Logger log = LogManager.getLogger(AutoAlign.class);
+    private static Logger LOG = LogManager.getLogger(AutoAlign.class);
     public AutoAlign() {
         super();
-
+        LOG.info(getName() + " Beginning constructor");
         // More or less will be the same value
         // Someone should tell me if it's otherwise
         ANGLE_THRESHOLD = DriveTrainSettings.getRotAbsTolerance();
 
         requires(Robot.claw);
+        LOG.info(getName() + " Constructed");
     }
 
     @Override
     protected void initialize() {
         updateHeading(Robot.camera.getAngleFromCube());
-        log.info(getName() + " Initialized");
+        LOG.info(getName() + " Initialized");
         super.initialize();
     }
 

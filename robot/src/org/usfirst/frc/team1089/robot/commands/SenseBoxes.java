@@ -2,16 +2,18 @@ package org.usfirst.frc.team1089.robot.commands;
 
 import com.ctre.phoenix.CANifier;
 import edu.wpi.first.wpilibj.command.Command;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.subsystems.Claw;
 
 public class SenseBoxes extends Command {
 
     /**
      * C'tor
      */
+    private static Logger log = LogManager.getLogger(SenseBoxes.class);
     public SenseBoxes() {
-
+        log.info(getName() + " Beginning constructor");
     }
     // Called just before this Command runs the first time
     @Override

@@ -38,7 +38,7 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
 			DriveTrainSettings.getPIDValues("rotateRelative")[1],
 			DriveTrainSettings.getPIDValues("rotateRelative")[2]
 		);
-
+		log.info(getName() + " Beginning constructor");
 		requires(Robot.driveTrain);
 
     	this.targetHeading = targetHeading;

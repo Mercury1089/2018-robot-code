@@ -16,12 +16,13 @@ public class GetCube extends CommandGroup {
     private double angleTurned, distanceTraveled;
 
     public GetCube() {
+        log.info(getName() + " Beginning constructor");
         angleTurned = Robot.vision.getPixyCam().pidGet();
         addSequential(new RotateToTarget());
         distanceTraveled = Robot.claw.getLidar().getDistance();
         addParallel(new UseClaw(Claw.ClawState.GRAB));
         addSequential(new DriveWithLIDAR(8, .3));
-        log.info(getName() + " Created");
+        log.info(getName() + " Constructed");
         //TODO updated history code
     }
 

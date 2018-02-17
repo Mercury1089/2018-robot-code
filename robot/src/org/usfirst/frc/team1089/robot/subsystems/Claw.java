@@ -65,11 +65,11 @@ public class Claw extends Subsystem {
     private void updateState() {
         boolean rumble = false;
 
-        if (Robot.vision.getPixyCam().inRange()) { //Cube is in range to auto pickup
+        if (Robot.vision.getPixyCam().inRange()) { // Cube is in range to auto pickup
             // White
             colorLED(255, 255, 255);
             rumble = true;
-        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { //Have cube?
+        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
             // Orange
             colorLED(255, 161, 0);
         } else {
@@ -82,6 +82,7 @@ public class Claw extends Subsystem {
 
     /**
      * Sets the color of the LED based on RBG int values
+     *
      * @param r red value [0 - 255]
      * @param g green value [0 - 255]
      * @param b blue value [0 - 255]

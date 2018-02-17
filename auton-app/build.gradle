@@ -26,6 +26,8 @@ task runJar(type: Exec) {
     group = "application"
     description = "Runs the jarfile by building it and running it inside /build/libs"
 
+    dependsOn("jar")
+
     workingDir "${projectDir}/build/libs"
 
     commandLine 'java', '-jar', "${project.name}.jar"

@@ -294,9 +294,10 @@ public class AutonBuilderController {
     @FXML
     private void loadConfiguration() {
         FileChooser fileChooser = new FileChooser();
+
         fileChooser.setTitle("Open Configuration CSV");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
-        fileChooser.setInitialDirectory(new File(""));
+        fileChooser.setInitialDirectory(new File("./"));
         fileChooser.showOpenDialog(root.getScene().getWindow());
     }
 

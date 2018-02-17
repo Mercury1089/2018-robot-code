@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
+import org.usfirst.frc.team1089.util.HistoryOriginator;
 
 /**
  * Command group that calls both the AutoAlign command
@@ -16,11 +17,18 @@ public class GetCube extends CommandGroup {
     private double angleTurned, distanceTraveled;
 
     public GetCube() {
+        RotateToTarget rtt = new RotateToTarget();
+        RotateRelative rotate180 = new RotateRelative(180);
+        DriveWithLIDAR dwl = new DriveWithLIDAR(8, 0.3);
         angleTurned = Robot.vision.getPixyCam().pidGet();
-        addSequential(new RotateToTarget());
+        addSequential(rotate180);
+        addSequential(rtt);
         distanceTraveled = Robot.claw.getLidar().getDistance();
         addParallel(new UseClaw(Claw.ClawState.GRAB));
-        addSequential(new DriveWithLIDAR(8, .3));
+        addSequential(dwl);
+        addSequential(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.3));
+        addSequential(new RotateRelative(rtt, HistoryOriginator.HistoryTreatment.REVERSE));
+        addSequential(new RotateRelative(rotate180, HistoryOriginator.HistoryTreatment.REVERSE));
         log.info(getName() + " Created");
         //TODO updated history code
     }

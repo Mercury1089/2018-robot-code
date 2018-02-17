@@ -42,6 +42,7 @@ public class MoveOnPath extends Command {
 
     private boolean isRunning;
     private int dir;
+    private double fGain, fGainMultiplier;
 
     public enum Direction {
         BACKWARD,
@@ -86,6 +87,9 @@ public class MoveOnPath extends Command {
         statusRight = new MotionProfileStatus();
 
 	    TRAJECTORY_SIZE = trajectoryL.length();
+
+	    fGainMultiplier = .5;
+	    fGain = Robot.driveTrain.getFeedForward() * fGainMultiplier;
 	}
 	
 	//Called just before this Command runs for the first time. 
@@ -98,7 +102,7 @@ public class MoveOnPath extends Command {
 
         // Configure PID values
         double[] pid = DriveTrainSettings.getPIDValues("moveOnPath");
-        configurePID(pid[0], pid[1], pid[2], Robot.driveTrain.getFeedForward());
+        configurePID(pid[0], pid[1], pid[2], fGain);
 
         // Change motion control frame period
         left.changeMotionControlFramePeriod(10);

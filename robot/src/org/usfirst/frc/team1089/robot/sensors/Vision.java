@@ -15,8 +15,6 @@ public class Vision extends Subsystem {
 
 	@Override
 	public void periodic() {
-		pixyCam.read(1);
-
 		BoundingBox box = pixyCam.getTarget();
 
 		SmartDashboard.putNumber("Pixy Cam: Displacement", pixyCam.pidGet());

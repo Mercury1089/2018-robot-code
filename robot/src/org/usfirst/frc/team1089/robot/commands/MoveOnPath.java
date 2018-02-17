@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.modifiers.TankModifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,7 +57,7 @@ public class MoveOnPath extends Command {
 	public MoveOnPath(String name, Direction direction) {
         requires(Robot.driveTrain);
         setName("MoveOnPath-" + name);
-        log.info(getName() + " created");
+        log.info(getName() + " Beginning constructor");
 
         left = Robot.driveTrain.getLeft();
         right = Robot.driveTrain.getRight();
@@ -90,6 +89,7 @@ public class MoveOnPath extends Command {
 
 	    fGainMultiplier = .5;
 	    fGain = Robot.driveTrain.getFeedForward() * fGainMultiplier;
+        log.info(getName() + " construced");
 	}
 	
 	//Called just before this Command runs for the first time. 

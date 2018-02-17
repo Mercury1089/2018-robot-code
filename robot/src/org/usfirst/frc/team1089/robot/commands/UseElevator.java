@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;
 
@@ -21,6 +20,7 @@ public class UseElevator extends Command {
         // requires(Robot.elevator);
         setName(targetState + "Elevator");
         this.targetState = targetState;
+        log.info(getName() + " Constructed");
     }
 
     @Override

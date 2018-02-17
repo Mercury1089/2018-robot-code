@@ -40,6 +40,7 @@ public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 				DriveTrainSettings.getPIDValues("rotateToTarget")[2]
 		);
 
+		LOG.info(getName() + " Beginning constructor");
 		requires(Robot.driveTrain);
 		requires(Robot.vision);
 

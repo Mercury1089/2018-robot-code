@@ -17,6 +17,7 @@ public class DriveWithLIDAR extends DriveDistance {
      */
     public DriveWithLIDAR(double minDist, double percentVoltage) {
         super(0, percentVoltage);
+        LOG.info(getName() + " Beginning constructor");
         requires(Robot.driveTrain);
         minimumDistance = minDist;
         LOG.info("DriveWithLIDAR constructed with minimum distance of "  + minimumDistance);

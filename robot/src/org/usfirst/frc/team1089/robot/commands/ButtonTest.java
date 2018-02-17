@@ -12,7 +12,7 @@ public class ButtonTest extends Command {
 	private static Logger log = LogManager.getLogger(ButtonTest.class);
 	private DelayableLogger exeLog = new DelayableLogger(log, 1, TimeUnit.SECONDS);
 	public ButtonTest() {
-		setName("ButtonTest Command");
+		setName("ButtonTest");
 		log.info(getName() + " command created");
 	}
 

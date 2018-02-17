@@ -20,9 +20,11 @@ public class UseClaw extends Command {
     private final double minimumDistance = 8, maximumDistance = 18;
 
     public UseClaw(Claw.ClawState state) {
+        LOG.info(getName() + "Beginning constructor");
         requires(Robot.claw);
         setName(state + "_Claw");
         targetState = state;
+        LOG.info(getName() + " Constructed");
     }
 
     @Override

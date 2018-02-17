@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import jaci.pathfinder.Waypoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
@@ -111,13 +112,13 @@ public class OI {
 		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("ScaleSideRight", MoveOnPath.Direction.FORWARD));
+		right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("SwitchBackRight", MoveOnPath.Direction.BACKWARD));
+		right7.whenPressed(new MoveOnPath("SwitchMidLeft", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right10.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
 		right11 = new JoystickButton(rightStick, 11);
-		right11.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
+		right11.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

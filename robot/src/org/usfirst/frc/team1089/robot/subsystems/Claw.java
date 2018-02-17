@@ -93,9 +93,9 @@ public class Claw extends Subsystem {
      * @param b blue value [0 - 255]
      */
     private void colorLED(int r, int g, int b) {
-        canifier.setLEDOutput(r / 255.0, CANifier.LEDChannel.LEDChannelA);
-        canifier.setLEDOutput(g / 255.0, CANifier.LEDChannel.LEDChannelB);
-        canifier.setLEDOutput(b / 255.0, CANifier.LEDChannel.LEDChannelC);
+        canifier.setLEDOutput((double) g / 255.0, CANifier.LEDChannel.LEDChannelA);
+        canifier.setLEDOutput((double) r / 255.0, CANifier.LEDChannel.LEDChannelB);
+        canifier.setLEDOutput((double) b / 255.0, CANifier.LEDChannel.LEDChannelC);
     }
 
     @Override

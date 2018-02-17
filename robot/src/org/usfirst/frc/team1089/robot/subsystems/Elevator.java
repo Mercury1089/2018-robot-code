@@ -4,10 +4,12 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.RobotMap;
 import org.usfirst.frc.team1089.robot.commands.UseElevator;
 import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
 
@@ -17,6 +19,13 @@ public class Elevator extends Subsystem {
     private WPI_TalonSRX elevatorTalon;
     private WPI_VictorSPX elevatorVictorFollower;
 
+    private DigitalInput limitSwitch;
+
+    private ELEVATOR_STATE currentState;
+
+    private double curHeight;
+    public static final double MAX_HEIGHT = 450.0; //Random value, change to the max height of the elevator
+
     public Elevator(int talonID, int victorID) {
         elevatorTalon = new WPI_TalonSRX(talonID);
         elevatorTalon.setNeutralMode(NeutralMode.Brake);
@@ -24,6 +33,8 @@ public class Elevator extends Subsystem {
         elevatorVictorFollower.setNeutralMode(NeutralMode.Brake);
 
         elevatorVictorFollower.follow(elevatorTalon);
+
+        limitSwitch = new DigitalInput(RobotMap.DIGITAL_INPUT.ELEVATOR_LIMIT_SWITCH);
 
         double[] pid = ManipulatorSettings.getElevatorPID();
 
@@ -62,5 +73,25 @@ public class Elevator extends Subsystem {
 
     public WPI_TalonSRX getElevatorTalon() {
         return elevatorTalon;
+    }
+
+    public DigitalInput getLimitSwitch() {
+        return limitSwitch;
+    }
+
+    public ELEVATOR_STATE getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(ELEVATOR_STATE currentState) {
+        this.currentState = currentState;
+    }
+
+    public void setCurHeight(double curHeight) {
+        this.curHeight = curHeight;
+    }
+
+    public double getCurHeight() {
+        return curHeight;
     }
 }

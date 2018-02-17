@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,10 +15,15 @@ public class Elevator extends Subsystem {
     private static Logger log = LogManager.getLogger(Elevator.class);
 
     private WPI_TalonSRX elevatorTalon;
+    private WPI_VictorSPX elevatorVictorFollower;
 
-    public Elevator(int talonID) {
+    public Elevator(int talonID, int victorID) {
         elevatorTalon = new WPI_TalonSRX(talonID);
         elevatorTalon.setNeutralMode(NeutralMode.Brake);
+        elevatorVictorFollower = new WPI_VictorSPX(victorID);
+        elevatorVictorFollower.setNeutralMode(NeutralMode.Brake);
+
+        elevatorVictorFollower.follow(elevatorTalon);
 
         double[] pid = ManipulatorSettings.getElevatorPID();
 

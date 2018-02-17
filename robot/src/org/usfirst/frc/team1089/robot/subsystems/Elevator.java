@@ -24,7 +24,7 @@ public class Elevator extends Subsystem {
     private ELEVATOR_STATE currentState;
 
     private double curHeight;
-    public static final double MAX_HEIGHT = 450.0; //Random value, change to the max height of the elevator
+    public static final double MAX_HEIGHT = 450.0; //TODO Random value, change to the max height of the elevator
 
     public Elevator(int talonID, int victorID) {
         elevatorTalon = new WPI_TalonSRX(talonID);

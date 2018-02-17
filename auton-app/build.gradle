@@ -2,8 +2,16 @@ apply plugin: 'application'
 
 mainClassName = "org.usfirst.frc.team1089.main.Client"
 
+configurations {
+    nativeLib {
+
+    }
+}
+
 dependencies {
     compile "edu.wpi.first.ntcore:ntcore-java:4.0.0"
+    nativeLib "edu.wpi.first.ntcore:ntcore-jni:4.0.0:windowsx86-64"
+    compile "edu.wpi.first.wpiutil:wpiutil-java:3.1.0"
 }
 
 jar {
@@ -12,4 +20,17 @@ jar {
     manifest {
         attributes 'Main-Class': mainClassName
     }
+}
+
+task unzipNatives(type: Copy) {
+    group = "build"
+    description = "Unzip native libraries to /natives/ directory"
+
+    include "**/*.dll"
+
+    from project.configurations.nativeLib.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }
+
+    into "${projectDir}/natives/"
 }

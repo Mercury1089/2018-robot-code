@@ -116,9 +116,9 @@ public class OI {
 		right7 = new JoystickButton(rightStick, 7);
 		right7.whenPressed(new MoveOnPath("InitialScaleFrontLeft", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
+		right10.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		right11 = new JoystickButton(rightStick, 11);
-		right11.whenPressed(new MoveOnPath("SwitchFrontLeft", MoveOnPath.Direction.FORWARD));
+		right11.whenPressed(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

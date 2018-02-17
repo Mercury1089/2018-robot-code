@@ -257,36 +257,41 @@ public class AutonBuilderController {
     }
 
     private boolean checkIfComplete() {
-        boolean isComplete = ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
+        boolean tableIsComplete = ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableLRL.getItems().get(tableLRL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRLR.getItems().get(tableRLR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRRR.getItems().get(tableRRR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE;
+        boolean radioSelected = radioGroup.getSelectedToggle() != null;
 
-        if (!isComplete) {
+        if (!tableIsComplete || !radioSelected) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("");
-            alert.setContentText("Finish each configuration before continuing.");
+            if (!tableIsComplete && !radioSelected) {
+                alert.setContentText("Finish each configuration and select a starting auton position before continuing.");
+            }
+            else if (!tableIsComplete && radioSelected) {
+                alert.setContentText("Finish each configuration before continuing.");
+            }
+            else if (tableIsComplete && !radioSelected) {
+                alert.setContentText("Select a starting auton position before continuing.");
+            }
             alert.show();
         }
-        return isComplete;
+        return tableIsComplete && radioSelected;
     }
 
     @FXML
     private void saveConfiguration() {
-        if (!checkIfComplete()); {
-            return;
+        if (checkIfComplete()) {
+
         }
-
-
     }
 
     @FXML
     private void loadConfiguration() {
-        if (!checkIfComplete()); {
+        if (checkIfComplete()) {
             return;
         }
-
-
     }
 
     @FXML

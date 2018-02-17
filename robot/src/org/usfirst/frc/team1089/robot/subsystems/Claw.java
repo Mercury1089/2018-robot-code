@@ -19,8 +19,8 @@ public class Claw extends Subsystem {
     public final double MIN_INCHES = 8.0;
 
     private WPI_VictorSPX
-        clawMotor_M,
-        clawMotor_S;
+            clawMotor_M,
+            clawMotor_S;
 
     private LIDAR lidar;
     private CANifier canifier;
@@ -30,6 +30,7 @@ public class Claw extends Subsystem {
     public enum ClawState {
         GRAB(1.0), EJECT(-1.0), STOP(0.0);
         public final double SPEED;
+
         ClawState(double speed) {
             SPEED = speed;
         }
@@ -114,7 +115,7 @@ public class Claw extends Subsystem {
         return hasCube;
     }
 
-    public void setHasCube(boolean b){
+    public void setHasCube(boolean b) {
         hasCube = b;
     }
 
@@ -122,7 +123,7 @@ public class Claw extends Subsystem {
         return ejecting;
     }
 
-    public void setEjecting(boolean b){
+    public void setEjecting(boolean b) {
         ejecting = b;
     }
 }

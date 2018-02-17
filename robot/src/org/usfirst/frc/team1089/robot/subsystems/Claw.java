@@ -1,15 +1,11 @@
 package org.usfirst.frc.team1089.robot.subsystems;
 
 import com.ctre.phoenix.CANifier;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
@@ -33,9 +29,10 @@ public class Claw extends Subsystem {
 
     public enum ClawState {
         GRAB(1.0), EJECT(-1.0), STOP(0.0);
-        public final double speed;
+        public final double SPEED;
+
         ClawState(double speed) {
-            this.speed = speed;
+            SPEED = speed;
         }
     }
 
@@ -63,34 +60,38 @@ public class Claw extends Subsystem {
     @Override
     public void periodic() {
         lidar.updatePWMInput();
+        updateState();
+    }
 
+    private void updateState() {
         boolean rumble = false;
 
-        if (Robot.vision.getPixyCam().inRange()) { //Cube is in range to auto pickup
-            //set green (R: 28.2%, G: 91%, B: 14.9%)
-            canifier.setLEDOutput(.282, CANifier.LEDChannel.LEDChannelA);
-            canifier.setLEDOutput(.91, CANifier.LEDChannel.LEDChannelB);
-            canifier.setLEDOutput(.149, CANifier.LEDChannel.LEDChannelC);
-
+        if (Robot.vision.getPixyCam().inRange()) { // Cube is in range to auto pickup
+            // White
+            colorLED(255, 255, 255);
             rumble = true;
-        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { //Have cube?
-            //set orange (R: 100%, G: 74.5%, B: 3.9%)
-            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelA);
-            canifier.setLEDOutput(.745, CANifier.LEDChannel.LEDChannelB);
-            canifier.setLEDOutput(.39, CANifier.LEDChannel.LEDChannelC);
-        } else if (Robot.claw.getEjecting()) { //Robo is ejecting cube
-            //set red (R: 100%, G: 3.9%, B: 3.9%)
-            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelA);
-            canifier.setLEDOutput(.39, CANifier.LEDChannel.LEDChannelB);
-            canifier.setLEDOutput(.39, CANifier.LEDChannel.LEDChannelC);
-        } else { //default case
-            // set white (All values max power, maximum)
-            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelA);
-            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelB);
-            canifier.setLEDOutput(1, CANifier.LEDChannel.LEDChannelC);
+        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
+            // Orange
+            colorLED(255, 161, 0);
+        } else {
+            // None
+            colorLED(0, 0, 0);
         }
 
         Robot.oi.rumbleController(rumble);
+    }
+
+    /**
+     * Sets the color of the LED based on RBG int values
+     *
+     * @param r red value [0 - 255]
+     * @param g green value [0 - 255]
+     * @param b blue value [0 - 255]
+     */
+    private void colorLED(int r, int g, int b) {
+        canifier.setLEDOutput(r / 255.0, CANifier.LEDChannel.LEDChannelA);
+        canifier.setLEDOutput(g / 255.0, CANifier.LEDChannel.LEDChannelB);
+        canifier.setLEDOutput(b / 255.0, CANifier.LEDChannel.LEDChannelC);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class Claw extends Subsystem {
     }
 
     public void set(ClawState state) {
-        clawMotor_M.set(state.speed);
+        clawMotor_M.set(state.SPEED);
     }
 
     public CANifier getCanifier() {
@@ -114,7 +115,7 @@ public class Claw extends Subsystem {
         return hasCube;
     }
 
-    public void setHasCube(boolean b){
+    public void setHasCube(boolean b) {
         hasCube = b;
     }
 
@@ -122,7 +123,7 @@ public class Claw extends Subsystem {
         return ejecting;
     }
 
-    public void setEjecting(boolean b){
+    public void setEjecting(boolean b) {
         ejecting = b;
     }
 }

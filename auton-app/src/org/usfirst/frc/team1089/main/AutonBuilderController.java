@@ -8,9 +8,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
+import java.io.File;
 import java.util.Optional;
 
 
@@ -291,9 +293,11 @@ public class AutonBuilderController {
 
     @FXML
     private void loadConfiguration() {
-        if (checkIfComplete()) {
-            return;
-        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Configuration CSV");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
+        fileChooser.setInitialDirectory(new File("")); //TODO Put file path to Configurations folder.
+        fileChooser.showOpenDialog(root.getScene().getWindow());
     }
 
     @FXML

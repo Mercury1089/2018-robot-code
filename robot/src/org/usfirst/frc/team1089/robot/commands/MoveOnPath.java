@@ -146,9 +146,6 @@ public class MoveOnPath extends Command {
 	    // Reset command state
         reset();
 
-        left.setNeutralMode(NeutralMode.Brake);
-        right.setNeutralMode(NeutralMode.Brake);
-
         // Configure PID values
         double[] pid = DriveTrainSettings.getPIDValues("moveOnPath");
         configurePID(pid[0], pid[1], pid[2], fGain);
@@ -203,8 +200,6 @@ public class MoveOnPath extends Command {
         right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, DriveTrain.TIMEOUT_MS);
 
         Robot.driveTrain.stop();
-        left.setNeutralMode(NeutralMode.Coast);
-        right.setNeutralMode(NeutralMode.Coast);
 
         log.log(Level.INFO, "Finished running");
     }

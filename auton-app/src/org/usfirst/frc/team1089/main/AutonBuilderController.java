@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.main;
 
+import edu.wpi.first.networktables.NetworkTable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,6 +18,7 @@ import sun.java2d.pipe.SpanShapeRenderer;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class AutonBuilderController {
@@ -289,10 +291,69 @@ public class AutonBuilderController {
 
     @FXML
     private void publishConfiguration() {
-        if (!checkIfComplete()); {
-            return;
+        int startingPos = 0;
+
+        String[]
+            autonTaskLLL = new String[dataLLL.size()],
+            autonTaskLRL = new String[dataLRL.size()],
+            autonTaskRLR = new String[dataRLR.size()],
+            autonTaskRRR = new String[dataRRR.size()],
+            scoringSideLLL = new String[dataLLL.size()],
+            scoringSideLRL = new String[dataLRL.size()],
+            scoringSideRLR = new String[dataRLR.size()],
+            scoringSideRRR = new String[dataRRR.size()];
+
+        NetworkTable
+            rootTable = Client.getNT().getTable("AutonConfiguration"),
+            lllTable = rootTable.getSubTable("LLL"),
+            lrlTable = rootTable.getSubTable("LRL"),
+            rlrTable = rootTable.getSubTable("RLR"),
+            rrrTable = rootTable.getSubTable("RRR");
+
+        if (checkIfComplete()) {
+            // First off get the starting position
+            if (radioGroup.getSelectedToggle() == rightRadioButton)
+                startingPos = 2;
+            else if (radioGroup.getSelectedToggle() == middleRadioButton)
+                startingPos = 1;
+            else
+                startingPos = 0;
+
+            // Get all auton tasks and scoring side
+            for (int i = 0; i < dataLLL.size(); i++) {
+                autonTaskLLL[i] = dataLLL.get(i).autonTask.get().toString();
+                scoringSideLLL[i] = dataLLL.get(i).scoringSide.get().toString();
+            }
+
+            for (int i = 0; i < dataLRL.size(); i++) {
+                autonTaskLRL[i] = dataLRL.get(i).autonTask.get().toString();
+                scoringSideLRL[i] = dataLRL.get(i).scoringSide.get().toString();
+            }
+
+            for (int i = 0; i < dataRLR.size(); i++) {
+                autonTaskRLR[i] = dataRLR.get(i).autonTask.get().toString();
+                scoringSideRLR[i] = dataRLR.get(i).scoringSide.get().toString();
+            }
+
+            for (int i = 0; i < dataRRR.size(); i++) {
+                autonTaskRRR[i] = dataRRR.get(i).autonTask.get().toString();
+                scoringSideRRR[i] = dataRRR.get(i).scoringSide.get().toString();
+            }
+
+            // Place values in table
+            rootTable.getEntry("startingPos").setNumber(startingPos);
+
+            lllTable.getEntry("tasks").setStringArray(autonTaskLLL);
+            lllTable.getEntry("sides").setStringArray(scoringSideLLL);
+
+            lrlTable.getEntry("tasks").setStringArray(autonTaskLRL);
+            lrlTable.getEntry("sides").setStringArray(scoringSideLRL);
+
+            rlrTable.getEntry("tasks").setStringArray(autonTaskRLR);
+            rlrTable.getEntry("sides").setStringArray(scoringSideRLR);
+
+            rrrTable.getEntry("tasks").setStringArray(autonTaskRRR);
+            rrrTable.getEntry("sides").setStringArray(scoringSideRRR);
         }
-
-
     }
 }

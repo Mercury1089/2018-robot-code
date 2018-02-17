@@ -1,9 +1,6 @@
 package org.usfirst.frc.team1089.main;
 
 import edu.wpi.first.networktables.NetworkTable;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,12 +10,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import sun.java2d.pipe.SpanShapeRenderer;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Optional;
 
 
 public class AutonBuilderController {
@@ -283,7 +276,16 @@ public class AutonBuilderController {
     @FXML
     private void saveConfiguration() {
         if (checkIfComplete()) {
+            TextInputDialog dialog = new TextInputDialog("FileName");
+            dialog.setTitle("Saving presets");
+            dialog.setContentText("");
+            dialog.setContentText("Enter a name for the new preset:");
+            Optional<String> result = dialog.showAndWait();
 
+            result.ifPresent(fileName -> {
+                //TODO Save the current tables as a CSV with the given file name in /auton-app/Configurations
+
+            });
         }
     }
 

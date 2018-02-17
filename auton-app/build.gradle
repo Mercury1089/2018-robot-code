@@ -14,7 +14,25 @@ dependencies {
     compile "edu.wpi.first.wpiutil:wpiutil-java:3.1.0"
 }
 
+task run(overwrite: true) {
+    group = null
+
+    doLast {
+        println "Use :auton-app:runJar instead."
+    }
+}
+
+task runJar(type: Exec) {
+    group = "application"
+    description = "Runs the jarfile by building it and running it inside /build/libs"
+
+    workingDir "${projectDir}/build/libs"
+
+    commandLine 'java', '-jar', "${project.name}.jar"
+}
+
 jar {
+    dependsOn("unzipNatives")
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     // Set up manifest to point the main class to the right class.
     manifest {
@@ -26,11 +44,10 @@ task unzipNatives(type: Copy) {
     group = "build"
     description = "Unzip native libraries to /natives/ directory"
 
-    include "**/*.dll"
-
     from project.configurations.nativeLib.collect {
+        include "**/*.dll"
         it.isDirectory() ? it : zipTree(it)
     }
 
-    into "${projectDir}/natives/"
+    into "${projectDir}/build/libs/"
 }

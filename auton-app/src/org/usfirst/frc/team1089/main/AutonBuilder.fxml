@@ -57,8 +57,8 @@
             <Font size="35.0" />
          </font>
       </Label>
-      <Button fx:id="loadButton" layoutX="30.0" layoutY="18.0" mnemonicParsing="false" text="Load" />
-      <Button fx:id="saveButton" layoutX="711.0" layoutY="18.0" mnemonicParsing="false" text="Save" />
-      <Button fx:id="publishButton" layoutX="767.0" layoutY="18.0" mnemonicParsing="false" text="Publish" />
+      <Button fx:id="loadButton" layoutX="30.0" layoutY="18.0" mnemonicParsing="false" onAction="#loadConfiguration" text="Load" />
+      <Button fx:id="saveButton" layoutX="711.0" layoutY="18.0" mnemonicParsing="false" onAction="#saveConfiguration" text="Save" />
+      <Button fx:id="publishButton" layoutX="767.0" layoutY="18.0" mnemonicParsing="false" onAction="#publishConfiguration" text="Publish" />
    </children>
 </Pane>

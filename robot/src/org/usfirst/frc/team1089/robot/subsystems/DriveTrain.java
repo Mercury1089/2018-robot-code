@@ -31,6 +31,9 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final int SLOT_0 = 0;
     public static final int PRIMARY_PID_LOOP = 0;
 
+    public static final double MAX_SPEED = 1.0;
+    public static final double MIN_SPEED = 0.2; //TODO Set to max speed we can drive with elevator up
+
     private WPI_TalonSRX tMasterLeft, tMasterRight;
     private BaseMotorController vFollowerLeft, vFollowerRight;
 
@@ -192,5 +195,9 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
     public void pidWrite(double output) {
         tDrive.tankDrive(output, -output);
+    }
+
+    public void setMaxOutput(double maxOutput) {
+        tDrive.setMaxOutput(maxOutput);
     }
 }

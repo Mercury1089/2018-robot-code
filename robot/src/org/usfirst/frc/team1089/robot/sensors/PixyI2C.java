@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.robot.sensors;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import org.apache.logging.log4j.Level;
@@ -16,12 +17,20 @@ public class PixyI2C implements PIDSource {
     private final BoundingBox[] BOXES;
     private final int DISPLACEMENT_OFFSET;
 
-    private final int MIN_BOX_WIDTH = 100; //Arbitrary value, change to what minimum value of width can be for cube to be cassified as "In range"
+    private final int MIN_BOX_WIDTH = 45; //Arbitrary value, change to what minimum value of width can be for cube to be cassified as "In range"
+    private final Notifier PIXY_UPDATE_NOTIFIER = new Notifier(null);
+
 
     public PixyI2C() {
         PIXY = new I2C(I2C.Port.kOnboard, 0x54);
         BOXES = new BoundingBox[7];
         DISPLACEMENT_OFFSET = 20;
+
+        PIXY_UPDATE_NOTIFIER.setHandler(() -> {
+            this.read(1);
+        });
+
+        PIXY_UPDATE_NOTIFIER.startPeriodic(0.05);
     }
 
     /**

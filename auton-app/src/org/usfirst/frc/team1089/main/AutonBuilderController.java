@@ -149,6 +149,9 @@ public class AutonBuilderController {
     }
 
     @FXML
+    /**
+     * Saves a chosen configuration table to a CSV file at a given directory.
+     */
     private void saveConfiguration() throws IOException {
         //Prompt the user for the table they want to save to a CSV.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
@@ -201,6 +204,9 @@ public class AutonBuilderController {
 
 
     @FXML
+    /**
+     * Loads a user selected CSV file into a table, chosen by the user in the form of a dialog prompt.
+     */
     private void loadConfiguration() throws IOException {
         //Prompt the user for the table they wish to load into.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
@@ -241,6 +247,9 @@ public class AutonBuilderController {
     }
 
     @FXML
+    /**
+     * Pushes the auton configuration to the NetworkTable in the form of String arrays if the auton configuration is completely finished.
+     */
     private void publishConfiguration() {
         int startingPos = 0;
 
@@ -354,21 +363,16 @@ public class AutonBuilderController {
      */
     private ObservableList<TaskConfig> determineData(String input) {
         switch (input) {
-            case "Table LLL": {
+            case "Table LLL":
                 return dataLLL;
-            }
-            case "Table LRL": {
+            case "Table LRL":
                 return dataLRL;
-            }
-            case "Table RLR": {
+            case "Table RLR":
                 return dataRLR;
-            }
-            case "Table RRR": {
+            case "Table RRR": 
                 return dataRRR;
-            }
-            default: {
+            default:
                 return null;
-            }
         }
     }
 }

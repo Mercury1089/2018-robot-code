@@ -68,7 +68,7 @@ public class AutonCommand extends CommandGroup {
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();
 
-        RotateRelative rotateRelative;      //History RotateRelative that will be used to return to pickup position
+        RotateRelative rotateRelative = null;      //History RotateRelative that will be used to return to pickup position
 
         switch (workingSide) {
             case LEFT:
@@ -177,7 +177,7 @@ public class AutonCommand extends CommandGroup {
                         switch (sideToScoreOn) {
                             case BACK:
                                 if (gameData.getSwitchSide() == gameData.getScaleSide()) {
-                                    rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, 0))
+                                    rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, 0));
                                     addSequential(new DriveDistance(15, .5));
                                     addSequential(new DriveDistance(-15, .5));  //TODO change these arbitrary values
                                 }

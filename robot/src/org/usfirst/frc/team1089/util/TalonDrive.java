@@ -33,7 +33,6 @@ public class TalonDrive {
 	 * @param max Max output value
 	 */
 	public void setMaxOutput(double max) {
-		System.out.println("Set max to " + max);
 		maxOutput = max;
 	}
 

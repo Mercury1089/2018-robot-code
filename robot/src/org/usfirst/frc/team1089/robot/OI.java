@@ -112,7 +112,7 @@ public class OI {
 		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right6.whenPressed(new MoveOnPath("SwitchMid", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
 		right7.whenPressed(new MoveOnPath("InitialSwitchBackLeft", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);

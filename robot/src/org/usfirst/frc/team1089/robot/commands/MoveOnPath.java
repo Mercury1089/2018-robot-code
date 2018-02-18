@@ -73,10 +73,10 @@ public class MoveOnPath extends Command {
                 break;
         }
 
-        // trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
-        // trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
-        trajectoryL = Robot.autonTrajectories.get(name).getLeft();
-        trajectoryR = Robot.autonTrajectories.get(name).getRight();
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
+        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
+        //trajectoryL = Robot.autonTrajectories.get(name).getLeft();
+        //trajectoryR = Robot.autonTrajectories.get(name).getRight();
 
         if (trajectoryProcessor == null) {
             trajectoryProcessor = new Notifier(() -> {
@@ -88,9 +88,15 @@ public class MoveOnPath extends Command {
         statusLeft = new MotionProfileStatus();
         statusRight = new MotionProfileStatus();
 
-	    TRAJECTORY_SIZE = trajectoryL.length();
+        if (trajectoryL != null) {
+            TRAJECTORY_SIZE = trajectoryL.length();
 
-        log.info(getName() + " construced: " + TRAJECTORY_SIZE);
+            log.info(getName() + " construced: " + TRAJECTORY_SIZE);
+        } else {
+            TRAJECTORY_SIZE = 0;
+            log.info(getName() + " could not be constructed!");
+            end();
+        }
 	}
 	
 	//Called just before this Command runs for the first time. 

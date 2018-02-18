@@ -70,10 +70,10 @@ public class Robot extends IterativeRobot {
 
 		camera = new CameraVision();
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
-		// elevator = new Elevator(CAN.TALON_ELEVATOR);
+		elevator = new Elevator(CAN.TALON_ELEVATOR);
 		vision = new Vision();
 
-		autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
+		//autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

@@ -3,6 +3,10 @@ package org.usfirst.frc.team1089.util;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Helper class for various manual drive controls
@@ -11,6 +15,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * 
  */
 public class TalonDrive {
+	private final Logger LOG = LogManager.getLogger(TalonDrive.class);
+	private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 10, TimeUnit.SECONDS);
 	private final WPI_TalonSRX TALON_LEFT, TALON_RIGHT;
 	public double maxOutput = 0.5;
 	
@@ -33,7 +39,7 @@ public class TalonDrive {
 	 * @param max Max output value
 	 */
 	public void setMaxOutput(double max) {
-		System.out.println("Set max to " + max);
+		SLOW_LOG.run(log -> log.info("Set max to " + max));
 		maxOutput = max;
 	}
 

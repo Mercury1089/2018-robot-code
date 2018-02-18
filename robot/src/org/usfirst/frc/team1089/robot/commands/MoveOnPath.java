@@ -46,7 +46,7 @@ public class MoveOnPath extends Command {
 
     public enum Direction {
         BACKWARD,
-        FORWARD;
+        FORWARD
     }
 
     /**
@@ -73,8 +73,10 @@ public class MoveOnPath extends Command {
                 break;
         }
 
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
+        // trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
+        // trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
+        trajectoryL = Robot.autonTrajectories.get(name).getLeft();
+        trajectoryR = Robot.autonTrajectories.get(name).getRight();
 
         if (trajectoryProcessor == null) {
             trajectoryProcessor = new Notifier(() -> {

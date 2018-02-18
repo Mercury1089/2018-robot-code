@@ -3,10 +3,8 @@ package org.usfirst.frc.team1089.main;
 import javafx.util.StringConverter;
 
 public enum AutonTask {
-    GRAB_CUBE,
     SCORE_SWITCH,
     SCORE_SCALE,
-    DO_NOTHING,
     DELETE,
     DONE;
 
@@ -17,17 +15,11 @@ public enum AutonTask {
                 return "";
             }
             switch (object) {
-                case GRAB_CUBE: {
-                    return "Grab Cube";
-                }
                 case SCORE_SCALE: {
                     return "Score Scale";
                 }
                 case SCORE_SWITCH: {
                     return "Score Switch";
-                }
-                case DO_NOTHING: {
-                    return "Do Nothing";
                 }
                 case DELETE: {
                     return "Delete";
@@ -43,9 +35,6 @@ public enum AutonTask {
         @Override
         public AutonTask fromString(String string) {
             switch (string) {
-                case "Grab Cube": {
-                    return AutonTask.GRAB_CUBE;
-                }
                 case "Score Scale": {
                     return AutonTask.SCORE_SCALE;
                 }

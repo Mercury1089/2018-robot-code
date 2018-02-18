@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.main;
 
+import com.opencsv.CSVWriter;
 import edu.wpi.first.networktables.NetworkTable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,9 +12,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -68,6 +73,7 @@ public class AutonBuilderController {
     @FXML
     public void initialize() {
         //Setup up the radio buttons to be in a group.
+
         radioGroup = new ToggleGroup();
         leftRadioButton.setToggleGroup(radioGroup);
         middleRadioButton.setToggleGroup(radioGroup);
@@ -84,7 +90,7 @@ public class AutonBuilderController {
                         addBlankRow(this.getTableView().getItems());
                         hasCreatedNewRow = true;
                     }
-                    else if (item == AutonTask.DONE || item == AutonTask.GRAB_CUBE) {
+                    else if (item == AutonTask.DONE) {
                         ((TaskConfig) this.getTableRow().getItem()).scoringSide.setValue(ScoringSide.Not_Applicable);
                     }
                     if (item == AutonTask.DELETE) {
@@ -191,68 +197,74 @@ public class AutonBuilderController {
     }
 
     @FXML
-    private void saveConfiguration() {
-        if (checkIfComplete()) {
-            TextInputDialog fileNameDialog = new TextInputDialog("FileName");
-            fileNameDialog.setTitle("Saving presets");
-            fileNameDialog.setHeaderText("");
-            fileNameDialog.setContentText("Enter a name for the new preset:");
-            Optional<String> fileNameResult = fileNameDialog.showAndWait();
+    private void saveConfiguration() throws Exception {
+        ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
+        choiceDialog.setTitle("Choosing Save Method...");
+        choiceDialog.setHeaderText("");
+        choiceDialog.setContentText("Choose which table(s) to save:");
+        Optional<String> tableResult = choiceDialog.showAndWait();
 
-            ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(null, "Table LLL", "Table LRL", "Table RLR", "Table RRR");
-            choiceDialog.setTitle("Choosing Save Method...");
-            choiceDialog.setHeaderText("");
-            choiceDialog.setContentText("Choose which table(s) to save:");
-            Optional<String> tableResult = choiceDialog.showAndWait();
+        ObservableList<TaskConfig> relevantData;
+        switch (tableResult.get()) {
+            case "Table LLL": {
+                relevantData = dataLLL;
+                break;
+            }
+            case "Table LRL": {
+                relevantData = dataLRL;
+                break;
+            }
+            case "Table RLR": {
+                relevantData = dataRLR;
+                break;
+            }
+            case "Table RRR": {
+                relevantData = dataRRR;
+                break;
+            }
+            default:
+                relevantData = null;
+                break;
+        }
 
-            fileNameResult.ifPresent(fileName -> {
-                //TODO Save the current tables as a CSV with the given file name in /auton-app/Configurations
-                FileWriter fileWriter = null;
-                ObservableList<TaskConfig> relevantData = null;
-                try {
-                    fileWriter = new FileWriter(fileName + ".csv");
-                    PrintWriter printWriter = new PrintWriter(fileWriter);
-                    switch (tableResult.get()) {
-                        case "Table LLL": {
-                            relevantData = dataLLL;
-                        }
-                        case "Table LRL": {
-                            relevantData = dataLRL;
-                        }
-                        case "Table RLR": {
-                            relevantData = dataRLR;
-                        }
-                        case "Table RRR": {
-                            relevantData = dataRRR;
-                        }
-                    }
+        if (relevantData != null && relevantData.get(relevantData.size() - 1).autonTask.getValue() == AutonTask.DONE) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+            fileChooser.setInitialFileName(".csv");
+            File directory = fileChooser.showSaveDialog(root.getScene().getWindow());
 
-                    for (TaskConfig tc : relevantData) {
-                        String autonTask = AutonTask.STRING_CONVERTER.toString(tc.autonTask.get());
-                        String scoringSide = ScoringSide.STRING_CONVERTER.toString(tc.scoringSide.get());
-                        printWriter.println(autonTask + "," + scoringSide);
-                    }
-                    printWriter.flush();
-                    printWriter.close();
-                    fileWriter.close();
-                    Alert successfulAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    successfulAlert.setContentText("File has been saved successfully!");
-                    successfulAlert.show();
-                }  catch (Exception e) {
-                    System.out.println("AutonBuilderController.saveConfiguration threw an exception: " + e.toString());
+            if (directory != null) {
+                CSVWriter csvWriter = new CSVWriter(new FileWriter(directory));
+                for (TaskConfig tc : relevantData) {
+                    String task = AutonTask.STRING_CONVERTER.toString(tc.autonTask.getValue());
+                    String side = ScoringSide.STRING_CONVERTER.toString(tc.scoringSide.getValue());
+                    String[] entry = {task, side};
+                    csvWriter.writeNext(entry, false);
                 }
-            });
+                csvWriter.flush();
+                csvWriter.close();
+
+                Alert successfulAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                successfulAlert.setContentText("File has been saved successfully!");
+                successfulAlert.show();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("The selected table has not been completed!");
+            alert.setHeaderText("Unfinished Error");
+            alert.setTitle("Error");
+            alert.show();
         }
     }
 
     @FXML
     private void loadConfiguration() {
         FileChooser fileChooser = new FileChooser();
-
         fileChooser.setTitle("Open Configuration CSV");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        fileChooser.showOpenDialog(root.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
+
     }
 
     @FXML

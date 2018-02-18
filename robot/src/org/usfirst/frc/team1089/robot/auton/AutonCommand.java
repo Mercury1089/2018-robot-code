@@ -70,26 +70,37 @@ public class AutonCommand extends CommandGroup {
         switch (workingSide) {
             case LEFT:
             case RIGHT:
-                if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                switch (autonTasks[0]) {
+                    case SCORE_SWITCH:
+                        if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                            if (gameData.getSwitchSide() == comparableWorkingSide) {
+                                addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                                addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                            } else {
+                                addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                                switchWorkingSide();
+                                addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                            }
+                        } else {
+                            if (gameData.getSwitchSide() == comparableWorkingSide) {
+                                addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                                switchWorkingSide();
+                                addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                            } else {
+                                addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                                addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                            }
+                        }
+                    addSequential(new DriveDistance(43.5, .5));
+                    break;
+                case SCORE_SCALE:
                     if (gameData.getSwitchSide() == comparableWorkingSide) {
-                        addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
-                        addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                        addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                     } else {
-                        addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                        addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
                         switchWorkingSide();
-                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
-                    }
-                } else {
-                    if (gameData.getSwitchSide() == comparableWorkingSide) {
-                        addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
-                        switchWorkingSide();
-                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
-                    } else {
-                        addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
-                        addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                     }
                 }
-                addSequential(new DriveDistance(43.5, .5));
                 break;
             case MIDDLE:
                 switch (initialMidSwitchSide) {
@@ -103,8 +114,7 @@ public class AutonCommand extends CommandGroup {
                 break;
         }
 
-        RotateRelative rotateRelative;
-        DriveDistance driveDistance;
+        RotateRelative rotateRelative;      //History RotateRelative that will be used to return to pickup position
 
         addSequential(new DriveDistance(43.5, .5));
         rotateRelative = new RotateRelative(getCubeTurnAngleScale(cubesPickedUp, rotationFactor, 0));

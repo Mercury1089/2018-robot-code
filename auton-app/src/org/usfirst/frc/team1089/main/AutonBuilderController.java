@@ -10,11 +10,9 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
 
@@ -61,9 +59,6 @@ public class AutonBuilderController {
     @FXML
     private TableColumn sideColRRR;
 
-    private StringConverter<AutonTask> autonTaskStringConverter;
-    private StringConverter<ScoringSide> scoringSideStringConverter;
-
     private ObservableList<TaskConfig> dataLLL = FXCollections.observableArrayList();
     private ObservableList<TaskConfig> dataLRL = FXCollections.observableArrayList();
     private ObservableList<TaskConfig> dataRLR = FXCollections.observableArrayList();
@@ -77,94 +72,6 @@ public class AutonBuilderController {
         leftRadioButton.setToggleGroup(radioGroup);
         middleRadioButton.setToggleGroup(radioGroup);
         rightRadioButton.setToggleGroup(radioGroup);
-
-
-        //Set up StringConverters to convert the AutonTask and ScoringSide Enums into Strings for display.
-        autonTaskStringConverter = new StringConverter<AutonTask>() {
-            @Override
-            public String toString(AutonTask object) {
-                if (object == null) {
-                    return "";
-                }
-                switch (object) {
-                    case GRAB_CUBE: {
-                        return "Grab Cube";
-                    }
-                    case SCORE_SCALE: {
-                        return "Score Scale";
-                    }
-                    case SCORE_SWITCH: {
-                        return "Score Switch";
-                    }
-                    case DO_NOTHING: {
-                        return "Do Nothing";
-                    }
-                    case DELETE: {
-                        return "Delete";
-                    }
-                    case DONE: {
-                        return "Done";
-                    }
-                    default:
-                        return object.toString();
-                }
-            }
-
-            @Override
-            public AutonTask fromString(String string) {
-                switch (string) {
-                    case "Grab Cube": {
-                        return AutonTask.GRAB_CUBE;
-                    }
-                    case "Score Scale": {
-                        return AutonTask.SCORE_SCALE;
-                    }
-                    case "Score Switch": {
-                        return AutonTask.SCORE_SWITCH;
-                    }
-                    case "Done": {
-                        return AutonTask.DONE;
-                    }
-                    case "Delete": {
-                        return AutonTask.DELETE;
-                    }
-                    default:
-                        return null;
-                }
-            }
-        };
-
-        scoringSideStringConverter = new StringConverter<ScoringSide>() {
-            @Override
-            public String toString(ScoringSide object) {
-                if (object == null) {
-                    return "";
-                }
-                switch (object) {
-                    case Not_Applicable:
-                        return "Not Applicable";
-                    default:
-                        return object.toString();
-                }
-            }
-
-            @Override
-            public ScoringSide fromString(String string) {
-                switch (string) {
-                    case "Front": {
-                        return ScoringSide.Front;
-                    }
-                    case "Middle": {
-                        return ScoringSide.Mid;
-                    }
-                    case "Back": {
-                        return ScoringSide.Back;
-                    }
-                    default:
-                        return null;
-                }
-            }
-        };
 
         //Not even going to try to explain cell factories. Nope.
         Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
@@ -187,7 +94,7 @@ public class AutonBuilderController {
             };
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
-            comboBoxTableCell.setConverter(autonTaskStringConverter);
+            comboBoxTableCell.setConverter(AutonTask.STRING_CONVERTER);
             comboBoxTableCell.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == AutonTask.DELETE) {
                     comboBoxTableCell.getTableView().getItems().remove(comboBoxTableCell.getTableRow().getItem());
@@ -201,7 +108,7 @@ public class AutonBuilderController {
             ComboBoxTableCell<TaskConfig, ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(ScoringSide.values()));
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
-            comboBoxTableCell.setConverter(scoringSideStringConverter);
+            comboBoxTableCell.setConverter(ScoringSide.STRING_CONVERTER);
             return comboBoxTableCell;
         };
 
@@ -301,10 +208,10 @@ public class AutonBuilderController {
             fileNameResult.ifPresent(fileName -> {
                 //TODO Save the current tables as a CSV with the given file name in /auton-app/Configurations
                 FileWriter fileWriter = null;
+                ObservableList<TaskConfig> relevantData = null;
                 try {
                     fileWriter = new FileWriter(fileName + ".csv");
                     PrintWriter printWriter = new PrintWriter(fileWriter);
-                    ObservableList<TaskConfig> relevantData;
                     switch (tableResult.get()) {
                         case "Table LLL": {
                             relevantData = dataLLL;
@@ -318,19 +225,19 @@ public class AutonBuilderController {
                         case "Table RRR": {
                             relevantData = dataRRR;
                         }
-                        default: {
-                            relevantData = null;
-                        }
                     }
 
                     for (TaskConfig tc : relevantData) {
-                        String autonTask = autonTaskStringConverter.toString(tc.autonTask.get());
-                        String scoringSide = scoringSideStringConverter.toString(tc.scoringSide.get());
+                        String autonTask = AutonTask.STRING_CONVERTER.toString(tc.autonTask.get());
+                        String scoringSide = ScoringSide.STRING_CONVERTER.toString(tc.scoringSide.get());
                         printWriter.println(autonTask + "," + scoringSide);
                     }
                     printWriter.flush();
                     printWriter.close();
                     fileWriter.close();
+                    Alert successfulAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    successfulAlert.setContentText("File has been saved successfully!");
+                    successfulAlert.show();
                 }  catch (Exception e) {
                     System.out.println("AutonBuilderController.saveConfiguration threw an exception: " + e.toString());
                 }

@@ -12,11 +12,10 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import org.usfirst.frc.team1089.robot.auton.AutonTask;
+import org.usfirst.frc.team1089.robot.auton.ScoringSide;
 
-import javax.imageio.ImageIO;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -89,7 +88,7 @@ public class AutonBuilderController {
                         hasCreatedNewRow = true;
                     }
                     else if (item == AutonTask.DONE) {
-                        ((TaskConfig) this.getTableRow().getItem()).scoringSide.setValue(ScoringSide.Not_Applicable);
+                        ((TaskConfig) this.getTableRow().getItem()).scoringSide.setValue(ScoringSide.NOT_APPLICABLE);
                     }
                     if (item == AutonTask.DELETE) {
                         this.getTableView().getItems().remove(this.getItem());

@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1089.main;
 
 import javafx.beans.property.SimpleObjectProperty;
+import org.usfirst.frc.team1089.robot.auton.AutonTask;
+import org.usfirst.frc.team1089.robot.auton.ScoringSide;
 
 public class TaskConfig {
     public SimpleObjectProperty<ScoringSide> scoringSide = new SimpleObjectProperty<>();

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.main;
 
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import edu.wpi.first.networktables.NetworkTable;
 import javafx.beans.value.ObservableValue;
@@ -13,10 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -197,7 +195,7 @@ public class AutonBuilderController {
     }
 
     @FXML
-    private void saveConfiguration() throws Exception {
+    private void saveConfiguration() throws IOException {
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
         choiceDialog.setTitle("Choosing Save Method...");
         choiceDialog.setHeaderText("");
@@ -222,9 +220,10 @@ public class AutonBuilderController {
                 relevantData = dataRRR;
                 break;
             }
-            default:
+            default: {
                 relevantData = null;
                 break;
+            }
         }
 
         if (relevantData != null && relevantData.get(relevantData.size() - 1).autonTask.getValue() == AutonTask.DONE) {
@@ -258,13 +257,58 @@ public class AutonBuilderController {
     }
 
     @FXML
-    private void loadConfiguration() {
+    private void loadConfiguration() throws IOException {
+        ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
+        choiceDialog.setTitle("Choosing Load Method...");
+        choiceDialog.setHeaderText("Warning: Loading data into a table will clear the current contents!");
+        choiceDialog.setContentText("Choose which table to load into:");
+        Optional<String> tableResult = choiceDialog.showAndWait();
+
+        ObservableList<TaskConfig> relevantData;
+        switch (tableResult.get()) {
+            case "Table LLL": {
+                relevantData = dataLLL;
+                break;
+            }
+            case "Table LRL": {
+                relevantData = dataLRL;
+                break;
+            }
+            case "Table RLR": {
+                relevantData = dataRLR;
+                break;
+            }
+            case "Table RRR": {
+                relevantData = dataRRR;
+                break;
+            }
+            default: {
+                relevantData = null;
+                break;
+            }
+        }
+        relevantData.clear();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Configuration CSV");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
+        File directory = fileChooser.showOpenDialog(root.getScene().getWindow());
 
+        CSVReader csvReader = new CSVReader(new FileReader(directory.getPath()));
+
+        String[] nextLine = null;
+        while((nextLine = csvReader.readNext()) != null) {
+            AutonTask task = AutonTask.STRING_CONVERTER.fromString(nextLine[0]);
+            ScoringSide side = ScoringSide.STRING_CONVERTER.fromString(nextLine[1]);
+            relevantData.add(new TaskConfig(task, side));
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Loaded successfully!");
+        alert.setTitle("Success");
+        alert.setHeaderText("");
+        alert.show();
     }
 
     @FXML

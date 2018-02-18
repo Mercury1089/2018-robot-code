@@ -338,6 +338,7 @@ public class AutonBuilderController {
         }
     }
 
+    @FXML
     private void loadConfiguration() {
         FileChooser fileChooser = new FileChooser();
 

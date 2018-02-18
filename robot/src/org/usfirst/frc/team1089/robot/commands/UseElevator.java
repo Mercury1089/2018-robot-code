@@ -17,7 +17,7 @@ public class UseElevator extends Command {
     private Elevator.ELEVATOR_STATE targetState;
 
     public UseElevator(Elevator.ELEVATOR_STATE targetState) {
-        // requires(Robot.elevator);
+        requires(Robot.elevator);
         setName(targetState + "Elevator");
         this.targetState = targetState;
         log.info(getName() + " Constructed");

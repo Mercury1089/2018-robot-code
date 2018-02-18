@@ -77,8 +77,15 @@ public class Claw extends Subsystem {
             rumble = true;
         } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
             // Listen from SmartDash
-            double[] color = SmartDashboard.getNumberArray("LED Color (Have Cube)", new double[]{255, 161, 0});
-            colorLED((int) color[0], (int) color[1], (int) color[2]);
+
+            // Fun colors to note:
+            // Orange (In range): 255, 30, 0
+            // Purple (Something about a cube): 255, 0, 255
+            // Cyan (Very nice color): 0, 255, 255
+            int r = (int) SmartDashboard.getNumber("LED Color (R)", 255);
+            int g = (int) SmartDashboard.getNumber("LED Color (G)", 161);
+            int b = (int) SmartDashboard.getNumber("LED Color (B)", 0);
+            colorLED(r, g, b);
         } else {
             // None
             colorLED(0, 0, 0);

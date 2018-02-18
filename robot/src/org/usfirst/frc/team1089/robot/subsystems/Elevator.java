@@ -68,7 +68,7 @@ public class Elevator extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new UseElevator(ELEVATOR_STATE.STOP));
+       // setDefaultCommand(new UseElevator(ELEVATOR_STATE.STOP));
     }
 
     public WPI_TalonSRX getElevatorTalon() {

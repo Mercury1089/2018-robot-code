@@ -1,11 +1,16 @@
 package org.usfirst.frc.team1089.robot.subsystems;
 
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
@@ -16,7 +21,7 @@ import org.usfirst.frc.team1089.util.config.SensorsSettings;
  */
 public class Claw extends Subsystem {
     private static Logger log = LogManager.getLogger(Claw.class);
-    public final double MIN_INCHES = 8.0;
+    public final double MIN_INCHES = 10.0;
 
     private WPI_VictorSPX
             clawMotor_M,
@@ -71,8 +76,9 @@ public class Claw extends Subsystem {
             colorLED(255, 255, 255);
             rumble = true;
         } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
-            // Orange
-            colorLED(255, 161, 0);
+            // Listen from SmartDash
+            double[] color = SmartDashboard.getNumberArray("LED Color (Have Cube)", new double[]{255, 161, 0});
+            colorLED((int) color[0], (int) color[1], (int) color[2]);
         } else {
             // None
             colorLED(0, 0, 0);
@@ -89,9 +95,9 @@ public class Claw extends Subsystem {
      * @param b blue value [0 - 255]
      */
     private void colorLED(int r, int g, int b) {
-        canifier.setLEDOutput(r / 255.0, CANifier.LEDChannel.LEDChannelA);
-        canifier.setLEDOutput(g / 255.0, CANifier.LEDChannel.LEDChannelB);
-        canifier.setLEDOutput(b / 255.0, CANifier.LEDChannel.LEDChannelC);
+        canifier.setLEDOutput((double) g / 255.0, CANifier.LEDChannel.LEDChannelA);
+        canifier.setLEDOutput((double) r / 255.0, CANifier.LEDChannel.LEDChannelB);
+        canifier.setLEDOutput((double) b / 255.0, CANifier.LEDChannel.LEDChannelC);
     }
 
     @Override

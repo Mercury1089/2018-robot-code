@@ -15,6 +15,9 @@ import org.usfirst.frc.team1089.robot.subsystems.*;
 import org.usfirst.frc.team1089.util.GameData;
 import org.usfirst.frc.team1089.util.config.*;
 import org.usfirst.frc.team1089.robot.sensors.Vision;
+import org.usfirst.frc.team1089.robot.auton.AutonTrajectoryGenerator;
+
+import java.util.Map;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,6 +37,7 @@ public class Robot extends IterativeRobot {
     public static Vision vision;
 	private static Logger log = LogManager.getLogger(Robot.class);
 
+	public static Map<String, AutonTrajectoryGenerator.TrajectoryPair> autonTrajectories;
 	private AutonCommand autonCommand;
 	private AutonBuilder autonBuilderLLL, autonBuilderRRR, autonBuilderRLR, autonBuilderLRL;
 
@@ -68,6 +72,8 @@ public class Robot extends IterativeRobot {
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		// elevator = new Elevator(CAN.TALON_ELEVATOR);
 		vision = new Vision();
+
+		autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

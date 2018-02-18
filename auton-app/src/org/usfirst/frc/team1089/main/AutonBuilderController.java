@@ -251,7 +251,7 @@ public class AutonBuilderController {
 
         fileChooser.setTitle("Open Configuration CSV");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
-        fileChooser.setInitialDirectory(new File("./"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.showOpenDialog(root.getScene().getWindow());
     }
 

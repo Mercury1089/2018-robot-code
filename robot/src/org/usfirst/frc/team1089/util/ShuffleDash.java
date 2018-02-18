@@ -54,9 +54,6 @@ public class ShuffleDash {
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Cube Angle", Robot.camera.getAngleFromCube());
-
-        System.out.println(Robot.driveTrain.getLeftEncPositionInFeet());
-        System.out.println(Robot.driveTrain.getRightEncPositionInFeet());
     }
 
     private void runAutonOnShuffleboard() {

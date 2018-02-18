@@ -66,6 +66,8 @@ public class LIDAR {
      */
     public double getDistance() {
         // Apply offset equation
+        if (equation.apply(getRawDistance()) < 1)
+            return Double.POSITIVE_INFINITY;
         return equation.apply(getRawDistance());
     }
 

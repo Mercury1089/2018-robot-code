@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import jaci.pathfinder.Waypoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
@@ -67,7 +68,7 @@ public class OI {
 
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4, right5, right6, right7, right10, right11;
-	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb;
+	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb, gamepad_start, gamepad_back;
 
 	private UseClaw useClaw;
 
@@ -111,23 +112,26 @@ public class OI {
 		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("CircleProfile", MoveOnPath.Direction.FORWARD));
+		right6.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("CircleProfile", MoveOnPath.Direction.BACKWARD));
+		right7.whenPressed(new MoveOnPath("InitialSwitchBackLeft", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right10.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
 		right11 = new JoystickButton(rightStick, 11);
-		right11.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.BACKWARD));
+		right11.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);
 		gamepad_b = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.B);
 		gamepad_x = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.X);
 		gamepad_y = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.Y);
+		gamepad_start = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.START);
+		gamepad_back = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.BACK);
 		//gamepad_a.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.STOP));
 		//gamepad_x.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SWITCH));
-		gamepad_a.whenPressed(new DriveArcade());
-		gamepad_x.whenPressed(new DriveTank());
+		gamepad_start.whenPressed(new DriveArcade());
+		gamepad_back.whenPressed(new DriveTank());
+		gamepad_a.whenPressed(new GetCube());
 		gamepad_b.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_HIGH));
 		gamepad_y.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_LOW));
 		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);

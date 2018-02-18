@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.modifiers.TankModifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +46,7 @@ public class MoveOnPath extends Command {
 
     public enum Direction {
         BACKWARD,
-        FORWARD;
+        FORWARD
     }
 
     /**
@@ -71,8 +73,10 @@ public class MoveOnPath extends Command {
                 break;
         }
 
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
+        // trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_left_detailed.csv"));
+        // trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/trajectories/" + name + "_right_detailed.csv"));
+        trajectoryL = Robot.autonTrajectories.get(name).getLeft();
+        trajectoryR = Robot.autonTrajectories.get(name).getRight();
 
         if (trajectoryProcessor == null) {
             trajectoryProcessor = new Notifier(() -> {
@@ -85,16 +89,16 @@ public class MoveOnPath extends Command {
         statusRight = new MotionProfileStatus();
 
 	    TRAJECTORY_SIZE = trajectoryL.length();
-        log.info(getName() + " construced");
+
+        log.info(getName() + " construced: " + TRAJECTORY_SIZE);
 	}
 	
 	//Called just before this Command runs for the first time. 
 	protected void initialize() {
+	    System.out.println("MoveOnPath: Initializing...");
+
 	    // Reset command state
         reset();
-
-        left.setNeutralMode(NeutralMode.Brake);
-        right.setNeutralMode(NeutralMode.Brake);
 
         // Configure PID values
         double[] pid = DriveTrainSettings.getPIDValues("moveOnPath");
@@ -150,8 +154,6 @@ public class MoveOnPath extends Command {
         right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, DriveTrain.TIMEOUT_MS);
 
         Robot.driveTrain.stop();
-        left.setNeutralMode(NeutralMode.Coast);
-        right.setNeutralMode(NeutralMode.Coast);
 
         log.log(Level.INFO, "Finished running");
     }

@@ -4,13 +4,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import jaci.pathfinder.Waypoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.auton.AutonBuilder;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
-import org.usfirst.frc.team1089.robot.auton.TestAutonBuilder;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
@@ -130,9 +128,9 @@ public class OI {
 
 		gamepad_start.whenPressed(new DriveArcade());
 		gamepad_back.whenPressed(new DriveTank());
-		gamepad_a.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.STOP)); //GetCube());
-		gamepad_b.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_HIGH));
-		gamepad_x.whenPressed(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_LOW));
+		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorState.STOP)); //GetCube());
+		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorState.SCALE_HIGH));
+		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorState.SCALE_LOW));
 		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);
 		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		gamepad_rb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.RB);

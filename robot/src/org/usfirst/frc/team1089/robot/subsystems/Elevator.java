@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap;
 import org.usfirst.frc.team1089.robot.commands.UseElevator;
 import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
@@ -22,7 +21,7 @@ public class Elevator extends Subsystem {
 
     private DigitalInput limitSwitch;
 
-    public enum ELEVATOR_STATE {
+    public enum ElevatorState {
         // TODO: Temporary Values
         SWITCH(150.0),
         SCALE_LOW(300.0),
@@ -31,15 +30,15 @@ public class Elevator extends Subsystem {
 
         public final double encPos;
 
-        ELEVATOR_STATE(double encPos) {
+        ElevatorState(double encPos) {
             this.encPos = encPos;
         }
     }
 
-    private ELEVATOR_STATE currentState;
+    private ElevatorState currentState;
 
+    public static final double MAX_HEIGHT = ElevatorState.SCALE_HIGH.encPos; //TODO Random value, change to the max height of the elevator
     private double curHeight;
-    public static final double MAX_HEIGHT = 450.0; //TODO Random value, change to the max height of the elevator
 
     public Elevator(int talonID) { //, int victorID) {
         elevatorTalon = new WPI_TalonSRX(talonID);
@@ -64,14 +63,14 @@ public class Elevator extends Subsystem {
 
         elevatorTalon.configAllowableClosedloopError(0, 5, 10);
 
-        elevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveTrain.PRIMARY_PID_LOOP, DriveTrain.TIMEOUT_MS);
+        elevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, RobotMap.PID.PRIMARY_PID_LOOP, DriveTrain.TIMEOUT_MS);
 
         elevatorTalon.configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, 10);
     }
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new UseElevator(ELEVATOR_STATE.STOP));
+        setDefaultCommand(new UseElevator(ElevatorState.STOP));
     }
 
     public WPI_TalonSRX getElevatorTalon() {
@@ -82,19 +81,15 @@ public class Elevator extends Subsystem {
         return elevatorTalon.getSensorCollection().isRevLimitSwitchClosed();
     }
 
-    public ELEVATOR_STATE getCurrentState() {
+    public ElevatorState getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(ELEVATOR_STATE currentState) {
+    public void setCurrentState(ElevatorState currentState) {
         this.currentState = currentState;
     }
 
-    public void setCurHeight(double curHeight) {
-        this.curHeight = curHeight;
-    }
-
-    public double getCurHeight() {
-        return curHeight;
+    public double getHeight() {
+        return elevatorTalon.getSelectedSensorPosition(RobotMap.PID.PRIMARY_PID_LOOP);
     }
 }

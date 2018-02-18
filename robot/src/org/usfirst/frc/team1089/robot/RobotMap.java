@@ -45,6 +45,16 @@ public class RobotMap {
 	}
 
 	/**
+	 * Class containing constants for PID loop indicies
+	 */
+	public static class PID {
+		public static final int
+				PRIMARY_PID_LOOP = 0;
+
+		private PID() { } // Should never be constructed.
+	}
+
+	/**
 	 * Class containing constants for PWM device channels
 	 */
 	public static class PWM {

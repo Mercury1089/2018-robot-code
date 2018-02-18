@@ -76,7 +76,7 @@ public class Claw extends Subsystem {
             rumble = true;
         } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
             // Orange
-            colorLED(255, 61, 0);
+            colorLED(255, 30, 0);
         } else {
             // None
             colorLED(0, 0, 0);

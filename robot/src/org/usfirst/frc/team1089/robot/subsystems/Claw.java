@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot.subsystems;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
@@ -71,8 +72,9 @@ public class Claw extends Subsystem {
             colorLED(255, 255, 255);
             rumble = true;
         } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
-            // Orange
-            colorLED(255, 161, 0);
+            // Listen from SmartDash
+            double[] color = SmartDashboard.getNumberArray("LED Color (Have Cube)", new double[]{255, 161, 0});
+            colorLED((int) color[0], (int) color[1], (int) color[2]);
         } else {
             // None
             colorLED(0, 0, 0);

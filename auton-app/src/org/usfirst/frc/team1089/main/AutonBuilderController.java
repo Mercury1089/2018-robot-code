@@ -13,6 +13,9 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Optional;
 
 
@@ -58,6 +61,9 @@ public class AutonBuilderController {
     @FXML
     private TableColumn sideColRRR;
 
+    private StringConverter<AutonTask> autonTaskStringConverter;
+    private StringConverter<ScoringSide> scoringSideStringConverter;
+
     private ObservableList<TaskConfig> dataLLL = FXCollections.observableArrayList();
     private ObservableList<TaskConfig> dataLRL = FXCollections.observableArrayList();
     private ObservableList<TaskConfig> dataRLR = FXCollections.observableArrayList();
@@ -66,12 +72,15 @@ public class AutonBuilderController {
 
     @FXML
     public void initialize() {
+        //Setup up the radio buttons to be in a group.
         radioGroup = new ToggleGroup();
         leftRadioButton.setToggleGroup(radioGroup);
         middleRadioButton.setToggleGroup(radioGroup);
         rightRadioButton.setToggleGroup(radioGroup);
 
-        StringConverter<AutonTask> autonTaskStringConverter= new StringConverter<AutonTask>() {
+
+        //Set up StringConverters to convert the AutonTask and ScoringSide Enums into Strings for display.
+        autonTaskStringConverter = new StringConverter<AutonTask>() {
             @Override
             public String toString(AutonTask object) {
                 if (object == null) {
@@ -125,7 +134,7 @@ public class AutonBuilderController {
             }
         };
 
-        StringConverter<ScoringSide> scoringSideStringConverter = new StringConverter<ScoringSide>() {
+        scoringSideStringConverter = new StringConverter<ScoringSide>() {
             @Override
             public String toString(ScoringSide object) {
                 if (object == null) {
@@ -157,6 +166,7 @@ public class AutonBuilderController {
             }
         };
 
+        //Not even going to try to explain cell factories. Nope.
         Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
             ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell(FXCollections.observableArrayList(AutonTask.values())) {
                 private boolean hasCreatedNewRow = false;
@@ -173,7 +183,6 @@ public class AutonBuilderController {
                     if (item == AutonTask.DELETE) {
                         this.getTableView().getItems().remove(this.getItem());
                     }
-
                 }
             };
             comboBoxTableCell.setEditable(true);
@@ -185,7 +194,6 @@ public class AutonBuilderController {
                     addBlankRow(comboBoxTableCell.getTableView().getItems());
                 }
             });
-
             return comboBoxTableCell;
         };
 
@@ -278,20 +286,58 @@ public class AutonBuilderController {
     @FXML
     private void saveConfiguration() {
         if (checkIfComplete()) {
-            TextInputDialog dialog = new TextInputDialog("FileName");
-            dialog.setTitle("Saving presets");
-            dialog.setContentText("");
-            dialog.setContentText("Enter a name for the new preset:");
-            Optional<String> result = dialog.showAndWait();
+            TextInputDialog fileNameDialog = new TextInputDialog("FileName");
+            fileNameDialog.setTitle("Saving presets");
+            fileNameDialog.setHeaderText("");
+            fileNameDialog.setContentText("Enter a name for the new preset:");
+            Optional<String> fileNameResult = fileNameDialog.showAndWait();
 
-            result.ifPresent(fileName -> {
+            ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(null, "Table LLL", "Table LRL", "Table RLR", "Table RRR");
+            choiceDialog.setTitle("Choosing Save Method...");
+            choiceDialog.setHeaderText("");
+            choiceDialog.setContentText("Choose which table(s) to save:");
+            Optional<String> tableResult = choiceDialog.showAndWait();
+
+            fileNameResult.ifPresent(fileName -> {
                 //TODO Save the current tables as a CSV with the given file name in /auton-app/Configurations
+                FileWriter fileWriter = null;
+                try {
+                    fileWriter = new FileWriter(fileName + ".csv");
+                    PrintWriter printWriter = new PrintWriter(fileWriter);
+                    ObservableList<TaskConfig> relevantData;
+                    switch (tableResult.get()) {
+                        case "Table LLL": {
+                            relevantData = dataLLL;
+                        }
+                        case "Table LRL": {
+                            relevantData = dataLRL;
+                        }
+                        case "Table RLR": {
+                            relevantData = dataRLR;
+                        }
+                        case "Table RRR": {
+                            relevantData = dataRRR;
+                        }
+                        default: {
+                            relevantData = null;
+                        }
+                    }
 
+                    for (TaskConfig tc : relevantData) {
+                        String autonTask = autonTaskStringConverter.toString(tc.autonTask.get());
+                        String scoringSide = scoringSideStringConverter.toString(tc.scoringSide.get());
+                        printWriter.println(autonTask + "," + scoringSide);
+                    }
+                    printWriter.flush();
+                    printWriter.close();
+                    fileWriter.close();
+                }  catch (Exception e) {
+                    System.out.println("AutonBuilderController.saveConfiguration threw an exception: " + e.toString());
+                }
             });
         }
     }
-
-    @FXML
+r
     private void loadConfiguration() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Configuration CSV");

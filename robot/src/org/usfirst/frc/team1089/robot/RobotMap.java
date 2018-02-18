@@ -55,6 +55,16 @@ public class RobotMap {
 	}
 
 	/**
+	 * Class containing constants for Digital Input channels
+	 */
+	public static class DIGITAL_INPUT {
+		public static final int
+				ELEVATOR_LIMIT_SWITCH = 0;
+
+		private DIGITAL_INPUT() { } // Should never be constructed.
+	}
+
+	/**
 	 * Class containing constants for ports of the devices on the USB interface of the Driver Station.
 	 * Good for OI joystick ports and of the like.
 	 */

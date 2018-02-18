@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +31,8 @@ public class DriveTank extends Command {
 	@Override
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
+		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Brake);
+		Robot.driveTrain.getLeft().setNeutralMode(NeutralMode.Brake);
 		log.info(getName() + " command initialized");
 	}
 

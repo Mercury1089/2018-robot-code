@@ -1,10 +1,13 @@
 package org.usfirst.frc.team1089.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
@@ -32,6 +35,8 @@ public class DriveArcade extends Command {
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
 		//Robot.driveTrain.getGyro().reset();
+		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Brake);
+		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Brake);
 		log.info(getName() + " command initialized");
 	}
 
@@ -39,6 +44,7 @@ public class DriveArcade extends Command {
 	@Override
 	protected void execute() {
 		tDrive.arcadeDrive(Robot.oi.getY(DS_USB.LEFT_STICK), -Robot.oi.getX(DS_USB.RIGHT_STICK), true);
+		tDrive.setMaxOutput(DriveTrain.MAX_SPEED - (Robot.elevator.getCurHeight() / Elevator.MAX_HEIGHT) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED)); //TODO test this
 		everySecond.run(log -> log.info("arcade driving"));
 	}
 

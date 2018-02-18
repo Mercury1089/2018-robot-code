@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.modifiers.TankModifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,10 +43,56 @@ public class MoveOnPath extends Command {
 
     private boolean isRunning;
     private int dir;
+    private double fGain, fGainMultiplier;
 
     public enum Direction {
         BACKWARD,
         FORWARD;
+    }
+
+    public MoveOnPath(String name, Waypoint[] points, double timeStep, double maxVelo, double maxAcc, double maxJerk, Direction direction) {
+        System.out.println("MoveOnPath: Constructing...");
+
+        requires(Robot.driveTrain);
+        setName("MoveOnPath-" + name);
+        log.info(getName() + " Beginning constructor");
+
+        Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, timeStep, maxVelo, maxAcc, maxJerk);
+        Trajectory trajectory = Pathfinder.generate(points, config);
+        TankModifier modifier = new TankModifier(trajectory);
+        modifier.modify(2.0);
+
+        left = Robot.driveTrain.getLeft();
+        right = Robot.driveTrain.getRight();
+
+        switch(direction) {
+            case BACKWARD:
+                dir = -1;
+                break;
+            case FORWARD:
+            default:
+                dir = 1;
+                break;
+        }
+
+        if (trajectoryProcessor == null) {
+            trajectoryProcessor = new Notifier(() -> {
+                left.processMotionProfileBuffer();
+                right.processMotionProfileBuffer();
+            });
+        }
+
+        trajectoryL = modifier.getLeftTrajectory();
+        trajectoryR = modifier.getRightTrajectory();
+
+        statusLeft = new MotionProfileStatus();
+        statusRight = new MotionProfileStatus();
+
+        TRAJECTORY_SIZE = trajectory.length();
+
+        fGainMultiplier = 1.0;
+        fGain = Robot.driveTrain.getFeedForward() * fGainMultiplier;
+        log.info(getName() + " construced: " + TRAJECTORY_SIZE);
     }
 
     /**
@@ -85,20 +133,22 @@ public class MoveOnPath extends Command {
         statusRight = new MotionProfileStatus();
 
 	    TRAJECTORY_SIZE = trajectoryL.length();
-        log.info(getName() + " construced");
+
+	    fGainMultiplier = .5;
+	    fGain = Robot.driveTrain.getFeedForward() * fGainMultiplier;
+        log.info(getName() + " construced: " + TRAJECTORY_SIZE);
 	}
 	
 	//Called just before this Command runs for the first time. 
 	protected void initialize() {
+	    System.out.println("MoveOnPath: Initializing...");
+
 	    // Reset command state
         reset();
 
-        left.setNeutralMode(NeutralMode.Brake);
-        right.setNeutralMode(NeutralMode.Brake);
-
         // Configure PID values
         double[] pid = DriveTrainSettings.getPIDValues("moveOnPath");
-        configurePID(pid[0], pid[1], pid[2], Robot.driveTrain.getFeedForward());
+        configurePID(pid[0], pid[1], pid[2], fGain);
 
         // Change motion control frame period
         left.changeMotionControlFramePeriod(10);
@@ -150,8 +200,6 @@ public class MoveOnPath extends Command {
         right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, DriveTrain.TIMEOUT_MS);
 
         Robot.driveTrain.stop();
-        left.setNeutralMode(NeutralMode.Coast);
-        right.setNeutralMode(NeutralMode.Coast);
 
         log.log(Level.INFO, "Finished running");
     }

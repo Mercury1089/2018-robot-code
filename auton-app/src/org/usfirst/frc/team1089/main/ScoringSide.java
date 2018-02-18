@@ -5,6 +5,4 @@ public enum ScoringSide {
     Mid,
     Back,
     Not_Applicable,
-    Delete,
-    Done;
 }

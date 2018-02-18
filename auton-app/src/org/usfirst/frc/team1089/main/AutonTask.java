@@ -4,6 +4,7 @@ public enum AutonTask {
     GRAB_CUBE,
     SCORE_SWITCH,
     SCORE_SCALE,
+    DO_NOTHING,
     DELETE,
     DONE;
 }

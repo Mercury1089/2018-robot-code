@@ -25,13 +25,25 @@ public class UseElevator extends Command {
 
     @Override
     protected void initialize() {
-        Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
+        if (targetState != Elevator.ELEVATOR_STATE.STOP) {
+            Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
+            Robot.elevator.setCurrentState(targetState);
+        }
         log.info(getName() + " initialized");
     }
 
     @Override
     protected void execute() {
         exeLog.run( log -> log.debug(getName() + " executing"));
+        if (targetState == Elevator.ELEVATOR_STATE.STOP) {
+            while(!Robot.elevator.getLimitSwitch().get()) {
+                Robot.elevator.getElevatorTalon().set(ControlMode.PercentOutput, -0.3);
+            }
+
+            Robot.elevator.setCurHeight(Robot.elevator.getElevatorTalon().getSensorCollection().getQuadraturePosition());
+            Robot.elevator.setCurrentState(targetState);
+            Robot.elevator.getElevatorTalon().getSensorCollection().setQuadraturePosition((int)Elevator.ELEVATOR_STATE.STOP.encPos, 0);
+        }
     }
 
     @Override

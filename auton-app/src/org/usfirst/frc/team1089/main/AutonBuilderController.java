@@ -337,12 +337,13 @@ public class AutonBuilderController {
             });
         }
     }
-r
+
     private void loadConfiguration() {
         FileChooser fileChooser = new FileChooser();
+
         fileChooser.setTitle("Open Configuration CSV");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
-        fileChooser.setInitialDirectory(new File("")); //TODO Put file path to Configurations folder.
+        fileChooser.setInitialDirectory(new File("./"));
         fileChooser.showOpenDialog(root.getScene().getWindow());
     }
 

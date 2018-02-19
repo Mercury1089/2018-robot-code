@@ -34,6 +34,7 @@ public class Robot extends IterativeRobot {
 	public static CameraVision camera;
     public static Claw claw;
     public static Elevator elevator;
+    public static Ultrasonic ultrasonic;
     public static Vision vision;
 	private static Logger log = LogManager.getLogger(Robot.class);
 
@@ -71,6 +72,7 @@ public class Robot extends IterativeRobot {
 		camera = new CameraVision();
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		elevator = new Elevator(CAN.TALON_ELEVATOR);
+		ultrasonic = new Ultrasonic();
 		vision = new Vision();
 
 		//autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();

@@ -48,16 +48,14 @@ public class ShuffleDash {
         SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.claw.getLidar().getDistance(), 10));
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.claw.getLidar().getDistance(), 10));
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
-        SmartDashboard.putNumber("Ultrasonic Distance", Robot.ultrasonic.getRange());
+        SmartDashboard.putNumber("Ultrasonic Distance", Robot.claw.getUltrasonic().getRange());
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
-        SmartDashboard.putNumber("Cube Angle", Robot.camera.getAngleFromCube());
     }
 
     private void runAutonOnShuffleboard() {
         startingPosition = new SendableChooser<>();
         startingPosition.addObject("Left", AutonPosition.LEFT);
-        startingPosition.addObject("Middle", AutonPosition.MIDDLE);
         startingPosition.addObject("Right", AutonPosition.RIGHT);
         SmartDashboard.putData("Auton Starting Position", startingPosition);
     }

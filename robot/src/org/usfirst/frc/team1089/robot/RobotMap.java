@@ -44,6 +44,16 @@ public class RobotMap {
 	}
 
 	/**
+	 * Class containing constants for AIO device channels
+	 */
+	public static class AIO {
+		public static final int
+				ULTRASONIC= 0;
+
+		private AIO() { } // Should never be constructed.
+	}
+
+	/**
 	 * Class containing constants for PID loop indicies
 	 */
 	public static class PID {

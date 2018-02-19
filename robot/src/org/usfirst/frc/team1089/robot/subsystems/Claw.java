@@ -151,6 +151,10 @@ public class Claw extends Subsystem {
         return pixyCam;
     }
 
+    public Ultrasonic getUltrasonic() {
+        return ultrasonic;
+    }
+
     public boolean getHasCube() {
         return hasCube;
     }

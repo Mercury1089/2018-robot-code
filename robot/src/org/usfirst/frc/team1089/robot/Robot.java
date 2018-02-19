@@ -8,8 +8,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.usfirst.frc.team1089.robot.RobotMap.CAN;
-import org.usfirst.frc.team1089.robot.RobotMap.PWM;
+import org.usfirst.frc.team1089.robot.RobotMap.*;
 import org.usfirst.frc.team1089.robot.auton.*;
 import org.usfirst.frc.team1089.robot.sensors.PiVision;
 import org.usfirst.frc.team1089.robot.sensors.Ultrasonic;
@@ -31,15 +30,13 @@ import java.util.Map;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	private static Logger log = LogManager.getLogger(Robot.class);
 
 	// Subsystems
 	public static DriveTrain driveTrain;
 	public static PDP pdp;
-	public static PiVision camera;
     public static Claw claw;
     public static Elevator elevator;
-    public static Ultrasonic ultrasonic;
-	private static Logger log = LogManager.getLogger(Robot.class);
 
 	public static Map<String, AutonTrajectoryGenerator.TrajectoryPair> autonTrajectories;
 	private AutonCommand autonCommand;
@@ -76,9 +73,7 @@ public class Robot extends IterativeRobot {
 
 		pdp = new PDP();
 
-		camera = new PiVision();
-		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
-		ultrasonic = new Ultrasonic();
+		claw = new Claw(AIO.ULTRASONIC, CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

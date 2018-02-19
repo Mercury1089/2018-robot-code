@@ -81,9 +81,10 @@ public class AutonBuilderController {
                 @Override
                 public void updateItem(Object item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (!hasCreatedNewRow && item != null && item != AutonTask.DONE) {
-                        addBlankRow(this.getTableView().getItems());
-                        hasCreatedNewRow = true;
+                    if (item != null && item != AutonTask.DONE) {
+                        if (((TaskConfig) this.getTableView().getItems().get(this.getTableView().getItems().size() - 1)).autonTask.getValue() != null) {
+                            addBlankRow(this.getTableView().getItems());
+                        }
                     }
                     else if (item == AutonTask.DONE) {
                         ((TaskConfig) this.getTableRow().getItem()).scoringSide.setValue(ScoringSide.NOT_APPLICABLE);

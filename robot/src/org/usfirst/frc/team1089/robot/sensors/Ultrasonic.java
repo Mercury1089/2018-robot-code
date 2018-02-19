@@ -39,6 +39,7 @@ public class Ultrasonic {
      */
     public double getRange() {
         return ultrasonic.getVoltage() * SCALING_FACTOR;
+
         // TODO: Figure out conversion method from volts to inches
     	/*double range = ultrasonic.getVoltage();
     	//first, normalize the voltage

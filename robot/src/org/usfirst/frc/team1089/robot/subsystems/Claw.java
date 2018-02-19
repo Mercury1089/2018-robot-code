@@ -36,6 +36,7 @@ public class Claw extends Subsystem {
     private Ultrasonic ultrasonic;
 
     private boolean hasCube;
+    private boolean hasCubeUltrasonic;
     private boolean ejecting;
 
     public enum ClawState {
@@ -98,7 +99,7 @@ public class Claw extends Subsystem {
             // White
             colorLED(255, 255, 255);
             rumble = true;
-        } else if (lidar.getDistance() <= MIN_INCHES) { // Have cube?
+        } else if (hasCube()) { // Have cube?
             // Listen from SmartDash
 
             // Fun colors to note:
@@ -155,12 +156,8 @@ public class Claw extends Subsystem {
         return ultrasonic;
     }
 
-    public boolean getHasCube() {
-        return hasCube;
-    }
-
-    public void setHasCube(boolean b) {
-        hasCube = b;
+    public boolean hasCube() {
+        return ultrasonic.getRange() <= 3.6;
     }
 
     public boolean getEjecting() {

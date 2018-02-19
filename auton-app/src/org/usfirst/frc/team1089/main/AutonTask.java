@@ -52,4 +52,20 @@ public enum AutonTask {
             }
         }
     };
+
+    public static String[] arrayToString(AutonTask[] tasks) {
+        String[] output = new String[tasks.length];
+        for (int i = 0; i < tasks.length; i++) {
+            output[i] = STRING_CONVERTER.toString(tasks[i]);
+        }
+        return output;
+    }
+
+    public static AutonTask[] arrayFromString(String[] strings) {
+        AutonTask[] output = new AutonTask[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            output[i] = STRING_CONVERTER.fromString(strings[i]);
+        }
+        return output;
+    }
 }

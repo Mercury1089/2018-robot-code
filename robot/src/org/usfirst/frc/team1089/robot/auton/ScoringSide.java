@@ -39,4 +39,20 @@ public enum ScoringSide {
             }
         }
     };
+
+    public static String[] arrayToString(ScoringSide[] sides) {
+        String[] output = new String[sides.length];
+        for (int i = 0; i < sides.length; i++) {
+            output[i] = STRING_CONVERTER.toString(sides[i]);
+        }
+        return output;
+    }
+
+    public static ScoringSide[] arrayFromString(String[] strings) {
+        ScoringSide[] output = new ScoringSide[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            output[i] = STRING_CONVERTER.fromString(strings[i]);
+        }
+        return output;
+    }
 }

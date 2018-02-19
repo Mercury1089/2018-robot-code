@@ -110,11 +110,11 @@ public class OI {
 		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("InitialCubeSetupPickupLeft", MoveOnPath.Direction.FORWARD));
+		right6.whenPressed(new MoveOnPath("InitialScaleFrontOppRight", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
+		right7.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
+		right10.whenPressed(new MoveOnPath("SwitchBackOppRight", MoveOnPath.Direction.FORWARD));
 		right11 = new JoystickButton(rightStick, 11);
 		right11.whenPressed(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
 
@@ -207,8 +207,8 @@ public class OI {
 
 	public void rumbleController(boolean rumble) {
 		if (rumble) {
-			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 1.0);
-			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
+			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
 		} else {
 			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
 			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);

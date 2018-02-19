@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1089.robot.auton;
 
-import javafx.util.StringConverter;
-
 public enum ScoringSide {
     FRONT,
     MID,
@@ -9,6 +7,10 @@ public enum ScoringSide {
     NOT_APPLICABLE;
 
     public static String toString(ScoringSide object) {
+        if (object == null) {
+            return "";
+        }
+
         switch (object) {
             case NOT_APPLICABLE:
                 return "Not Applicable";
@@ -38,10 +40,10 @@ public enum ScoringSide {
         }
     }
 
-    public static String[] arrayToString(ScoringSide[] sides) {
-        String[] output = new String[sides.length];
-        for (int i = 0; i < sides.length; i++) {
-            output[i] = toString(sides[i]);
+    public static String[] arrayToString(Object[] data) {
+        String[] output = new String[data.length];
+        for (int i = 0; i < data.length; i++) {
+            output[i] = toString(((TaskConfig) data[i]).scoringSide.getValue());
         }
         return output;
     }

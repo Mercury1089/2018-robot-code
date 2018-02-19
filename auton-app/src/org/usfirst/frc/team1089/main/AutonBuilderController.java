@@ -248,7 +248,7 @@ public class AutonBuilderController {
      * Pushes the auton configuration to the NetworkTable in the form of String arrays if the auton configuration is completely finished.
      */
     private void publishConfiguration() {
-        int startingPos = 0;
+        int startingPos;
 
         String[]
             autonTaskLLL = new String[dataLLL.size()],
@@ -318,19 +318,19 @@ public class AutonBuilderController {
 
     /**
      * Adds a blank item to the given data. This will cause the table to display a blank, editable row.
-     * @param data The table data that will have a blank row added to it.
+     * @param data The table data to add a blank row to.
      */
     private void addBlankRow(ObservableList<TaskConfig> data) {
         data.add(new TaskConfig(null, null));
     }
-
 
     /**
      * Checks to see if all the tables are complete AND if a starting auton position has been selected. The method will throw an error depending on what is not finished.
      * @return All the tables are complete AND if a starting auton position has been selected.
      */
     private boolean isCompletelyFinished() {
-        boolean tableIsComplete = ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
+        boolean tableIsComplete =
+                ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableLRL.getItems().get(tableLRL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRLR.getItems().get(tableRLR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRRR.getItems().get(tableRRR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE;

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1089.robot.auton;
+package org.usfirst.frc.team1089.main;
 
 import javafx.util.StringConverter;
 
@@ -8,7 +8,7 @@ public enum ScoringSide {
     BACK,
     NOT_APPLICABLE;
 
-    public static final StringConverter<ScoringSide> STRING_CONVERTER = new javafx.util.StringConverter<ScoringSide>() {
+    public static final StringConverter<ScoringSide> STRING_CONVERTER = new StringConverter<ScoringSide>() {
         @Override
         public String toString(ScoringSide object) {
             if (object == null) {

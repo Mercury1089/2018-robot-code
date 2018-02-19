@@ -12,8 +12,6 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import org.usfirst.frc.team1089.robot.auton.AutonTask;
-import org.usfirst.frc.team1089.robot.auton.ScoringSide;
 
 import java.io.*;
 import java.util.Optional;
@@ -129,7 +127,6 @@ public class AutonBuilderController {
         taskColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
         taskColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
 
-
         sideColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
         sideColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
         sideColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
@@ -149,6 +146,9 @@ public class AutonBuilderController {
     }
 
     @FXML
+    /**
+     * Saves a chosen configuration table to a CSV file at a given directory.
+     */
     private void saveConfiguration() throws IOException {
         //Prompt the user for the table they want to save to a CSV.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
@@ -201,6 +201,9 @@ public class AutonBuilderController {
 
 
     @FXML
+    /**
+     * Loads a user selected CSV file into a table, chosen by the user in the form of a dialog prompt.
+     */
     private void loadConfiguration() throws IOException {
         //Prompt the user for the table they wish to load into.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
@@ -241,8 +244,11 @@ public class AutonBuilderController {
     }
 
     @FXML
+    /**
+     * Pushes the auton configuration to the NetworkTable in the form of String arrays if the auton configuration is completely finished.
+     */
     private void publishConfiguration() {
-        int startingPos = 0;
+        int startingPos;
 
         String[]
             autonTaskLLL = new String[dataLLL.size()],
@@ -312,19 +318,19 @@ public class AutonBuilderController {
 
     /**
      * Adds a blank item to the given data. This will cause the table to display a blank, editable row.
-     * @param data The table data that will have a blank row added to it.
+     * @param data The table data to add a blank row to.
      */
     private void addBlankRow(ObservableList<TaskConfig> data) {
         data.add(new TaskConfig(null, null));
     }
-
 
     /**
      * Checks to see if all the tables are complete AND if a starting auton position has been selected. The method will throw an error depending on what is not finished.
      * @return All the tables are complete AND if a starting auton position has been selected.
      */
     private boolean isCompletelyFinished() {
-        boolean tableIsComplete = ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
+        boolean tableIsComplete =
+                ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableLRL.getItems().get(tableLRL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRLR.getItems().get(tableRLR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRRR.getItems().get(tableRRR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE;
@@ -354,21 +360,16 @@ public class AutonBuilderController {
      */
     private ObservableList<TaskConfig> determineData(String input) {
         switch (input) {
-            case "Table LLL": {
+            case "Table LLL":
                 return dataLLL;
-            }
-            case "Table LRL": {
+            case "Table LRL":
                 return dataLRL;
-            }
-            case "Table RLR": {
+            case "Table RLR":
                 return dataRLR;
-            }
-            case "Table RRR": {
+            case "Table RRR": 
                 return dataRRR;
-            }
-            default: {
+            default:
                 return null;
-            }
         }
     }
 }

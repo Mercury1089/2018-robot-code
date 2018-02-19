@@ -14,6 +14,13 @@ import org.usfirst.frc.team1089.robot.subsystems.*;
 import org.usfirst.frc.team1089.util.GameData;
 import org.usfirst.frc.team1089.util.config.*;
 import org.usfirst.frc.team1089.robot.sensors.Vision;
+import org.usfirst.frc.team1089.robot.subsystems.Claw;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.robot.subsystems.Elevator;
+import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
+import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.util.Map;
 
@@ -107,11 +114,28 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-	    autonBuilderRRR = new AutonBuilder(AutonPosition.RIGHT,
-                new AutonTask[]{AutonTask.SCORE_SWITCH, AutonTask.SCORE_SCALE, AutonTask.SCORE_SCALE},
-                new ScoringSide[]{ScoringSide.MID, ScoringSide.FRONT, ScoringSide.FRONT},
-                null);
-		switch (DriverStation.getInstance().getGameSpecificMessage()) {
+        NetworkTable
+                rootTable = NetworkTableInstance.getDefault().getTable("AutonConfiguration"),
+                lllTable = rootTable.getSubTable("LLL"),
+                lrlTable = rootTable.getSubTable("LRL"),
+                rlrTable = rootTable.getSubTable("RLR"),
+                rrrTable = rootTable.getSubTable("RRR");
+
+        int autPosOrdinal = (int) rootTable.getEntry("startingPos").getNumber(-1);
+
+        AutonPosition autPos = AutonPosition.values()[autPosOrdinal];
+
+        AutonTask[] llltasks = AutonTask.arrayFromString(lllTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] lrltasks = AutonTask.arrayFromString(lrlTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] rlrtasks = AutonTask.arrayFromString(rlrTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] rrrtasks = AutonTask.arrayFromString(rrrTable.getEntry("tasks").getValue().getStringArray());
+
+        ScoringSide[] lllSides = ScoringSide.arrayFromString(lllTable.getEntry("sides").getValue().getStringArray());
+        ScoringSide[] lrlSides = ScoringSide.arrayFromString(lrlTable.getEntry("sides").getValue().getStringArray());
+        ScoringSide[] rlrSides = ScoringSide.arrayFromString(rlrTable.getEntry("sides").getValue().getStringArray());
+        ScoringSide[] rrrSides = ScoringSide.arrayFromString(rrrTable.getEntry("sides").getValue().getStringArray());
+
+        switch (DriverStation.getInstance().getGameSpecificMessage()) {
 			case "LLL":
 				autonCommand = new AutonCommand(autonBuilderLLL);
 				break;
@@ -123,7 +147,7 @@ public class Robot extends IterativeRobot {
 				break;
 			case "RLR":
 				autonCommand = new AutonCommand(autonBuilderRLR);
-                break;
+				break;
 		}
 		if (autonCommand != null) {
 		    autonCommand.start();

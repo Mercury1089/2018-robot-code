@@ -47,13 +47,12 @@ public class UseClaw extends Command {
     @Override
     protected void end() {
         LOG.info(getName() + " ended");
-        if((targetState == Claw.ClawState.GRAB)) {
-            Robot.claw.setHasCube(true);
-        }
-        else if (targetState == Claw.ClawState.EJECT) {
-            Robot.claw.setHasCube(false);
+        if (targetState == Claw.ClawState.GRAB) {
+            // ???
+        } else if (targetState == Claw.ClawState.EJECT) {
             Robot.claw.setEjecting(false);
         }
+
         Robot.claw.setClawState(Claw.ClawState.STOP);
     }
 

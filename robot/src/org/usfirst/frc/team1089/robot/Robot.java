@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
+		// autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
 
 		elevator = new Elevator(CAN.ELEVATOR_M, CAN.ELEVATOR_S);
 

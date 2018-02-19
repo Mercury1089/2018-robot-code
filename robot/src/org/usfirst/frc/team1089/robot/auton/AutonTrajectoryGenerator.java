@@ -164,14 +164,17 @@ public class AutonTrajectoryGenerator {
 
         return trajectories;
     }
+
     public static class TrajectoryPair {
         private Trajectory leftTrajectory, rightTrajectory;
         public TrajectoryPair(Trajectory left, Trajectory right) {
 
         }
+
         public Trajectory getLeft() {
             return leftTrajectory;
         }
+
         public Trajectory getRight() {
             return rightTrajectory;
         }
@@ -182,6 +185,7 @@ public class AutonTrajectoryGenerator {
                 points,
                 new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, TIME_STEP, velocity, acceleration, jerk)
         );
+
         TankModifier modifier = new TankModifier(trajectory);
         modifier.modify(wheelbase);
         return new TrajectoryPair(modifier.getLeftTrajectory(), modifier.getRightTrajectory());

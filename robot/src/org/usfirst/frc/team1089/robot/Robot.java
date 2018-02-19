@@ -8,14 +8,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
-import org.usfirst.frc.team1089.robot.auton.AutonBuilder;
-import org.usfirst.frc.team1089.robot.auton.AutonCommand;
+import org.usfirst.frc.team1089.robot.auton.*;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
 import org.usfirst.frc.team1089.robot.subsystems.*;
 import org.usfirst.frc.team1089.util.GameData;
 import org.usfirst.frc.team1089.util.config.*;
 import org.usfirst.frc.team1089.robot.sensors.Vision;
-import org.usfirst.frc.team1089.robot.auton.AutonTrajectoryGenerator;
+import org.usfirst.frc.team1089.robot.subsystems.Claw;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1089.robot.subsystems.Elevator;
+import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
+import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.util.Map;
 
@@ -56,6 +61,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
+
+		elevator = new Elevator(CAN.ELEVATOR_M, CAN.ELEVATOR_S);
+
 	    driveTrain = new DriveTrain(
 			CAN.DRIVETRAIN_ML,
 			CAN.DRIVETRAIN_MR,
@@ -71,11 +80,8 @@ public class Robot extends IterativeRobot {
 
 		camera = new CameraVision();
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
-		elevator = new Elevator(CAN.TALON_ELEVATOR);
 		ultrasonic = new Ultrasonic();
 		vision = new Vision();
-
-		//autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
@@ -110,18 +116,44 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		switch (DriverStation.getInstance().getGameSpecificMessage()) {
+        NetworkTable
+                rootTable = NetworkTableInstance.getDefault().getTable("AutonConfiguration"),
+                lllTable = rootTable.getSubTable("LLL"),
+                lrlTable = rootTable.getSubTable("LRL"),
+                rlrTable = rootTable.getSubTable("RLR"),
+                rrrTable = rootTable.getSubTable("RRR");
+
+        int autPosOrdinal = (int) rootTable.getEntry("startingPos").getNumber(-1);
+
+        AutonPosition autPos = AutonPosition.values()[autPosOrdinal];
+
+        AutonTask[] llltasks = AutonTask.arrayFromString(lllTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] lrltasks = AutonTask.arrayFromString(lrlTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] rlrtasks = AutonTask.arrayFromString(rlrTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] rrrtasks = AutonTask.arrayFromString(rrrTable.getEntry("tasks").getValue().getStringArray());
+
+        ScoringSide[] lllSides = ScoringSide.arrayFromString(lllTable.getEntry("sides").getValue().getStringArray());
+        ScoringSide[] lrlSides = ScoringSide.arrayFromString(lrlTable.getEntry("sides").getValue().getStringArray());
+        ScoringSide[] rlrSides = ScoringSide.arrayFromString(rlrTable.getEntry("sides").getValue().getStringArray());
+        ScoringSide[] rrrSides = ScoringSide.arrayFromString(rrrTable.getEntry("sides").getValue().getStringArray());
+
+        switch (DriverStation.getInstance().getGameSpecificMessage()) {
 			case "LLL":
 				autonCommand = new AutonCommand(autonBuilderLLL);
+				break;
 			case "RRR":
 				autonCommand = new AutonCommand(autonBuilderRRR);
+				break;
 			case "LRL":
 				autonCommand = new AutonCommand(autonBuilderLRL);
+				break;
 			case "RLR":
 				autonCommand = new AutonCommand(autonBuilderRLR);
-			default:
-
+				break;
 		}
+		if (autonCommand != null) {
+		    autonCommand.start();
+        }
 	}
 
 	/**

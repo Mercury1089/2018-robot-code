@@ -6,9 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.auton.AutonPosition;
-import org.usfirst.frc.team1089.robot.auton.AutonTask;
-import org.usfirst.frc.team1089.robot.auton.ScoringSide;
-import org.usfirst.frc.team1089.robot.commands.MoveOnPath;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 
 /**

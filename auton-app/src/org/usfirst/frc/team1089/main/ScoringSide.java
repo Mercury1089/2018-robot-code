@@ -3,19 +3,19 @@ package org.usfirst.frc.team1089.main;
 import javafx.util.StringConverter;
 
 public enum ScoringSide {
-    Front,
-    Mid,
-    Back,
-    Not_Applicable;
+    FRONT,
+    MID,
+    BACK,
+    NOT_APPLICABLE;
 
-    public static final StringConverter<ScoringSide> STRING_CONVERTER = new javafx.util.StringConverter<ScoringSide>() {
+    public static final StringConverter<ScoringSide> STRING_CONVERTER = new StringConverter<ScoringSide>() {
         @Override
         public String toString(ScoringSide object) {
             if (object == null) {
                 return "";
             }
             switch (object) {
-                case Not_Applicable:
+                case NOT_APPLICABLE:
                     return "Not Applicable";
                 default:
                     return object.toString();
@@ -25,18 +25,34 @@ public enum ScoringSide {
         @Override
         public ScoringSide fromString(String string) {
             switch (string) {
-                case "Front": {
-                    return ScoringSide.Front;
+                case "FRONT": {
+                    return ScoringSide.FRONT;
                 }
                 case "Middle": {
-                    return ScoringSide.Mid;
+                    return ScoringSide.MID;
                 }
-                case "Back": {
-                    return ScoringSide.Back;
+                case "BACK": {
+                    return ScoringSide.BACK;
                 }
                 default:
                     return null;
             }
         }
     };
+
+    public static String[] arrayToString(ScoringSide[] sides) {
+        String[] output = new String[sides.length];
+        for (int i = 0; i < sides.length; i++) {
+            output[i] = STRING_CONVERTER.toString(sides[i]);
+        }
+        return output;
+    }
+
+    public static ScoringSide[] arrayFromString(String[] strings) {
+        ScoringSide[] output = new ScoringSide[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            output[i] = STRING_CONVERTER.fromString(strings[i]);
+        }
+        return output;
+    }
 }

@@ -11,6 +11,7 @@ configurations {
 dependencies {
     compile "edu.wpi.first.ntcore:ntcore-java:4.0.0"
     nativeLib "edu.wpi.first.ntcore:ntcore-jni:4.0.0:windowsx86-64"
+    compile "com.opencsv:opencsv:4.0"
     compile "edu.wpi.first.wpiutil:wpiutil-java:3.1.0"
 }
 

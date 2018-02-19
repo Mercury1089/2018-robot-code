@@ -110,13 +110,13 @@ public class OI {
 		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right6.whenPressed(new MoveOnPath("InitialCubeSetupPickupLeft", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("InitialSwitchBackLeft", MoveOnPath.Direction.FORWARD));
+		right7.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
+		right10.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 		right11 = new JoystickButton(rightStick, 11);
-		right11.whenPressed(new MoveOnPath("CubePickupSetupLeft", MoveOnPath.Direction.BACKWARD));
+		right11.whenPressed(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);

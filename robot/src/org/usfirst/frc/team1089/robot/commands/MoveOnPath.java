@@ -88,9 +88,15 @@ public class MoveOnPath extends Command {
         statusLeft = new MotionProfileStatus();
         statusRight = new MotionProfileStatus();
 
-	    TRAJECTORY_SIZE = trajectoryL.length();
+        if (trajectoryL != null) {
+            TRAJECTORY_SIZE = trajectoryL.length();
 
-        log.info(getName() + " construced: " + TRAJECTORY_SIZE);
+            log.info(getName() + " construced: " + TRAJECTORY_SIZE);
+        } else {
+            TRAJECTORY_SIZE = 0;
+            log.info(getName() + " could not be constructed!");
+            end();
+        }
 	}
 	
 	//Called just before this Command runs for the first time. 

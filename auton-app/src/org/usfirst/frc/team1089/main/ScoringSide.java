@@ -11,6 +11,10 @@ public enum ScoringSide {
     public static final StringConverter<ScoringSide> STRING_CONVERTER = new StringConverter<ScoringSide>() {
         @Override
         public String toString(ScoringSide object) {
+            if (object == null) {
+                return "";
+            }
+
             switch (object) {
                 case NOT_APPLICABLE:
                     return "Not Applicable";

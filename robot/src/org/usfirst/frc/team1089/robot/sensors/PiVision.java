@@ -7,7 +7,12 @@ import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.awt.*;
 
-public class CameraVision {
+/**
+ * Implementation of vision sense using Raspberry Pi
+ *
+ * @deprecated since it is slow and inefficient; we are better off using the PixyCam.
+ */
+public class PiVision {
     private double centerX;
     private long lastUpdate;
 
@@ -15,7 +20,7 @@ public class CameraVision {
     private final Dimension RESOLUTION;
     private final double[] FOV;
 
-    public CameraVision() {
+    public PiVision() {
         LATENCY_MS = SensorsSettings.getCameraServerLatency();
         RESOLUTION = SensorsSettings.getCameraResolution();
         FOV = SensorsSettings.getCameraFOV();

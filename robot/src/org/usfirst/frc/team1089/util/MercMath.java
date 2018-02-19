@@ -33,7 +33,7 @@ public class MercMath {
 	 * Rounds a floating-point value to a certain number of places past the decimals
 	 * @param val    the number to round
 	 * @param places the number of places to round to
-	 * @return the value, truncated to the set amount of places
+	 * @return the value, truncated to the setClawState amount of places
 	 */
 	public static double roundFloat(double val, int places) {
 //		double factor = Math.pow(10, places);

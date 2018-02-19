@@ -29,7 +29,7 @@ public class AutonBuilderController {
     private ToggleGroup radioGroup = new ToggleGroup();
 
     @FXML
-    private RadioButton leftRadioButton, middleRadioButton, rightRadioButton;
+    private RadioButton leftRadioButton, middleLeftRadioButton, middleRightRadioButton, rightRadioButton;
 
     @FXML
     private TableView tableLLL, tableLRL, tableRLR, tableRRR;
@@ -51,7 +51,8 @@ public class AutonBuilderController {
     public void initialize() {
         //Setup up the radio buttons to be in a group.
         leftRadioButton.setToggleGroup(radioGroup);
-        middleRadioButton.setToggleGroup(radioGroup);
+        middleLeftRadioButton.setToggleGroup(radioGroup);
+        middleRightRadioButton.setToggleGroup(radioGroup);
         rightRadioButton.setToggleGroup(radioGroup);
 
         //Format columns.
@@ -270,8 +271,10 @@ public class AutonBuilderController {
         if (isCompletelyFinished()) {
             // First off get the starting position
             if (radioGroup.getSelectedToggle() == rightRadioButton)
+                startingPos = 3;
+            else if (radioGroup.getSelectedToggle() == middleLeftRadioButton)
                 startingPos = 2;
-            else if (radioGroup.getSelectedToggle() == middleRadioButton)
+            else if (radioGroup.getSelectedToggle() == middleRightRadioButton)
                 startingPos = 1;
             else
                 startingPos = 0;

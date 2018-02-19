@@ -75,13 +75,13 @@ public class AutonCommand extends CommandGroup {
             case RIGHT:
                 switch (autonTasks[0]) {
                     case SCORE_SWITCH:
-                        addParallel(new UseElevator(Elevator.ELEVATOR_STATE.SWITCH));
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         if (gameData.getSwitchSide() == gameData.getScaleSide()) {
                             //TODO make a path that replaces the "CubeSetupPickup" and "SwitchBack" and the following DriveDistance
                             if (gameData.getSwitchSide() == comparableWorkingSide) {
                                 addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));//FIXED
                             } else {
                                 addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
@@ -100,22 +100,22 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                             }
                         }
-                        addSequential(new DriveDistance(43.5, .5));
-                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));
-                        addSequential(rotateRelative);
+                        //addSequential(new DriveDistance(43.5, .5));
+                        //rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
+                        //addSequential(rotateRelative);
                         break;
-                    case SCORE_SCALE:
-                        addParallel(new UseElevator(Elevator.ELEVATOR_STATE.SCALE_HIGH));
-                        if (gameData.getSwitchSide() == comparableWorkingSide) {
-                            addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
-                        } else {
-                            addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
-                            switchWorkingSide();
-                        }
-                        addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addSequential(new DriveDistance(-51.825, .5));
-                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
-                        addSequential(rotateRelative);
+                case SCORE_SCALE:
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
+                    if (gameData.getSwitchSide() == comparableWorkingSide) {
+                        addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
+                    } else {
+                        addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                        switchWorkingSide();
+                    }
+                    addSequential(new UseClaw(Claw.ClawState.EJECT));
+                    addSequential(new DriveDistance(-51.825, .5));
+                    rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
+                    addSequential(rotateRelative);
                 }
                 break;
             case LEFT_MID:
@@ -123,7 +123,6 @@ public class AutonCommand extends CommandGroup {
                 addSequential(new MoveOnPath("SwitchMid" + autonTasks.toString().substring(0, autonTasks.toString().indexOf("_")),
                         MoveOnPath.Direction.FORWARD));
                 break;
-
         }
 
         //TODO check all RotateRelative angle signs.
@@ -138,7 +137,7 @@ public class AutonCommand extends CommandGroup {
                 if (i != 0) {
                     addSequential(new RotateRelative(rotateRelative, HistoryOriginator.HistoryTreatment.REVERSE));
                 } else {
-                    addSequential(new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0)));
+                    addSequential(new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90)));
                 }
                 addSequential(new GetCube());
             }
@@ -208,11 +207,10 @@ public class AutonCommand extends CommandGroup {
     }
 
     private double getCubeTurnAngleScale(int cubesPickedUp, int rotationFactor, int addDeg) {
-        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
     }
-
     private double getCubeTurnAngleSwitch(int cubesPickedUp, int rotationFactor, int addDeg) {
-        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
     }
 
     /*private DriveDistance generateDriveAndStore(double dist, double pVolt) {

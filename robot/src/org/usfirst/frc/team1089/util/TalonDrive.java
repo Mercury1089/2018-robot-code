@@ -3,6 +3,10 @@ package org.usfirst.frc.team1089.util;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Helper class for various manual drive controls
@@ -11,6 +15,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * 
  */
 public class TalonDrive {
+	private final Logger LOG = LogManager.getLogger(TalonDrive.class);
+	private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 10, TimeUnit.SECONDS);
 	private final WPI_TalonSRX TALON_LEFT, TALON_RIGHT;
 	public double maxOutput = 0.5;
 	
@@ -33,6 +39,7 @@ public class TalonDrive {
 	 * @param max Max output value
 	 */
 	public void setMaxOutput(double max) {
+		SLOW_LOG.run(log -> log.info("Set max to " + max));
 		maxOutput = max;
 	}
 
@@ -47,11 +54,11 @@ public class TalonDrive {
 	/**
 	 * Single stick driving. This is done by using one axis for forwards/backwards,
 	 * and another for turning right/left. This method allows direct input from any joystick
-	 * value. This assumes that the control mode for the back has been properly set.
+	 * value. This assumes that the control mode for the back has been properly setClawState.
 	 * 
 	 * @param moveVal      Value for forwards/backwards
 	 * @param rotateVal    Value for rotation right/left
-	 * @param squareInputs If set, decreases sensitivity at lower speeds
+	 * @param squareInputs If setClawState, decreases sensitivity at lower speeds
 	 */
 	public void arcadeDrive(double moveVal, double rotateVal, boolean squareInputs) {
 		double leftPercent, rightPercent;
@@ -93,15 +100,15 @@ public class TalonDrive {
 		rightPercent = MercMath.clamp(rightPercent, -1.0, 1.0);
 		
 		// Apply speeds to motors.
-		// This assumes that the Talons have been set properly.
+		// This assumes that the Talons have been setClawState properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftPercent * maxOutput);
 		TALON_RIGHT.set(ControlMode.PercentOutput, rightPercent * maxOutput);
 	}
 	
 	/**
-	 * Double stick driving. Each joystick has their y-axes set to control one side
+	 * Double stick driving. Each joystick has their y-axes setClawState to control one side
 	 * of the robot, like a tank. his method allows direct input from any joystick
-	 * value. This assumes that the control mode for the back has been properly set.
+	 * value. This assumes that the control mode for the back has been properly setClawState.
 	 * 
 	 * @param leftVal  Value for left forwards/backwards
 	 * @param rightVal Value for right forwards/backwards
@@ -109,7 +116,7 @@ public class TalonDrive {
 	public void tankDrive(double leftVal, double rightVal) {
 
 		// Apply speeds to motors.
-		// This assumes that the Talons have been set properly.
+		// This assumes that the Talons have been setClawState properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftVal * maxOutput);
 		TALON_RIGHT.set(ControlMode.PercentOutput, rightVal * maxOutput);
 	}

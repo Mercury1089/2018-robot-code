@@ -44,7 +44,6 @@ public class DriveArcade extends Command {
 	@Override
 	protected void execute() {
 		tDrive.arcadeDrive(Robot.oi.getY(DS_USB.LEFT_STICK), -Robot.oi.getX(DS_USB.RIGHT_STICK), true);
-		tDrive.setMaxOutput(DriveTrain.MAX_SPEED - (Robot.elevator.getCurHeight() / Elevator.MAX_HEIGHT) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED)); //TODO test this
 		everySecond.run(log -> log.info("arcade driving"));
 	}
 

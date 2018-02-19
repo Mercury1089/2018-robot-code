@@ -29,7 +29,7 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
 	}
 
 	/**
-	 * Constructs this command with a set degree to rotate.
+	 * Constructs this command with a setClawState degree to rotate.
 	 * @param targetHeading the relative number of degrees to rotate by
 	 */
 	public RotateRelative(double targetHeading) {

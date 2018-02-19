@@ -2,6 +2,9 @@ package org.usfirst.frc.team1089.robot.auton;
 
 import javafx.util.StringConverter;
 
+/**
+ * Enumerations of tasks that can be done during auton
+ */
 public enum AutonTask {
     SCORE_SWITCH,
     SCORE_SCALE,

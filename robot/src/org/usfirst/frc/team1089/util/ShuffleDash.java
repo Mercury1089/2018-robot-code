@@ -40,7 +40,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
-        //SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getElevatorTalon().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
+        SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getElevatorTalon().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
         SmartDashboard.putNumber("Left Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
         SmartDashboard.putNumber("Right Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
@@ -48,6 +48,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("LIDAR Distance (in.)", MercMath.roundFloat(Robot.claw.getLidar().getDistance(), 10));
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.claw.getLidar().getDistance(), 10));
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
+        SmartDashboard.putNumber("Ultrasonic Distance", Robot.ultrasonic.getRange());
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Cube Angle", Robot.camera.getAngleFromCube());

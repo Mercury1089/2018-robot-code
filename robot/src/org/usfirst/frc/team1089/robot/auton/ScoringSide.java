@@ -2,6 +2,16 @@ package org.usfirst.frc.team1089.robot.auton;
 
 import javafx.util.StringConverter;
 
+/**
+ * Enumeration of sides to score on for the scale or switch
+ *
+ * <h3>SIDES</h3>
+ * <ul>
+ *     <li>FRONT - Far side of scale/switch</li>
+ *     <li>MID - Outer edge of scale/switch</li>
+ *     <li>BACK - Near side of scale/switch</li>
+ * </ul>
+ */
 public enum ScoringSide {
     FRONT,
     MID,

@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.auton.*;
-import org.usfirst.frc.team1089.robot.sensors.CameraVision;
-import org.usfirst.frc.team1089.robot.sensors.Vision;
+import org.usfirst.frc.team1089.robot.sensors.PiVision;
+import org.usfirst.frc.team1089.robot.sensors.Ultrasonic;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
@@ -35,10 +35,10 @@ public class Robot extends IterativeRobot {
 	// Subsystems
 	public static DriveTrain driveTrain;
 	public static PDP pdp;
-	public static CameraVision camera;
+	public static PiVision camera;
     public static Claw claw;
     public static Elevator elevator;
-    public static Vision vision;
+    public static Ultrasonic ultrasonic;
 	private static Logger log = LogManager.getLogger(Robot.class);
 
 	public static Map<String, AutonTrajectoryGenerator.TrajectoryPair> autonTrajectories;
@@ -59,7 +59,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		//autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
+		autonTrajectories = AutonTrajectoryGenerator.generateTrajectories();
 
 		elevator = new Elevator(CAN.ELEVATOR_M, CAN.ELEVATOR_S);
 
@@ -76,9 +76,9 @@ public class Robot extends IterativeRobot {
 
 		pdp = new PDP();
 
-		camera = new CameraVision();
+		camera = new PiVision();
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
-		vision = new Vision();
+		ultrasonic = new Ultrasonic();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();
@@ -155,6 +155,9 @@ public class Robot extends IterativeRobot {
 				autonCommand = new AutonCommand(autonBuilderRLR);
 				break;
 		}
+		if (autonCommand != null) {
+		    autonCommand.start();
+        }
 	}
 
 	/**

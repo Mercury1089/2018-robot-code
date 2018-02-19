@@ -1,5 +1,10 @@
 package org.usfirst.frc.team1089.robot.auton;
 
+/**
+ * Builds an auton based on certain positions and tasks.
+ *
+ * This is good for modular autons that are easily customizable.
+ */
 public class AutonBuilder {
     private AutonPosition autonPos;
     private AutonTask[] autonTasks;

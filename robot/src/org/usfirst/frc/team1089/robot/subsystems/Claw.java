@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
+import org.usfirst.frc.team1089.robot.sensors.PixyI2C;
+import org.usfirst.frc.team1089.robot.sensors.Ultrasonic;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
@@ -24,11 +26,15 @@ public class Claw extends Subsystem {
     public final double MIN_INCHES = 10.0;
 
     private WPI_VictorSPX
-            clawMotor_M,
-            clawMotor_S;
+        clawMotor_M,
+        clawMotor_S;
 
+    // All sensors belong to the claw, I guess?
     private LIDAR lidar;
     private CANifier canifier;
+    private PixyI2C pixyCam;
+    private Ultrasonic ultrasonic;
+
     private boolean hasCube;
     private boolean ejecting;
 
@@ -41,19 +47,32 @@ public class Claw extends Subsystem {
         }
     }
 
-    public Claw(int canID, int pwm, int leader, int follower) {
-        canifier = new CANifier(canID);
+    /**
+     * Constructs a new claw, specifying the ports for the ledaer SPX, follower SPX,
+     * and all the sensors connected to it.
+     *
+     * @param usPort    Ultrasonic port
+     * @param cfID      CANifier CAN ID
+     * @param lidarPort LIDAR port
+     * @param leadID    Leader (Victor SPX) CAN ID
+     * @param folID     Follower (Victor SPX) CAN ID
+     */
+    public Claw(int usPort, int cfID, int lidarPort, int leadID, int folID) {
+        canifier = new CANifier(cfID);
 
-        clawMotor_S = new WPI_VictorSPX(follower);
-        clawMotor_M = new WPI_VictorSPX(leader);
+        clawMotor_S = new WPI_VictorSPX(folID);
+        clawMotor_M = new WPI_VictorSPX(leadID);
+
+        pixyCam = new PixyI2C();
+
+        ultrasonic = new Ultrasonic(usPort);
 
         // Clamp pwm id between 0 and 3
-        pwm = (int) MercMath.clamp(pwm, 0, 3);
         LIDAR.PWMOffset offset = SensorsSettings.getLidarEquation();
 
         hasCube = false;
 
-        lidar = new LIDAR(canifier, CANifier.PWMChannel.valueOf(pwm), offset);
+        this.lidar = new LIDAR(canifier, CANifier.PWMChannel.valueOf(lidarPort), offset);
 
         setName("Claw");
         log.info("Initalized claw");
@@ -68,14 +87,18 @@ public class Claw extends Subsystem {
         updateState();
     }
 
+    /**
+     * Updates the states of the LEDs and the gamepad rumble
+     * based on whether or not the cube is in range or is being held.
+     */
     private void updateState() {
         boolean rumble = false;
 
-        if (Robot.vision.getPixyCam().inRange()) { // Cube is in range to auto pickup
+        if (pixyCam.inRange()) { // Cube is in range to auto pickup
             // White
             colorLED(255, 255, 255);
             rumble = true;
-        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
+        } else if (lidar.getDistance() <= MIN_INCHES) { // Have cube?
             // Listen from SmartDash
 
             // Fun colors to note:
@@ -112,7 +135,7 @@ public class Claw extends Subsystem {
         setDefaultCommand(null);
     }
 
-    public void set(ClawState state) {
+    public void setClawState(ClawState state) {
         clawMotor_M.set(state.SPEED);
     }
 
@@ -122,6 +145,10 @@ public class Claw extends Subsystem {
 
     public LIDAR getLidar() {
         return lidar;
+    }
+
+    public PixyI2C getPixyCam() {
+        return pixyCam;
     }
 
     public boolean getHasCube() {

@@ -5,55 +5,74 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Command that constantly updates the height of the elevator based
+ * on the elevator's current target position.
+ */
 public class UseElevator extends Command {
-    private static Logger log = LogManager.getLogger(UseElevator.class);
-    private DelayableLogger exeLog = new DelayableLogger(log, 10, TimeUnit.SECONDS);
+    private final Logger LOG = LogManager.getLogger(UseElevator.class);
+    private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
 
-    private Elevator.ELEVATOR_STATE targetState;
+    private Elevator.ElevatorPosition targetPos;
 
-    public UseElevator(Elevator.ELEVATOR_STATE targetState) {
+    private int counter = 0;
+
+    /**
+     * Constructs this command with the specified position to move to
+     *
+     * @param pos the elevator position to move to
+     */
+    public UseElevator(Elevator.ElevatorPosition pos) {
         requires(Robot.elevator);
-        setName(targetState + "Elevator");
-        this.targetState = targetState;
-        log.info(getName() + " Constructed");
+        targetPos = pos;
+
+        setName("UseElevator (" + pos + ")");
+        LOG.info(getName() + " Constructed");
     }
 
     @Override
     protected void initialize() {
-        if (targetState != Elevator.ELEVATOR_STATE.STOP) {
-            Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
-            Robot.elevator.setCurrentState(targetState);
-        }
-        log.info(getName() + " initialized");
+        Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
+        Robot.elevator.setPosition(targetPos);
+
+        LOG.info(getName() + " initialized");
     }
 
     @Override
     protected void execute() {
-        exeLog.run( log -> log.debug(getName() + " executing"));
-        if (targetState == Elevator.ELEVATOR_STATE.STOP) {
-            while(!Robot.elevator.getLimitSwitch().get()) {
-                Robot.elevator.getElevatorTalon().set(ControlMode.PercentOutput, -0.3);
-            }
+        SLOW_LOG.run(log -> log.debug(getName() + " executing"));
 
-            Robot.elevator.setCurHeight(Robot.elevator.getElevatorTalon().getSensorCollection().getQuadraturePosition());
-            Robot.elevator.setCurrentState(targetState);
-            Robot.elevator.getElevatorTalon().getSensorCollection().setQuadraturePosition((int)Elevator.ELEVATOR_STATE.STOP.encPos, 0);
+        if (targetPos == Elevator.ElevatorPosition.FLOOR) {
+            if (Math.abs(Robot.elevator.getCurrentHeight()) <= 2.0 && !Robot.elevator.isLimitSwitchClosed()) {
+                Robot.elevator.getElevatorTalon().set(ControlMode.Position, counter--);
+
+                LOG.info("Did not reach, setting setpoint to " + targetPos.encPos + counter);
+            } else {
+                counter = 0;
+                Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
+                LOG.info("Reached!");
+            }
         }
+
+        double maxOut = DriveTrain.MAX_SPEED - (Robot.elevator.getCurrentHeight() / Elevator.MAX_HEIGHT) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
+        LOG.info("Set max output to " + maxOut);
+        Robot.driveTrain.setMaxOutput(maxOut);
     }
 
     @Override
     protected void interrupted() {
-        log.info(getName() + " interrupted");
+        LOG.info(getName() + " interrupted");
     }
 
     @Override
     protected void end() {
-        log.info(getName() + "elevator ended");
+        LOG.info(getName() + "elevator ended");
     }
 
     @Override

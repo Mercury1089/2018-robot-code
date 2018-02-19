@@ -5,6 +5,12 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
+/**
+ * Autonomous alignment command that uses {@link org.usfirst.frc.team1089.robot.sensors.PiVision PiVision}
+ * to align to a target.
+ *
+ * @deprecated see {@link org.usfirst.frc.team1089.robot.sensors.PiVision PiVision}
+ */
 public class AutoAlign extends RotateRelative {
     private final double ANGLE_THRESHOLD;
     private static Logger LOG = LogManager.getLogger(AutoAlign.class);

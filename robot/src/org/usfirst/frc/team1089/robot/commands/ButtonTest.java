@@ -7,6 +7,11 @@ import org.usfirst.frc.team1089.util.DelayableLogger;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Test to make sure that buttons work
+ *
+ * @deprecated gee I wonder why
+ */
 public class ButtonTest extends Command {
 
 	private static Logger log = LogManager.getLogger(ButtonTest.class);

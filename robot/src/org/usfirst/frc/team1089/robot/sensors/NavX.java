@@ -1,12 +1,13 @@
-package org.usfirst.frc.team1089.util;
+package org.usfirst.frc.team1089.robot.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
+/**
+ * Navigational sensor with both a gyro and accelerometer
+ */
 public class NavX extends AHRS implements Gyro {
-
-
     public NavX(SerialPort.Port serial_port_id) {
         super(serial_port_id);
     }

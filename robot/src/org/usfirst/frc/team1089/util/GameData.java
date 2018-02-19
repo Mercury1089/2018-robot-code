@@ -2,6 +2,10 @@ package org.usfirst.frc.team1089.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
+/**
+ * Class cntaining data structures for representing
+ * different stats of the game
+ */
 public class GameData {
 
     private static GameData gameData;

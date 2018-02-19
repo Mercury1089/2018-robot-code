@@ -22,7 +22,10 @@ public class PixyI2C implements PIDSource {
 
 
     public PixyI2C() {
+        // Assume that we are using the onboard port,
+        // We never use MXP port for I2C
         PIXY = new I2C(I2C.Port.kOnboard, 0x54);
+
         BOXES = new BoundingBox[7];
         DISPLACEMENT_OFFSET = 20;
 

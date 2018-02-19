@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.sensors.LIDAR;
+import org.usfirst.frc.team1089.robot.sensors.PixyI2C;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
@@ -29,6 +30,7 @@ public class Claw extends Subsystem {
 
     private LIDAR lidar;
     private CANifier canifier;
+    private PixyI2C pixyCam;
     private boolean hasCube;
     private boolean ejecting;
 
@@ -41,19 +43,21 @@ public class Claw extends Subsystem {
         }
     }
 
-    public Claw(int canID, int pwm, int leader, int follower) {
-        canifier = new CANifier(canID);
+    public Claw(int cf, int pwmOffsetEq, int leader, int follower) {
+        canifier = new CANifier(cf);
 
         clawMotor_S = new WPI_VictorSPX(follower);
         clawMotor_M = new WPI_VictorSPX(leader);
 
+        pixyCam = new PixyI2C();
+
         // Clamp pwm id between 0 and 3
-        pwm = (int) MercMath.clamp(pwm, 0, 3);
+        pwmOffsetEq = (int) MercMath.clamp(pwmOffsetEq, 0, 3);
         LIDAR.PWMOffset offset = SensorsSettings.getLidarEquation();
 
         hasCube = false;
 
-        lidar = new LIDAR(canifier, CANifier.PWMChannel.valueOf(pwm), offset);
+        lidar = new LIDAR(canifier, CANifier.PWMChannel.valueOf(pwmOffsetEq), offset);
 
         setName("Claw");
         log.info("Initalized claw");
@@ -71,11 +75,11 @@ public class Claw extends Subsystem {
     private void updateState() {
         boolean rumble = false;
 
-        if (Robot.vision.getPixyCam().inRange()) { // Cube is in range to auto pickup
+        if (pixyCam.inRange()) { // Cube is in range to auto pickup
             // White
             colorLED(255, 255, 255);
             rumble = true;
-        } else if (Robot.claw.getLidar().getDistance() <= MIN_INCHES) { // Have cube?
+        } else if (lidar.getDistance() <= MIN_INCHES) { // Have cube?
             // Listen from SmartDash
 
             // Fun colors to note:
@@ -122,6 +126,10 @@ public class Claw extends Subsystem {
 
     public LIDAR getLidar() {
         return lidar;
+    }
+
+    public PixyI2C getPixyCam() {
+        return pixyCam;
     }
 
     public boolean getHasCube() {

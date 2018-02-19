@@ -42,9 +42,9 @@ public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 
 		LOG.info(getName() + " Beginning constructor");
 		requires(Robot.driveTrain);
-		requires(Robot.vision);
+		requires(Robot.claw);
 
-		filter = LinearDigitalFilter.movingAverage(Robot.vision.getPixyCam(), 5);
+		filter = LinearDigitalFilter.movingAverage(Robot.claw.getPixyCam(), 5);
 		gyro = Robot.driveTrain.getGyro();
 
 		MIN_PERCENT_VBUS = DriveTrainSettings.getRotMinPVBus();

@@ -21,7 +21,7 @@ public class GetCube extends CommandGroup {
         RotateRelative rotate180 = new RotateRelative(180);
         DriveWithLIDAR dwl = new DriveWithLIDAR(8, 0.3);
         log.info(getName() + " Beginning constructor");
-        angleTurned = Robot.vision.getPixyCam().pidGet();
+        angleTurned = Robot.claw.getPixyCam().pidGet();
         addSequential(rotate180);
         addSequential(rtt);
         distanceTraveled = Robot.claw.getLidar().getDistance();

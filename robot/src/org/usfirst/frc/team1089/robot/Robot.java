@@ -12,10 +12,7 @@ import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.auton.*;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
-import org.usfirst.frc.team1089.robot.subsystems.*;
-import org.usfirst.frc.team1089.util.GameData;
-import org.usfirst.frc.team1089.util.config.*;
-import org.usfirst.frc.team1089.robot.sensors.Vision;
+import org.usfirst.frc.team1089.robot.sensors.Ultrasonic;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
@@ -42,7 +39,6 @@ public class Robot extends IterativeRobot {
     public static Claw claw;
     public static Elevator elevator;
     public static Ultrasonic ultrasonic;
-    public static Vision vision;
 	private static Logger log = LogManager.getLogger(Robot.class);
 
 	public static Map<String, AutonTrajectoryGenerator.TrajectoryPair> autonTrajectories;
@@ -83,7 +79,6 @@ public class Robot extends IterativeRobot {
 		camera = new CameraVision();
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		ultrasonic = new Ultrasonic();
-		vision = new Vision();
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

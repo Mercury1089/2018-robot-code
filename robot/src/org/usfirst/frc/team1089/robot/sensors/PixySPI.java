@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -18,8 +17,8 @@ import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-public class PixyCam implements PIDSource {
-    private static final Logger log = LogManager.getLogger(PixyCam.class);
+public class PixySPI implements PIDSource {
+    private static final Logger log = LogManager.getLogger(PixySPI.class);
 
     private final SPI SPI;
 
@@ -46,7 +45,7 @@ public class PixyCam implements PIDSource {
     private long getBlock = 0;
     private long readPackets = 0;
 
-    public PixyCam(int spiPort) {
+    public PixySPI(int spiPort) {
         // Only use ports [0 - 3]
         spiPort = (int) MercMath.clamp(spiPort, 0, 3);
 

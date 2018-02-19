@@ -75,7 +75,7 @@ public class AutonCommand extends CommandGroup {
             case RIGHT:
                 switch (autonTasks[0]) {
                     case SCORE_SWITCH:
-                        addParallel(new UseElevator(Elevator.ElevatorState.SWITCH));
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         if (gameData.getSwitchSide() == gameData.getScaleSide()) {
                             //TODO make a path that replaces the "CubeSetupPickup" and "SwitchBack" and the following DriveDistance
                             if (gameData.getSwitchSide() == comparableWorkingSide) {
@@ -105,7 +105,7 @@ public class AutonCommand extends CommandGroup {
                         //addSequential(rotateRelative);
                         break;
                 case SCORE_SCALE:
-                    addParallel(new UseElevator(Elevator.ElevatorState.SCALE_HIGH));
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                     if (gameData.getSwitchSide() == comparableWorkingSide) {
                         addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                     } else {

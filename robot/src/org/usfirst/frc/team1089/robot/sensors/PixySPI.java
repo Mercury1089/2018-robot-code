@@ -17,6 +17,11 @@ import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+/**
+ * PixyCam implementation using SPI interface
+ *
+ * @deprecated since we cannot use the SPI interface on the RIO.
+ */
 public class PixySPI implements PIDSource {
     private static final Logger log = LogManager.getLogger(PixySPI.class);
 
@@ -107,7 +112,7 @@ public class PixySPI implements PIDSource {
             skipStart = false;
         }
 
-        // Loop until we hit the maximum size allowed for BOXES, or until we know we have a complete set of BOXES.
+        // Loop until we hit the maximum size allowed for BOXES, or until we know we have a complete setClawState of BOXES.
         while (BOXES.size() < max && BOXES.size() < PIXY_MAXIMUM_ARRAYSIZE) {
             // Since this is our first time in, bytes 2 and 3 are the checksum, grab them and store for future use.
             // NOTE: getWord grabs the entire 16 bits in one shot.
@@ -115,7 +120,7 @@ public class PixySPI implements PIDSource {
             int trialsum = 0;
 
             // See if the checksum is really the beginning of the next block,
-            // in which case return the current set of BOXES found and set the flag
+            // in which case return the current setClawState of BOXES found and setClawState the flag
             // to skip looking for the beginning of the next block since we already found it.
             if (checksum == PIXY_START_WORD) {
                 skipStart = true;

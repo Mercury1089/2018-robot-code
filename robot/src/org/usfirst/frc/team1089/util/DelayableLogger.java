@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
- * A logger that can be set to log with a certain delay between logs. 
+ * A logger that can be setClawState to log with a certain delay between logs.
  * This is to prevent overhead from constant logging in periodic commands. <p>
  * 
  * Usage can be something like:

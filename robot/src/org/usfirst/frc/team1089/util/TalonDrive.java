@@ -54,11 +54,11 @@ public class TalonDrive {
 	/**
 	 * Single stick driving. This is done by using one axis for forwards/backwards,
 	 * and another for turning right/left. This method allows direct input from any joystick
-	 * value. This assumes that the control mode for the back has been properly set.
+	 * value. This assumes that the control mode for the back has been properly setClawState.
 	 * 
 	 * @param moveVal      Value for forwards/backwards
 	 * @param rotateVal    Value for rotation right/left
-	 * @param squareInputs If set, decreases sensitivity at lower speeds
+	 * @param squareInputs If setClawState, decreases sensitivity at lower speeds
 	 */
 	public void arcadeDrive(double moveVal, double rotateVal, boolean squareInputs) {
 		double leftPercent, rightPercent;
@@ -100,15 +100,15 @@ public class TalonDrive {
 		rightPercent = MercMath.clamp(rightPercent, -1.0, 1.0);
 		
 		// Apply speeds to motors.
-		// This assumes that the Talons have been set properly.
+		// This assumes that the Talons have been setClawState properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftPercent * maxOutput);
 		TALON_RIGHT.set(ControlMode.PercentOutput, rightPercent * maxOutput);
 	}
 	
 	/**
-	 * Double stick driving. Each joystick has their y-axes set to control one side
+	 * Double stick driving. Each joystick has their y-axes setClawState to control one side
 	 * of the robot, like a tank. his method allows direct input from any joystick
-	 * value. This assumes that the control mode for the back has been properly set.
+	 * value. This assumes that the control mode for the back has been properly setClawState.
 	 * 
 	 * @param leftVal  Value for left forwards/backwards
 	 * @param rightVal Value for right forwards/backwards
@@ -116,7 +116,7 @@ public class TalonDrive {
 	public void tankDrive(double leftVal, double rightVal) {
 
 		// Apply speeds to motors.
-		// This assumes that the Talons have been set properly.
+		// This assumes that the Talons have been setClawState properly.
 		TALON_LEFT.set(ControlMode.PercentOutput, leftVal * maxOutput);
 		TALON_RIGHT.set(ControlMode.PercentOutput, rightVal * maxOutput);
 	}

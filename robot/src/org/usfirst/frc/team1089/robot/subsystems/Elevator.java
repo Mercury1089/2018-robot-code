@@ -13,6 +13,9 @@ import org.usfirst.frc.team1089.robot.RobotMap;
 import org.usfirst.frc.team1089.robot.commands.UseElevator;
 import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
 
+/**
+ * Subsystem encapsulating elevator mechanism to move claw up and down.
+ */
 public class Elevator extends Subsystem {
     private static Logger log = LogManager.getLogger(Elevator.class);
 
@@ -21,25 +24,43 @@ public class Elevator extends Subsystem {
 
     private DigitalInput limitSwitch;
 
-    public enum ElevatorState {
+    /**
+     * Enumeration of positions that the elevator can have.
+     * This is more a representation of the target positions, and does not reflect
+     * the exact height of the claw at any precise moment.
+     */
+    public enum ElevatorPosition {
         // TODO: Temporary Values
-        SWITCH(150.0),
-        SCALE_LOW(300.0),
-        SCALE_HIGH(2000.0),
-        STOP(0.0);
+        SCALE_HIGH(2000.0), // Scale at its highest point
+        SCALE_LOW(300.0),   // Scale at its lowest point
+        SWITCH(150.0),      // Above switch fence
+        FLOOR(0.0);         // Elevator bottomed out
 
         public final double encPos;
 
-        ElevatorState(double encPos) {
-            this.encPos = encPos;
+        /**
+         * Creates an elevator position, storing the encoder ticks
+         * representing the height that the elevator should be at.
+         *
+         * @param ep encoder position, in ticks
+         */
+        ElevatorPosition(double ep) {
+            encPos = ep;
         }
     }
 
-    private ElevatorState currentState;
+    private ElevatorPosition position;
 
-    public static final double MAX_HEIGHT = ElevatorState.SCALE_HIGH.encPos; //TODO Random value, change to the max height of the elevator
+    public static final double MAX_HEIGHT = ElevatorPosition.SCALE_HIGH.encPos; //TODO Random value, change to the max height of the elevator
     private double curHeight;
 
+    /**
+     * Creates a new elevator, using the specified CAN IDs for the
+     * leader controller (Talon SRX) and follower controller (Victor SPX).
+     *
+     * @param talonID  Leader (Talon SRX) CAN ID
+     * @param victorID Follower (Victor SPX) CAN ID
+     */
     public Elevator(int talonID, int victorID) {
         elevatorTalon = new WPI_TalonSRX(talonID);
         elevatorTalon.setNeutralMode(NeutralMode.Brake);
@@ -70,7 +91,7 @@ public class Elevator extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new UseElevator(ElevatorState.STOP));
+        setDefaultCommand(new UseElevator(ElevatorPosition.FLOOR));
     }
 
     public WPI_TalonSRX getElevatorTalon() {
@@ -81,15 +102,30 @@ public class Elevator extends Subsystem {
         return elevatorTalon.getSensorCollection().isRevLimitSwitchClosed();
     }
 
-    public ElevatorState getCurrentState() {
-        return currentState;
+    /**
+     * Gets the current {@link ElevatorPosition} for the elevator.
+     *
+     * @return the current ElevatorPosition
+     */
+    public ElevatorPosition getPosition() {
+        return position;
     }
 
-    public void setCurrentState(ElevatorState currentState) {
-        this.currentState = currentState;
+    /**
+     * Sets the {@link ElevatorPosition} for the elevator.
+     *
+     * @param ep the new ElevatorPosition to set
+     */
+    public void setPosition(ElevatorPosition ep) {
+        position = ep;
     }
 
-    public double getHeight() {
+    /**
+     * Get current height of claw on elevator.
+     *
+     * @return height of claw as read by the encoder, in ticks
+     */
+    public double getCurrentHeight() {
         return elevatorTalon.getSelectedSensorPosition(RobotMap.PID.PRIMARY_PID_LOOP);
     }
 }

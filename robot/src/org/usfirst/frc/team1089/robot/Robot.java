@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
 import org.usfirst.frc.team1089.robot.auton.*;
-import org.usfirst.frc.team1089.robot.sensors.CameraVision;
+import org.usfirst.frc.team1089.robot.sensors.PiVision;
 import org.usfirst.frc.team1089.robot.sensors.Ultrasonic;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
@@ -35,7 +35,7 @@ public class Robot extends IterativeRobot {
 	// Subsystems
 	public static DriveTrain driveTrain;
 	public static PDP pdp;
-	public static CameraVision camera;
+	public static PiVision camera;
     public static Claw claw;
     public static Elevator elevator;
     public static Ultrasonic ultrasonic;
@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot {
 
 		pdp = new PDP();
 
-		camera = new CameraVision();
+		camera = new PiVision();
 		claw = new Claw(CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
 		ultrasonic = new Ultrasonic();
 

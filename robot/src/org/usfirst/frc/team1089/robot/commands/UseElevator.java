@@ -11,25 +11,35 @@ import org.usfirst.frc.team1089.util.DelayableLogger;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Command that constantly updates the height of the elevator based
+ * on the elevator's current target position.
+ */
 public class UseElevator extends Command {
     private final Logger LOG = LogManager.getLogger(UseElevator.class);
     private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
 
-    private Elevator.ElevatorState targetState;
+    private Elevator.ElevatorPosition targetPos;
 
     private int counter = 0;
 
-    public UseElevator(Elevator.ElevatorState targetState) {
+    /**
+     * Constructs this command with the specified position to move to
+     *
+     * @param pos the elevator position to move to
+     */
+    public UseElevator(Elevator.ElevatorPosition pos) {
         requires(Robot.elevator);
-        setName("UseElevator (" + targetState + ")");
-        this.targetState = targetState;
+        targetPos = pos;
+
+        setName("UseElevator (" + pos + ")");
         LOG.info(getName() + " Constructed");
     }
 
     @Override
     protected void initialize() {
-        Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
-        Robot.elevator.setCurrentState(targetState);
+        Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
+        Robot.elevator.setPosition(targetPos);
 
         LOG.info(getName() + " initialized");
     }
@@ -38,21 +48,21 @@ public class UseElevator extends Command {
     protected void execute() {
         SLOW_LOG.run(log -> log.debug(getName() + " executing"));
 
-        if (targetState == Elevator.ElevatorState.STOP) {
-            if (Math.abs(Robot.elevator.getHeight()) <= 2.0 && !Robot.elevator.isLimitSwitchClosed()) {
+        if (targetPos == Elevator.ElevatorPosition.FLOOR) {
+            if (Math.abs(Robot.elevator.getCurrentHeight()) <= 2.0 && !Robot.elevator.isLimitSwitchClosed()) {
                 Robot.elevator.getElevatorTalon().set(ControlMode.Position, counter--);
 
-                LOG.info("Did not reach, setting setpoint to " + targetState.encPos + counter);
+                LOG.info("Did not reach, setting setpoint to " + targetPos.encPos + counter);
             } else {
                 counter = 0;
-                Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetState.encPos);
+                Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
                 LOG.info("Reached!");
             }
         }
 
-        double maxOut = DriveTrain.MAX_SPEED - (Robot.elevator.getHeight() / Elevator.MAX_HEIGHT) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
+        double maxOut = DriveTrain.MAX_SPEED - (Robot.elevator.getCurrentHeight() / Elevator.MAX_HEIGHT) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
         LOG.info("Set max output to " + maxOut);
-        Robot.driveTrain.setMaxOutput(maxOut); //TODO test this
+        Robot.driveTrain.setMaxOutput(maxOut);
     }
 
     @Override

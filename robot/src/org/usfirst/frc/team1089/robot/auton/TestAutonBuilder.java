@@ -9,14 +9,13 @@ import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 
 /**
- * Command group that specifies the commands to be run
- * during the autonomous period.
+ * Test command to run {@link AutonBuilder} trials
  */
 public class TestAutonBuilder extends CommandGroup {
     private static Logger log = LogManager.getLogger(TestAutonBuilder.class);
 
     public TestAutonBuilder() {
-        //TODO make sure to set up cubes and test this in a wide open space
+        //TODO make sure to setClawState up cubes and test this in a wide open space
         //TODO also make sure to input RRR in the driver station
         /*addSequential(new AutonCommand(new AutonBuilder(
                 AutonPosition.RIGHT,

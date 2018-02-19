@@ -35,7 +35,7 @@ public class UseClaw extends Command {
 
     @Override
     protected void execute() {
-        Robot.claw.set(targetState);
+        Robot.claw.setClawState(targetState);
         exeLog.run( log -> log.debug(getName() + " executing"));
     }
 
@@ -54,7 +54,7 @@ public class UseClaw extends Command {
             Robot.claw.setHasCube(false);
             Robot.claw.setEjecting(false);
         }
-        Robot.claw.set(Claw.ClawState.STOP);
+        Robot.claw.setClawState(Claw.ClawState.STOP);
     }
 
     @Override

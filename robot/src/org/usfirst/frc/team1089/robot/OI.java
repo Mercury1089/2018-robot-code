@@ -128,9 +128,9 @@ public class OI {
 
 		gamepad_start.whenPressed(new DriveArcade());
 		gamepad_back.whenPressed(new DriveTank());
-		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorState.STOP)); //GetCube());
-		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorState.SCALE_HIGH));
-		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorState.SCALE_LOW));
+		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //GetCube());
+		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
+		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);
 		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		gamepad_rb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.RB);

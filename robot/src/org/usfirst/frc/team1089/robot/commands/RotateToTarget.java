@@ -15,7 +15,7 @@ import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Turns the robot towards a target found with a camera
+ * Turns the robot towards a target found with the PixyCam
  */
 public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 	private final Logger LOG = LogManager.getLogger(RotateToTarget.class);
@@ -31,7 +31,7 @@ public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 	private double finalRotation = Double.NEGATIVE_INFINITY;
 
 	/**
-	 * Constructs this command with a set degree to rotate.
+	 * Constructs this command with a setClawState degree to rotate.
 	 */
 	public RotateToTarget() {
 		super( // Sloppy, but configurable

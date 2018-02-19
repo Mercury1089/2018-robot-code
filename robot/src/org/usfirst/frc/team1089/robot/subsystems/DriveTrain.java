@@ -113,18 +113,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         tMasterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
     }
 
-    public TalonSRX getLeft() {
-        return tMasterLeft;
-    }
-
-    public TalonSRX getRight() {
-        return tMasterRight;
-    }
-
-    public TalonDrive getTalonDrive() {
-        return tDrive;
-    }
-
     public void resetEncoders() {
         tMasterLeft.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
         tMasterRight.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
@@ -143,7 +131,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     /**
-     * Sets both of the front talons to have a forward output of nominalOutput and peakOutput with the reverse output set to the negated outputs.
+     * Sets both of the front talons to have a forward output of nominalOutput and peakOutput with the reverse output setClawState to the negated outputs.
      *
      * @param nominalOutput The desired nominal voltage output of the left and right talons, both forward and reverse.
      * @param peakOutput    The desired peak voltage output of the left and right talons, both forward and reverse
@@ -160,7 +148,9 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     /**
-     * @return The gyro, either the NavX or Analog Gyro, currently in use on the robot.
+     * Gets the gyro being used by the drive train.
+     *
+     * @return The gyro, either the NavX or Analog Gyro, currently in use on the robot
      */
     public Gyro getGyro() {
        /* if (navX != null) {
@@ -187,6 +177,18 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
     public double getRightEncPositionInFeet() {
         return MercMath.getEncPosition(getRightEncPositionInTicks());
+    }
+
+    public TalonSRX getLeft() {
+        return tMasterLeft;
+    }
+
+    public TalonSRX getRight() {
+        return tMasterRight;
+    }
+
+    public TalonDrive getTalonDrive() {
+        return tDrive;
     }
 
     public double getFeedForward() {

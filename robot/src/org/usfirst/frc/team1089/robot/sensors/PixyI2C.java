@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.util.BoundingBox;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
+/**
+ * PixyCam implementation using the I2C interface
+ */
 public class PixyI2C implements PIDSource {
     private static final Logger LOG = LogManager.getLogger(PixyI2C.class);
     private BoundingBox curTarget;
@@ -20,7 +23,10 @@ public class PixyI2C implements PIDSource {
     private final int MIN_BOX_WIDTH = 45; //Arbitrary value, change to what minimum value of width can be for cube to be cassified as "In range"
     private final Notifier PIXY_UPDATE_NOTIFIER = new Notifier(null);
 
-
+    /**
+     * Constructs a new PixyCam, assuming that the I2C
+     * bus is the one on the roboRIO
+     */
     public PixyI2C() {
         // Assume that we are using the onboard port,
         // We never use MXP port for I2C
@@ -106,12 +112,13 @@ public class PixyI2C implements PIDSource {
 
     @Override
     public void setPIDSourceType(PIDSourceType pidSource) {
-
+        // Unused, but must be implemented
     }
 
     @Override
     public PIDSourceType getPIDSourceType() {
         return PIDSourceType.kDisplacement;
+        // Always a displacement error
     }
 
     @Override
@@ -125,6 +132,12 @@ public class PixyI2C implements PIDSource {
         return val;
     }
 
+    /**
+     * Gets whether or not the PixyCam is near the target based on
+     * the target's scale
+     *
+     * @return whether or not we can see a target and if it is close enough
+     */
     public boolean inRange() {
         return (curTarget != null && curTarget.getWidth() >= MIN_BOX_WIDTH);
     }

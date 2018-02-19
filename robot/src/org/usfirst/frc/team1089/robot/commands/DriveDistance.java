@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import static org.usfirst.frc.team1089.robot.subsystems.DriveTrain.PRIMARY_PID_LOOP;
 
 /**
- * Uses Talons and mag encoders to drive a set distance.
+ * Uses Talons and mag encoders to drive a setClawState distance.
  */
 public class DriveDistance extends Command implements HistoryOriginator {
     private final double MOVE_THRESHOLD = 500;
@@ -116,7 +116,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
 
         Robot.driveTrain.resetEncoders();
 
-        //The voltage set on the Talons is global, so the talons must be reconfigured back to their original outputs.
+        //The voltage setClawState on the Talons is global, so the talons must be reconfigured back to their original outputs.
         Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
 
         log.info("Final Distance: " + distanceTraveled);
@@ -130,6 +130,9 @@ public class DriveDistance extends Command implements HistoryOriginator {
         this.end();
     }
 
+    /**
+     * Updates the setpoint for PID.
+     */
     protected void updateDistance() {
         double endPosL = 0, endPosR = 0;
 
@@ -152,6 +155,7 @@ public class DriveDistance extends Command implements HistoryOriginator {
 
     /**
      * Sets PID values on both leader talons
+     *
      * @param p proportional value
      * @param i integral value
      * @param d derivative value

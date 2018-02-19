@@ -11,12 +11,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  * @see AnalogInput
  */
-public class Ultrasonic extends Subsystem {
-
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-
+public class Ultrasonic {
     private AnalogInput ultrasonic;
+
     private final double
             VOLTAGE_MIN,    // The range of the distances returned by this class in ft
             VOLTAGE_RANGE,  // The range of the voltages returned by the sensor
@@ -26,39 +23,28 @@ public class Ultrasonic extends Subsystem {
     /** Scaling factor - inches / volts */
     private final double SCALING_FACTOR = /*1/*/9.8;
 
-    public Ultrasonic() {
-        ultrasonic = new AnalogInput(0);
+    public Ultrasonic(int port) {
+        ultrasonic = new AnalogInput(port);
         VOLTAGE_MIN = .5;
         VOLTAGE_RANGE = 5.0 - VOLTAGE_MIN;
         DISTANCE_MIN = 0.25;
         DISTANCE_RANGE = 5 - DISTANCE_MIN;
     }
 
-    public AnalogInput getUltrasonic() {
-        return ultrasonic;
-    }
-
     /**
-     * <pre>
-     * public double getRange()
-     * </pre>
      * Gets the range between the rangefinder board and the object across from it
      * as perceived by the rangefinder by getting the voltage and multiplying it by the scaling factor
      *
      * @return the range between the board and the object across from it in inches
      */
     public double getRange() {
-
         return ultrasonic.getVoltage() * SCALING_FACTOR;
+        // TODO: Figure out conversion method from volts to inches
     	/*double range = ultrasonic.getVoltage();
     	//first, normalize the voltage
     	range = (range - min_voltage) / voltage_range;
     	//next, denormalize to the unit range
     	range = (range * distance_range) + min_distance;
     	return range;*/
-    }
-
-    public void initDefaultCommand() {
-        //setDefaultCommand(new DriveToWall());
     }
 }

@@ -58,7 +58,7 @@ public class TalonDrive {
 	 * 
 	 * @param moveVal      Value for forwards/backwards
 	 * @param rotateVal    Value for rotation right/left
-	 * @param squareInputs If setClawState, decreases sensitivity at lower speeds
+	 * @param squareInputs If set, decreases sensitivity at lower speeds
 	 */
 	public void arcadeDrive(double moveVal, double rotateVal, boolean squareInputs) {
 		double leftPercent, rightPercent;

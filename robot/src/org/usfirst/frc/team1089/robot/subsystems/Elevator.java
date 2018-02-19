@@ -40,17 +40,17 @@ public class Elevator extends Subsystem {
     public static final double MAX_HEIGHT = ElevatorState.SCALE_HIGH.encPos; //TODO Random value, change to the max height of the elevator
     private double curHeight;
 
-    public Elevator(int talonID) { //, int victorID) {
+    public Elevator(int talonID, int victorID) {
         elevatorTalon = new WPI_TalonSRX(talonID);
         elevatorTalon.setNeutralMode(NeutralMode.Brake);
-        //elevatorVictorFollower = new WPI_VictorSPX(victorID);
-        //elevatorVictorFollower.setNeutralMode(NeutralMode.Brake);
+        elevatorVictorFollower = new WPI_VictorSPX(victorID);
+        elevatorVictorFollower.setNeutralMode(NeutralMode.Brake);
 
-        //elevatorVictorFollower.follow(elevatorTalon);
+        elevatorVictorFollower.follow(elevatorTalon);
 
         double[] pid = ManipulatorSettings.getElevatorPID();
 
-        //ToDo get proper values when elevator is made.
+        // TODO: get proper values when elevator is made.
         elevatorTalon.config_kP(DriveTrain.PRIMARY_PID_LOOP, pid[0], 10);
         elevatorTalon.config_kI(DriveTrain.PRIMARY_PID_LOOP, pid[1], 10);
         elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);

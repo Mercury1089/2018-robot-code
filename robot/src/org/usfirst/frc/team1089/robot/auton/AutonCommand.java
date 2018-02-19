@@ -46,7 +46,7 @@ public class AutonCommand extends CommandGroup {
         // arm.
 
         int cubesPickedUp = 0, rotationFactor;
-        ;      //Number of cubes picked up
+            //Number of cubes picked up
         workingSide = autonBuilder.getAutonPos();
         GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
         switch (workingSide) {

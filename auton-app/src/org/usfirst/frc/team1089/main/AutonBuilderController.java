@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.main;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.wpi.first.networktables.NetworkTable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -12,6 +13,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.io.*;
 import java.util.Optional;
@@ -46,6 +48,29 @@ public class AutonBuilderController {
             dataRLR = FXCollections.observableArrayList(),
             dataRRR = FXCollections.observableArrayList();
 
+    private StringConverter autonTaskStringConverter = new StringConverter() {
+        @Override
+        public String toString(Object object) {
+            return AutonTask.toString(((AutonTask) object));
+        }
+
+        @Override
+        public Object fromString(String string) {
+            return AutonTask.fromString(string);
+        }
+    };
+
+    private StringConverter scoringSideStringConverter = new StringConverter() {
+        @Override
+        public String toString(Object object) {
+            return ScoringSide.toString(((ScoringSide) object));
+        }
+
+        @Override
+        public Object fromString(String string) {
+            return ScoringSide.fromString(string);
+        }
+    };
 
     @FXML
     public void initialize() {
@@ -96,7 +121,7 @@ public class AutonBuilderController {
             };
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
-            comboBoxTableCell.setConverter(AutonTask.STRING_CONVERTER);
+            comboBoxTableCell.setConverter(autonTaskStringConverter);
             comboBoxTableCell.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == AutonTask.DELETE) {
                     comboBoxTableCell.getTableView().getItems().remove(comboBoxTableCell.getTableRow().getItem());
@@ -110,7 +135,7 @@ public class AutonBuilderController {
             ComboBoxTableCell<TaskConfig, ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(ScoringSide.values()));
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
-            comboBoxTableCell.setConverter(ScoringSide.STRING_CONVERTER);
+            comboBoxTableCell.setConverter(scoringSideStringConverter);
             return comboBoxTableCell;
         };
 
@@ -154,7 +179,7 @@ public class AutonBuilderController {
     private void saveConfiguration() throws IOException {
         //Prompt the user for the table they want to save to a CSV.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
-        choiceDialog.setTitle("Choosing Save Method...");
+        choiceDialog.setTitle("Choosing Save Method..");
         choiceDialog.setHeaderText("");
         choiceDialog.setContentText("Choose which table(s) to save:");
         Optional<String> tableResult = choiceDialog.showAndWait();
@@ -172,13 +197,13 @@ public class AutonBuilderController {
             fileChooser.setInitialFileName(".csv");
             File directory = fileChooser.showSaveDialog(root.getScene().getWindow());
 
-            //Make sure the user didn't close the tab and not choose a location..
+            //Make sure the user didn't close the tab and not choose a location.
             if (directory != null) {
                 //Write to the CSV file using OpenCSV.
                 CSVWriter csvWriter = new CSVWriter(new FileWriter(directory));
                 for (TaskConfig tc : relevantData) {
-                    String task = AutonTask.STRING_CONVERTER.toString(tc.autonTask.getValue());
-                    String side = ScoringSide.STRING_CONVERTER.toString(tc.scoringSide.getValue());
+                    String task = AutonTask.toString(tc.autonTask.getValue());
+                    String side = ScoringSide.toString(tc.scoringSide.getValue());
                     String[] entry = {task, side};
                     csvWriter.writeNext(entry, false);
                 }
@@ -209,7 +234,7 @@ public class AutonBuilderController {
     private void loadConfiguration() throws IOException {
         //Prompt the user for the table they wish to load into.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
-        choiceDialog.setTitle("Choosing Load Method...");
+        choiceDialog.setTitle("Choosing Load Method..");
         choiceDialog.setHeaderText("Warning: Loading data into a table will clear the current contents!");
         choiceDialog.setContentText("Choose which table to load into:");
         Optional<String> tableResult = choiceDialog.showAndWait();
@@ -232,8 +257,8 @@ public class AutonBuilderController {
         CSVReader csvReader = new CSVReader(new FileReader(directory.getPath()));
         String[] nextLine = null;
         while((nextLine = csvReader.readNext()) != null) {
-            AutonTask task = AutonTask.STRING_CONVERTER.fromString(nextLine[0]);
-            ScoringSide side = ScoringSide.STRING_CONVERTER.fromString(nextLine[1]);
+            AutonTask task = AutonTask.fromString(nextLine[0]);
+            ScoringSide side = ScoringSide.fromString(nextLine[1]);
             relevantData.add(new TaskConfig(task, side));
         }
 
@@ -251,16 +276,6 @@ public class AutonBuilderController {
      */
     private void publishConfiguration() {
         int startingPos;
-
-        String[]
-            autonTaskLLL = new String[dataLLL.size()],
-            autonTaskLRL = new String[dataLRL.size()],
-            autonTaskRLR = new String[dataRLR.size()],
-            autonTaskRRR = new String[dataRRR.size()],
-            scoringSideLLL = new String[dataLLL.size()],
-            scoringSideLRL = new String[dataLRL.size()],
-            scoringSideRLR = new String[dataRLR.size()],
-            scoringSideRRR = new String[dataRRR.size()];
 
         NetworkTable
             rootTable = Client.getNT().getTable("AutonConfiguration"),
@@ -281,25 +296,16 @@ public class AutonBuilderController {
                 startingPos = 0;
 
             // Get all auton tasks and scoring side
-            for (int i = 0; i < dataLLL.size(); i++) {
-                autonTaskLLL[i] = dataLLL.get(i).autonTask.get().toString();
-                scoringSideLLL[i] = dataLLL.get(i).scoringSide.get().toString();
-            }
+            String[]
+                    autonTaskLLL = AutonTask.arrayToString(dataLLL.toArray()),
+                    autonTaskLRL = AutonTask.arrayToString(dataLRL.toArray()),
+                    autonTaskRLR = AutonTask.arrayToString(dataRLR.toArray()),
+                    autonTaskRRR = AutonTask.arrayToString(dataRRR.toArray()),
 
-            for (int i = 0; i < dataLRL.size(); i++) {
-                autonTaskLRL[i] = dataLRL.get(i).autonTask.get().toString();
-                scoringSideLRL[i] = dataLRL.get(i).scoringSide.get().toString();
-            }
-
-            for (int i = 0; i < dataRLR.size(); i++) {
-                autonTaskRLR[i] = dataRLR.get(i).autonTask.get().toString();
-                scoringSideRLR[i] = dataRLR.get(i).scoringSide.get().toString();
-            }
-
-            for (int i = 0; i < dataRRR.size(); i++) {
-                autonTaskRRR[i] = dataRRR.get(i).autonTask.get().toString();
-                scoringSideRRR[i] = dataRRR.get(i).scoringSide.get().toString();
-            }
+                    scoringSideLLL = ScoringSide.arrayToString(dataLLL.toArray()),
+                    scoringSideLRL = ScoringSide.arrayToString(dataLRL.toArray()),
+                    scoringSideRLR = ScoringSide.arrayToString(dataRLR.toArray()),
+                    scoringSideRRR = ScoringSide.arrayToString(dataRRR.toArray());
 
             // Place values in table
             rootTable.getEntry("startingPos").setNumber(startingPos);
@@ -338,6 +344,7 @@ public class AutonBuilderController {
                 ((TaskConfig) tableLRL.getItems().get(tableLRL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRLR.getItems().get(tableRLR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
                 ((TaskConfig) tableRRR.getItems().get(tableRRR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE;
+        System.out.println(((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue().toString());
         boolean radioSelected = radioGroup.getSelectedToggle() != null;
 
         if (!tableIsComplete || !radioSelected) {

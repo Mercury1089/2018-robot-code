@@ -14,26 +14,32 @@ public enum ScoringSide {
             if (object == null) {
                 return "";
             }
+
             switch (object) {
                 case NOT_APPLICABLE:
                     return "Not Applicable";
+                case FRONT:
+                    return "Front";
+                case MID:
+                    return "Mid";
+                case BACK:
+                    return "Back";
                 default:
-                    return object.toString();
+                    return "";
             }
         }
 
         @Override
         public ScoringSide fromString(String string) {
             switch (string) {
-                case "FRONT": {
+                case "Front":
                     return ScoringSide.FRONT;
-                }
-                case "Middle": {
+                case "Middle":
                     return ScoringSide.MID;
-                }
-                case "BACK": {
+                case "Back":
                     return ScoringSide.BACK;
-                }
+                case "Not Applicable":
+                    return NOT_APPLICABLE;
                 default:
                     return null;
             }

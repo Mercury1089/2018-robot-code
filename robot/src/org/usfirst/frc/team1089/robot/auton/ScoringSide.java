@@ -2,48 +2,40 @@ package org.usfirst.frc.team1089.robot.auton;
 
 import javafx.util.StringConverter;
 
-/**
- * Enumeration of sides to score on for the scale or switch
- *
- * <h3>SIDES</h3>
- * <ul>
- *     <li>FRONT - Far side of scale/switch</li>
- *     <li>MID - Outer edge of scale/switch</li>
- *     <li>BACK - Near side of scale/switch</li>
- * </ul>
- */
 public enum ScoringSide {
     FRONT,
     MID,
     BACK,
     NOT_APPLICABLE;
 
-    public static final StringConverter<ScoringSide> STRING_CONVERTER = new javafx.util.StringConverter<ScoringSide>() {
+    public static final StringConverter<ScoringSide> STRING_CONVERTER = new StringConverter<ScoringSide>() {
         @Override
         public String toString(ScoringSide object) {
-            if (object == null) {
-                return "";
-            }
             switch (object) {
                 case NOT_APPLICABLE:
                     return "Not Applicable";
+                case FRONT:
+                    return "Front";
+                case MID:
+                    return "Mid";
+                case BACK:
+                    return "Back";
                 default:
-                    return object.toString();
+                    return "";
             }
         }
 
         @Override
         public ScoringSide fromString(String string) {
             switch (string) {
-                case "FRONT": {
+                case "Front":
                     return ScoringSide.FRONT;
-                }
-                case "Middle": {
+                case "Middle":
                     return ScoringSide.MID;
-                }
-                case "BACK": {
+                case "Back":
                     return ScoringSide.BACK;
-                }
+                case "Not Applicable":
+                    return NOT_APPLICABLE;
                 default:
                     return null;
             }

@@ -15,8 +15,8 @@ configurations {
 }
 
 dependencies {
-    compile 'edu.wpi.first.shuffleboard:api:1.1.1'
-    shuffleboard 'edu.wpi.first.shuffleboard:app:1.1.1'
+    compile 'edu.wpi.first.shuffleboard:api:1.2.1'
+    shuffleboard 'edu.wpi.first.shuffleboard:app:1.2.1'
 }
 
 task runShuffleboard(type: Exec) {

@@ -2,7 +2,6 @@ package org.usfirst.frc.team1089.main;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.wpi.first.networktables.NetworkTable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -116,6 +115,7 @@ public class AutonBuilderController {
                     }
                     if (item == AutonTask.DELETE) {
                         this.getTableView().getItems().remove(this.getItem());
+                        this.getTableView().getItems().remove(getTableView().getItems().size() - 1); //Bandaid solution to delete adding a new row by itself.
                     }
                 }
             };

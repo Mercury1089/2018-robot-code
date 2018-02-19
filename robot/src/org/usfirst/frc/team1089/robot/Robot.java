@@ -8,14 +8,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.CAN;
 import org.usfirst.frc.team1089.robot.RobotMap.PWM;
-import org.usfirst.frc.team1089.robot.auton.AutonBuilder;
-import org.usfirst.frc.team1089.robot.auton.AutonCommand;
+import org.usfirst.frc.team1089.robot.auton.*;
 import org.usfirst.frc.team1089.robot.sensors.CameraVision;
 import org.usfirst.frc.team1089.robot.subsystems.*;
 import org.usfirst.frc.team1089.util.GameData;
 import org.usfirst.frc.team1089.util.config.*;
 import org.usfirst.frc.team1089.robot.sensors.Vision;
-import org.usfirst.frc.team1089.robot.auton.AutonTrajectoryGenerator;
 
 import java.util.Map;
 
@@ -109,18 +107,27 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+	    autonBuilderRRR = new AutonBuilder(AutonPosition.RIGHT,
+                new AutonTask[]{AutonTask.SCORE_SWITCH, AutonTask.SCORE_SCALE, AutonTask.SCORE_SCALE},
+                new ScoringSide[]{ScoringSide.MID, ScoringSide.FRONT, ScoringSide.FRONT},
+                null);
 		switch (DriverStation.getInstance().getGameSpecificMessage()) {
 			case "LLL":
 				autonCommand = new AutonCommand(autonBuilderLLL);
+				break;
 			case "RRR":
 				autonCommand = new AutonCommand(autonBuilderRRR);
+				break;
 			case "LRL":
 				autonCommand = new AutonCommand(autonBuilderLRL);
+				break;
 			case "RLR":
 				autonCommand = new AutonCommand(autonBuilderRLR);
-			default:
-
+                break;
 		}
+		if (autonCommand != null) {
+		    autonCommand.start();
+        }
 	}
 
 	/**

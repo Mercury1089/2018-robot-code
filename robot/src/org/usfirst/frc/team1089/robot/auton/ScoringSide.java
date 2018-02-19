@@ -29,7 +29,7 @@ public enum ScoringSide {
         switch (string) {
             case "Front":
                 return ScoringSide.FRONT;
-            case "Middle":
+            case "Mid":
                 return ScoringSide.MID;
             case "Back":
                 return ScoringSide.BACK;

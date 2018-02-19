@@ -120,19 +120,26 @@ public class Robot extends IterativeRobot {
                 rlrTable = rootTable.getSubTable("RLR"),
                 rrrTable = rootTable.getSubTable("RRR");
 
-        int autPosOrdinal = (int) rootTable.getEntry("startingPos").getNumber(-1);
 
-        AutonPosition autPos = AutonPosition.values()[autPosOrdinal];
 
-        AutonTask[] llltasks = AutonTask.arrayFromString(lllTable.getEntry("tasks").getValue().getStringArray());
-        AutonTask[] lrltasks = AutonTask.arrayFromString(lrlTable.getEntry("tasks").getValue().getStringArray());
-        AutonTask[] rlrtasks = AutonTask.arrayFromString(rlrTable.getEntry("tasks").getValue().getStringArray());
-        AutonTask[] rrrtasks = AutonTask.arrayFromString(rrrTable.getEntry("tasks").getValue().getStringArray());
+        int autonPositionOrdinal = (int) rootTable.getEntry("startingPos").getNumber(-1);
+
+        AutonPosition autonPosition = AutonPosition.values()[autonPositionOrdinal];
+
+        AutonTask[] lllTasks = AutonTask.arrayFromString(lllTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] lrlTasks = AutonTask.arrayFromString(lrlTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] rlrTasks = AutonTask.arrayFromString(rlrTable.getEntry("tasks").getValue().getStringArray());
+        AutonTask[] rrrTasks = AutonTask.arrayFromString(rrrTable.getEntry("tasks").getValue().getStringArray());
 
         ScoringSide[] lllSides = ScoringSide.arrayFromString(lllTable.getEntry("sides").getValue().getStringArray());
         ScoringSide[] lrlSides = ScoringSide.arrayFromString(lrlTable.getEntry("sides").getValue().getStringArray());
         ScoringSide[] rlrSides = ScoringSide.arrayFromString(rlrTable.getEntry("sides").getValue().getStringArray());
         ScoringSide[] rrrSides = ScoringSide.arrayFromString(rrrTable.getEntry("sides").getValue().getStringArray());
+
+        autonBuilderLLL = new AutonBuilder(autonPosition, lllTasks, lllSides);
+        autonBuilderLRL = new AutonBuilder(autonPosition, lrlTasks, lrlSides);
+        autonBuilderRLR = new AutonBuilder(autonPosition, rlrTasks, rlrSides);
+        autonBuilderRRR = new AutonBuilder(autonPosition, rrrTasks, rrrSides);
 
         switch (DriverStation.getInstance().getGameSpecificMessage()) {
 			case "LLL":

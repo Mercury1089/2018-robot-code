@@ -17,7 +17,6 @@ import org.usfirst.frc.team1089.util.HistoryOriginator;
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
     private AutonPosition workingSide;
-    private InitialMiddleSwitchSide initialMidSwitchSide;
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
     private String posStr;
@@ -46,7 +45,8 @@ public class AutonCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
 
-        int cubesPickedUp = 0, rotationFactor;;      //Number of cubes picked up
+        int cubesPickedUp = 0, rotationFactor;
+        ;      //Number of cubes picked up
         workingSide = autonBuilder.getAutonPos();
         GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
         switch (workingSide) {
@@ -58,12 +58,12 @@ public class AutonCommand extends CommandGroup {
                 comparableWorkingSide = GameData.PlateSide.RIGHT;
                 rotationFactor = -1;
                 break;
-            case MIDDLE:
+            case LEFT_MID:
+            case RIGHT_MID:
             default:
                 comparableWorkingSide = GameData.PlateSide.UNKNOWN;
                 rotationFactor = 0;
         }
-        initialMidSwitchSide = autonBuilder.getInitMidSS();
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();
@@ -118,15 +118,10 @@ public class AutonCommand extends CommandGroup {
                     addSequential(rotateRelative);
                 }
                 break;
-            case MIDDLE:
-                switch (initialMidSwitchSide) {
-                    case LEFT_MID:
-                    case RIGHT_MID:
-                        String initMidStr = initialMidSwitchSide.toString();
-                        addSequential(new MoveOnPath("SwitchMid" + initMidStr.substring(0, initMidStr.indexOf("_")),
-                                MoveOnPath.Direction.FORWARD));
-                        break;
-                }
+            case LEFT_MID:
+            case RIGHT_MID:
+                addSequential(new MoveOnPath("SwitchMid" + autonTasks.toString().substring(0, autonTasks.toString().indexOf("_")),
+                        MoveOnPath.Direction.FORWARD));
                 break;
         }
 
@@ -149,7 +144,7 @@ public class AutonCommand extends CommandGroup {
 
             switch (taskToComplete) {
                 case SCORE_SCALE:
-                    if (workingSide != AutonPosition.MIDDLE && sideToScoreOn != ScoringSide.BACK) {
+                    if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != ScoringSide.BACK) {
                         switch (sideToScoreOn) {
                             case FRONT:
                                 //addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
@@ -172,7 +167,7 @@ public class AutonCommand extends CommandGroup {
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                     break;
                 case SCORE_SWITCH:
-                    if (workingSide != AutonPosition.MIDDLE && sideToScoreOn != ScoringSide.FRONT) {
+                    if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != ScoringSide.FRONT) {
                         addSequential(new RotateRelative());
                         switch (sideToScoreOn) {
                             case BACK:

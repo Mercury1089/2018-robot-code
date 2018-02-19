@@ -9,13 +9,11 @@ public class AutonBuilder {
     private AutonPosition autonPos;
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
-    private InitialMiddleSwitchSide initMidSS;
 
-    public AutonBuilder(AutonPosition autonPos, AutonTask[] autonTasks, ScoringSide[] scoreSide, InitialMiddleSwitchSide initMidSS) {
+    public AutonBuilder(AutonPosition autonPos, AutonTask[] autonTasks, ScoringSide[] scoreSide) {
         this.autonPos = autonPos;
         this.autonTasks = autonTasks;
         this.scoreSide = scoreSide;
-        this.initMidSS = initMidSS;
     }
 
     public AutonPosition getAutonPos() {
@@ -30,7 +28,4 @@ public class AutonBuilder {
         return scoreSide;
     }
 
-    public InitialMiddleSwitchSide getInitMidSS() {
-        return initMidSS;
-    }
 }

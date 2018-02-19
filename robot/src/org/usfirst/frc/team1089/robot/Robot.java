@@ -115,8 +115,6 @@ public class Robot extends IterativeRobot {
                 rlrTable = rootTable.getSubTable("RLR"),
                 rrrTable = rootTable.getSubTable("RRR");
 
-
-
         int autonPositionOrdinal = (int) rootTable.getEntry("startingPos").getNumber(-1);
 
         AutonPosition autonPosition = AutonPosition.values()[autonPositionOrdinal];

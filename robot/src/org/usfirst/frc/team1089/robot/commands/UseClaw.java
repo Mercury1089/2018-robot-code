@@ -61,6 +61,6 @@ public class UseClaw extends Command {
         if (targetState == Claw.ClawState.GRAB)
             return Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
 
-        return maximumDistance - Robot.claw.getLidar().getDistance() <= 0;
+        return maximumDistance - Robot.claw.getUltrasonic().getRange() <= 2;
     }
 }

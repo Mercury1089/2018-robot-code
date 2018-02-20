@@ -50,7 +50,7 @@ public class UseElevator extends Command {
 
         if (targetPos == Elevator.ElevatorPosition.FLOOR) {
             if (Math.abs(Robot.elevator.getCurrentHeight()) <= 2.0 && !Robot.elevator.isLimitSwitchClosed()) {
-                Robot.elevator.getElevatorTalon().set(ControlMode.Position, counter--);
+                Robot.elevator.getElevatorTalon().set(ControlMode.Position, counter++);
 
                 LOG.info("Did not reach, setting setpoint to " + targetPos.encPos + counter);
             } else {

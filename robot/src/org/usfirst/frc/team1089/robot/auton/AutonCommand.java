@@ -79,14 +79,26 @@ public class AutonCommand extends CommandGroup {
                         if (gameData.getSwitchSide() == gameData.getScaleSide()) {
                             //TODO make a path that replaces the "CubeSetupPickup" and "SwitchBack" and the following DriveDistance
                             if (gameData.getSwitchSide() == comparableWorkingSide) {
-                                addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
-                                addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));//FIXED
+                                if (scoreSide[0] == ScoringSide.BACK) {
+                                    addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+                                    addSequential(new UseClaw(Claw.ClawState.EJECT));
+                                    addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                } else {
+                                    addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
+                                    addSequential(new UseClaw(Claw.ClawState.EJECT));
+                                    addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));
+                                }
+
+                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
+                                addSequential(rotateRelative);
                             } else {
                                 addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 switchWorkingSide();
-                                addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                                addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                addSequential(new DriveDistance(43.5, .8));
+                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));
+                                addSequential(rotateRelative);
                             }
                         } else {
                             if (gameData.getSwitchSide() == comparableWorkingSide) {
@@ -99,10 +111,10 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
                             }
+                            addSequential(new DriveDistance(43.5, .8));
+                            rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));
+                            addSequential(rotateRelative);
                         }
-                        //addSequential(new DriveDistance(43.5, .5));
-                        //rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
-                        //addSequential(rotateRelative);
                         break;
                 case SCORE_SCALE:
                     addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
@@ -113,15 +125,15 @@ public class AutonCommand extends CommandGroup {
                         switchWorkingSide();
                     }
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
-                    addSequential(new DriveDistance(-51.825, .5));
+                    addSequential(new DriveDistance(-51.825, .8));
                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
                     addSequential(rotateRelative);
                 }
                 break;
             case LEFT_MID:
             case RIGHT_MID:
-                addSequential(new MoveOnPath("SwitchMid" + autonTasks.toString().substring(0, autonTasks.toString().indexOf("_")),
-                        MoveOnPath.Direction.FORWARD));
+                String taskStr = autonTasks[0].toString();
+                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(0, taskStr.indexOf("_")), MoveOnPath.Direction.FORWARD));
                 break;
         }
 
@@ -136,8 +148,6 @@ public class AutonCommand extends CommandGroup {
             if (previousSide != null) {
                 if (i != 0) {
                     addSequential(new RotateRelative(rotateRelative, HistoryOriginator.HistoryTreatment.REVERSE));
-                } else {
-                    addSequential(new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90)));
                 }
                 addSequential(new GetCube());
             }
@@ -145,49 +155,52 @@ public class AutonCommand extends CommandGroup {
             switch (taskToComplete) {
                 case SCORE_SCALE:
                     if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != ScoringSide.BACK) {
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                         switch (sideToScoreOn) {
                             case FRONT:
-                                //addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
-                                //addSequential(new MoveOnPath("ScaleFront" + posStr, MoveOnPath.Direction.BACKWARD));
-                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, rotationFactor, 90));
+                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 90));
                                 addSequential(rotateRelative);
-                                addSequential(new DriveDistance(51.825, .5));
-                                addSequential(new DriveDistance(-51.825, .5));
+                                addSequential(new DriveDistance(51.825, .8));
+                                addSequential(new UseClaw(Claw.ClawState.EJECT));
+                                addSequential(new DriveDistance(-51.825, .8));
                                 break;
-                            case MID:       //Will probably never use this...
-                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, rotationFactor, 0));
+                            case MID:       //PLEASE BE ADVISED NOT TO USE THIS
+                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 0));
                                 addSequential(rotateRelative);
-                                addSequential(new DriveDistance(-43.5, .5));
+                                addSequential(new DriveDistance(-43.5, .8));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.FORWARD));
+                                addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.BACKWARD));
-                                addSequential(new DriveDistance(43.5, .5));
+                                addSequential(new DriveDistance(43.5, .8));
                                 break;
                         }
                     }
-                    addSequential(new UseClaw(Claw.ClawState.EJECT));
                     break;
                 case SCORE_SWITCH:
                     if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != ScoringSide.FRONT) {
-                        addSequential(new RotateRelative());
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                        //TODO add opps...
                         switch (sideToScoreOn) {
                             case BACK:
                                 if (gameData.getSwitchSide() == gameData.getScaleSide()) {
-                                    rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, 0));
-                                    addSequential(new DriveDistance(15, .5));
-                                    addSequential(new DriveDistance(-15, .5));  //TODO change these arbitrary values
+                                    rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, -75));
+                                    addSequential(rotateRelative);
+                                    addSequential(new DriveDistance(15, .8));
+                                    addSequential(new UseClaw(Claw.ClawState.EJECT));
+                                    addSequential(new DriveDistance(-15, .8));  //TODO change these arbitrary values
                                 }
-                                //TODO elevator stuff
                                 break;
-                            case MID: //The side placement positions are the initial pickup setups, but the other way.
+                            case MID:       //PLEASE BE ADVISED NOT TO USE THIS
                                 if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                                    rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, rotationFactor, 0));
+                                    addSequential(rotateRelative);
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));
+                                    addSequential(new UseClaw(Claw.ClawState.EJECT));
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.BACKWARD));
                                 }
-                                //TODO elevator stuff
                                 break;
                         }
                     }
-                    addSequential(new UseClaw(Claw.ClawState.EJECT));
                     break;
             }
         }

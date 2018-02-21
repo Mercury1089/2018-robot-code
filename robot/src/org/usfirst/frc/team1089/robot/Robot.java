@@ -129,7 +129,6 @@ public class Robot extends IterativeRobot {
 			ScoringSide[] lrlSides = ScoringSide.arrayFromString(lrlTable.getEntry("sides").getValue().getStringArray());
 			ScoringSide[] rlrSides = ScoringSide.arrayFromString(rlrTable.getEntry("sides").getValue().getStringArray());
 			ScoringSide[] rrrSides = ScoringSide.arrayFromString(rrrTable.getEntry("sides").getValue().getStringArray());
-			System.out.println(rrrTasks[0].toString());
 
 			autonBuilderLLL = new AutonBuilder(autonPosition, lllTasks, lllSides);
 			autonBuilderLRL = new AutonBuilder(autonPosition, lrlTasks, lrlSides);

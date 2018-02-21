@@ -31,9 +31,9 @@ public class Elevator extends Subsystem {
      */
     public enum ElevatorPosition {
         // TODO: Temporary Values
-        SCALE_HIGH(2000.0), // Scale at its highest point
-        SCALE_LOW(300.0),   // Scale at its lowest point
-        SWITCH(150.0),      // Above switch fence
+        SCALE_HIGH(-2000.0), // Scale at its highest point
+        SCALE_LOW(-300.0),   // Scale at its lowest point
+        SWITCH(-150.0),      // Above switch fence
         FLOOR(0.0);         // Elevator bottomed out
 
         public final double encPos;
@@ -99,7 +99,7 @@ public class Elevator extends Subsystem {
     }
 
     public boolean isLimitSwitchClosed() {
-        return elevatorTalon.getSensorCollection().isRevLimitSwitchClosed();
+        return elevatorTalon.getSensorCollection().isFwdLimitSwitchClosed();
     }
 
     /**

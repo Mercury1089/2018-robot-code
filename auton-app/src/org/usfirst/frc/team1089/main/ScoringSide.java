@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1089.main;
 
-import javafx.util.StringConverter;
-
 public enum ScoringSide {
     FRONT,
     MID,
@@ -12,7 +10,6 @@ public enum ScoringSide {
         if (object == null) {
             return "";
         }
-
         switch (object) {
             case NOT_APPLICABLE:
                 return "Not Applicable";
@@ -31,7 +28,7 @@ public enum ScoringSide {
         switch (string) {
             case "Front":
                 return ScoringSide.FRONT;
-            case "Middle":
+            case "Mid":
                 return ScoringSide.MID;
             case "Back":
                 return ScoringSide.BACK;
@@ -42,10 +39,10 @@ public enum ScoringSide {
         }
     }
 
-    public static String[] arrayToString(Object[] data) {
-        String[] output = new String[data.length];
-        for (int i = 0; i < data.length; i++) {
-            output[i] = toString(((TaskConfig) data[i]).scoringSide.getValue());
+    public static String[] arrayToString(Object[] sides) {
+        String[] output = new String[sides.length];
+        for (int i = 0; i < sides.length; i++) {
+            output[i] = toString((ScoringSide) sides[i]);
         }
         return output;
     }

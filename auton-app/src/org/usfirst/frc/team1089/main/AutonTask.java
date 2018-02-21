@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1089.main;
 
-import javafx.concurrent.Task;
-import javafx.util.StringConverter;
-
+/**
+ * Enumerations of tasks that can be done during auton
+ */
 public enum AutonTask {
     SCORE_SWITCH,
     SCORE_SCALE,
@@ -50,10 +50,10 @@ public enum AutonTask {
         }
     }
 
-    public static String[] arrayToString(Object[] data) {
-        String[] output = new String[data.length];
-        for (int i = 0; i < data.length; i++) {
-            output[i] = toString(((TaskConfig) data[i]).autonTask.getValue());
+    public static String[] arrayToString(Object[] tasks) {
+        String[] output = new String[tasks.length];
+        for (int i = 0; i < tasks.length; i++) {
+            output[i] = toString((AutonTask) tasks[i]);
         }
         return output;
     }

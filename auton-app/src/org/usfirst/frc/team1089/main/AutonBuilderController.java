@@ -15,6 +15,8 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -100,8 +102,7 @@ public class AutonBuilderController {
 
         //Not even going to try to explain cell factories. Nope.
         Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
-            ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell(FXCollections.observableArrayList(AutonTask.values())) {
-                private boolean hasCreatedNewRow = false;
+            final ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell(FXCollections.observableArrayList(AutonTask.values())) {
                 @Override
                 public void updateItem(Object item, boolean empty) {
                     super.updateItem(item, empty);
@@ -109,9 +110,13 @@ public class AutonBuilderController {
                         if (((TaskConfig) this.getTableView().getItems().get(this.getTableView().getItems().size() - 1)).autonTask.getValue() != null) {
                             addBlankRow(this.getTableView().getItems());
                         }
-                    }
-                    else if (item == AutonTask.DONE) {
-                        ((TaskConfig) this.getTableRow().getItem()).scoringSide.setValue(ScoringSide.NOT_APPLICABLE);
+                    } else if (item == AutonTask.DONE) {
+                        trimRows(this.getTableView().getItems());
+                        try {
+                            ((TaskConfig) this.getTableRow().getItem()).scoringSide.set(ScoringSide.NOT_APPLICABLE);
+                        } catch (NullPointerException npe) {
+                            //TODO Fix this stupid bug where the above line throws an NPE but still does exactly what it needs to.
+                        }
                     }
                     if (item == AutonTask.DELETE) {
                         this.getTableView().getItems().remove(this.getItem());
@@ -119,15 +124,10 @@ public class AutonBuilderController {
                     }
                 }
             };
+
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
             comboBoxTableCell.setConverter(autonTaskStringConverter);
-            comboBoxTableCell.itemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == AutonTask.DELETE) {
-                    comboBoxTableCell.getTableView().getItems().remove(comboBoxTableCell.getTableRow().getItem());
-                    addBlankRow(comboBoxTableCell.getTableView().getItems());
-                }
-            });
             return comboBoxTableCell;
         };
 
@@ -159,6 +159,7 @@ public class AutonBuilderController {
         sideColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
         sideColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
 
+
         //Make sure each table has at least one blank row to start with. Additional rows will be added when tasks are selected in blank rows.
         addBlankRow(dataLLL);
         addBlankRow(dataLRL);
@@ -171,6 +172,8 @@ public class AutonBuilderController {
         tableRLR.setItems(dataRLR);
         tableRRR.setItems(dataRRR);
     }
+
+
 
     @FXML
     /**
@@ -255,11 +258,11 @@ public class AutonBuilderController {
 
         //Parse the loaded file using OpenCSV to put into the table the user chose.
         CSVReader csvReader = new CSVReader(new FileReader(directory.getPath()));
-        String[] nextLine = null;
-        while((nextLine = csvReader.readNext()) != null) {
-            AutonTask task = AutonTask.fromString(nextLine[0]);
-            ScoringSide side = ScoringSide.fromString(nextLine[1]);
-            relevantData.add(new TaskConfig(task, side));
+        List<TaskConfig> taskConfigs = new ArrayList<>();
+        List<String[]> csv = csvReader.readAll();
+
+        for (int i = 0; i < csv.size(); i++) {
+            relevantData.add(new TaskConfig(AutonTask.fromString(csv.get(i)[0]), ScoringSide.fromString(csv.get(i)[1])));
         }
 
         //Alert the user that the load was successful because reasons.
@@ -335,6 +338,26 @@ public class AutonBuilderController {
     }
 
     /**
+     * Trims off ending, blank rows in the table.
+     * @param data The data to have its rows trimmed.
+     */
+    private void trimRows(ObservableList data) {
+        while (((TaskConfig) data.get(data.size() - 1)).autonTask.getValue() == null) {
+            removeLastRow(data);
+        }
+    }
+    private TaskConfig getLastItem(ObservableList<TaskConfig> data) {
+        return data.get(data.size() - 1);
+    }
+    /**
+     * Removes the last row from a given set of data.
+     * @param data The table data that should have its lsat row removed.
+     */
+    private void removeLastRow(ObservableList<TaskConfig> data) {
+        data.remove(data.size() - 1);
+    }
+
+    /**
      * Checks to see if all the tables are complete AND if a starting auton position has been selected. The method will throw an error depending on what is not finished.
      * @return All the tables are complete AND if a starting auton position has been selected.
      */
@@ -383,4 +406,5 @@ public class AutonBuilderController {
                 return null;
         }
     }
+
 }

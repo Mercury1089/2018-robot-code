@@ -78,7 +78,7 @@ public class Claw extends Subsystem {
         setName("Claw");
         log.info("Initalized claw");
         clawMotor_M.setInverted(false);
-        clawMotor_S.setInverted(false);
+        clawMotor_S.setInverted(true);
         clawMotor_S.follow(clawMotor_M);
     }
 

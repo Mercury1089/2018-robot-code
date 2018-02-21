@@ -49,6 +49,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("LIDAR Period", MercMath.roundFloat(Robot.claw.getLidar().getDistance(), 10));
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
         SmartDashboard.putNumber("Ultrasonic Distance", Robot.claw.getUltrasonic().getRange());
+        SmartDashboard.putNumber("Pixy Displacement", Robot.claw.getPixyCam().pidGet());
 
         double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
     }

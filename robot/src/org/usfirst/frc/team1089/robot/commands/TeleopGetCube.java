@@ -12,24 +12,16 @@ import org.usfirst.frc.team1089.util.HistoryOriginator;
  * and the DriveWithLIDAR command to autonomously target and
  * approach the cube.
  */
-public class GetCube extends CommandGroup {
-    private static Logger log = LogManager.getLogger(GetCube.class);
+public class TeleopGetCube extends CommandGroup {
+    private static Logger log = LogManager.getLogger(TeleopGetCube.class);
     private double angleTurned, distanceTraveled;
 
-    public GetCube() {
-        RotateToTarget rtt = new RotateToTarget();
-        RotateRelative rotate180 = new RotateRelative(180);
-        DriveWithLIDAR dwl = new DriveWithLIDAR(8, 0.3);
+    public TeleopGetCube() {
         log.info(getName() + " Beginning constructor");
         angleTurned = Robot.claw.getPixyCam().pidGet();
-        addSequential(rotate180);
-        addSequential(rtt);
-        distanceTraveled = Robot.claw.getLidar().getDistance();
+        addSequential(new RotateToTarget());
         addParallel(new UseClaw(Claw.ClawState.GRAB));
-        addSequential(dwl);
-        addSequential(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.3));
-        addSequential(new RotateRelative(rtt, HistoryOriginator.HistoryTreatment.REVERSE));
-        addSequential(new RotateRelative(rotate180, HistoryOriginator.HistoryTreatment.REVERSE));
+        addSequential(new DriveWithLIDAR(3.75, 0.3));
         log.info(getName() + " Created");
         //TODO updated history code
     }

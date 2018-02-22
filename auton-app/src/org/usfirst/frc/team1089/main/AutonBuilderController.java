@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -102,34 +103,35 @@ public class AutonBuilderController {
 
         //Not even going to try to explain cell factories. Nope.
         Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
-            final ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell(FXCollections.observableArrayList(AutonTask.values())) {
-                @Override
-                public void updateItem(Object item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null && item != AutonTask.DONE) {
-                        if (((TaskConfig) this.getTableView().getItems().get(this.getTableView().getItems().size() - 1)).autonTask.getValue() != null) {
-                            addBlankRow(this.getTableView().getItems());
-                        }
-                    } else if (item == AutonTask.DONE) {
-                        trimRows(this.getTableView().getItems());
-                        try {
-                            ((TaskConfig) this.getTableRow().getItem()).scoringSide.set(ScoringSide.NOT_APPLICABLE);
-                        } catch (NullPointerException npe) {
-                            //TODO Fix this stupid bug where the above line throws an NPE but still does exactly what it needs to.
-                        }
-                    }
-                    if (item == AutonTask.DELETE) {
-                        this.getTableView().getItems().remove(this.getItem());
-                        this.getTableView().getItems().remove(getTableView().getItems().size() - 1); //Bandaid solution to delete adding a new row by itself.
-                    }
-                }
-            };
-
+            final ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell(FXCollections.observableArrayList(AutonTask.values()));
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
             comboBoxTableCell.setConverter(autonTaskStringConverter);
             return comboBoxTableCell;
         };
+
+        EventHandler<TableColumn.CellEditEvent<TaskConfig, AutonTask>> taskEditHandler = (TableColumn.CellEditEvent<TaskConfig, AutonTask> t) -> {
+            TableView table = t.getTableView();
+            int ind = t.getTablePosition().getRow();
+
+            ObservableList<TaskConfig> taskList = table.getItems();
+
+            if (t.getNewValue() == AutonTask.DELETE) {
+                taskList.remove(ind);
+            } else {
+                if (t.getNewValue() == AutonTask.DONE) {
+                    taskList.get(ind).scoringSide.setValue(ScoringSide.NOT_APPLICABLE);
+                } else if (t.getOldValue() == null || t.getOldValue() == AutonTask.DONE) {
+                    taskList.add(new TaskConfig(null, null));
+                }
+                taskList.get(ind).autonTask.set(t.getNewValue());
+            }
+        };
+
+        taskColLLL.setOnEditCommit(taskEditHandler);
+        taskColLRL.setOnEditCommit(taskEditHandler);
+        taskColRLR.setOnEditCommit(taskEditHandler);
+        taskColRRR.setOnEditCommit(taskEditHandler);
 
         Callback<TableColumn<TaskConfig, ScoringSide>, TableCell> scoringSideCellFactory = param -> {
             ComboBoxTableCell<TaskConfig, ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(ScoringSide.values()));
@@ -189,7 +191,6 @@ public class AutonBuilderController {
 
         //Figure out which table object the string corresponds to.
         ObservableList<TaskConfig> relevantData = determineData(tableResult.get());
-
 
         //Make sure that the table they chose has been finished by checking the last row for AutonTask.Done.
         if (relevantData != null && relevantData.get(relevantData.size() - 1).autonTask.getValue() == AutonTask.DONE) {

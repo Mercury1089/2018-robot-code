@@ -31,8 +31,8 @@ public class DriveTank extends Command {
 	@Override
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
-		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Brake);
-		Robot.driveTrain.getLeft().setNeutralMode(NeutralMode.Brake);
+		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Coast);
+		Robot.driveTrain.getLeft().setNeutralMode(NeutralMode.Coast);
 		log.info(getName() + " command initialized");
 	}
 

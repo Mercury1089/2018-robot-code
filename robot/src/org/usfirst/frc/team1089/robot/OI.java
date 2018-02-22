@@ -58,7 +58,7 @@ import org.usfirst.frc.team1089.util.ShuffleDash;
  *
  */
 public class OI {
-	private final double DEADZONE = 0.30;
+	private final double DEADZONE = 0.29;
 	private SendableChooser<AutonPosition> startingPosition;
 	private static Logger log = LogManager.getLogger(OI.class);
 
@@ -87,7 +87,7 @@ public class OI {
 		left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
 		left3.whenPressed(new DriveDistance(24.0, .12));
 		left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
-		left4.whenPressed(new GetCube());
+		left4.whenPressed(new AutonGetCube());
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
@@ -99,7 +99,7 @@ public class OI {
 		//right2.whenPressed(new TestAutonBuilder());
 		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
-		right3.whenPressed(new GetCube());
+		right3.whenPressed(new AutonGetCube());
 
 		DriveDistance dd = new DriveDistance(24, 0.2);
 		DriveWithLIDAR dwl = new DriveWithLIDAR(20, 0.2);
@@ -112,7 +112,7 @@ public class OI {
 		right6 = new JoystickButton(rightStick, 6);
 		right6.whenPressed(new MoveOnPath("InitialScaleFrontOppRight", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
+		right7.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		right10 = new JoystickButton(rightStick, 10);
 		right10.whenPressed(new MoveOnPath("SwitchBackOppRight", MoveOnPath.Direction.FORWARD));
 		right11 = new JoystickButton(rightStick, 11);
@@ -128,8 +128,9 @@ public class OI {
 
 		gamepad_start.whenPressed(new DriveArcade());
 		gamepad_back.whenPressed(new DriveTank());
-		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //GetCube());
+		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //AutonGetCube());
 		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
+		gamepad_y.whenPressed(new TeleopGetCube());
 		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);
 		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));
@@ -160,6 +161,9 @@ public class OI {
 			case DS_USB.RIGHT_STICK:
 				val = rightStick.getY();
 				break;
+			case DS_USB.GAMEPAD:
+				val = gamepad.getRawAxis(1);
+				break;
 			default:
 				val = -1;
 		}
@@ -183,6 +187,9 @@ public class OI {
 				break;
 			case DS_USB.RIGHT_STICK:
 				val = rightStick.getX();
+				break;
+			case DS_USB.GAMEPAD:
+				val = gamepad.getRawAxis(0);
 				break;
 			default:
 				val = -1;
@@ -213,6 +220,17 @@ public class OI {
 			gamepad.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
 			gamepad.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
 		}
+	}
 
+	public Joystick getLeftStick() {
+		return leftStick;
+	}
+
+	public Joystick getRightStick() {
+		return rightStick;
+	}
+
+	public Joystick getGamepad() {
+		return gamepad;
 	}
 }

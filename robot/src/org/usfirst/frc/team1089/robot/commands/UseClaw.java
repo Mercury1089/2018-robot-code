@@ -17,7 +17,7 @@ public class UseClaw extends Command {
 
     private Claw.ClawState targetState;
     private DelayableLogger exeLog = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
-    private final double minimumDistance = 8, maximumDistance = 18;
+    private final double minimumDistance = 8, maximumDistance = 4;
 
     public UseClaw(Claw.ClawState state) {
         LOG.info(getName() + "Beginning constructor");
@@ -61,6 +61,6 @@ public class UseClaw extends Command {
         if (targetState == Claw.ClawState.GRAB)
             return Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
 
-        return maximumDistance - Robot.claw.getUltrasonic().getRange() <= 2;
+        return maximumDistance - Robot.claw.getUltrasonic().getRange() <= 0;
     }
 }

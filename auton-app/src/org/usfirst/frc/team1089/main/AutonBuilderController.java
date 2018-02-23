@@ -175,12 +175,10 @@ public class AutonBuilderController {
         tableRRR.setItems(dataRRR);
     }
 
-
-
-    @FXML
     /**
      * Saves a chosen configuration table to a CSV file at a given directory.
      */
+    @FXML
     private void saveConfiguration() throws IOException {
         //Prompt the user for the table they want to save to a CSV.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
@@ -238,40 +236,45 @@ public class AutonBuilderController {
     private void loadConfiguration() throws IOException {
         //Prompt the user for the table they wish to load into.
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
-        choiceDialog.setTitle("Choosing Load Method..");
+        choiceDialog.setTitle("Choosing Load Method...");
         choiceDialog.setHeaderText("Warning: Loading data into a table will clear the current contents!");
         choiceDialog.setContentText("Choose which table to load into:");
         Optional<String> tableResult = choiceDialog.showAndWait();
 
-        //Figure out which table object the string corresponds to.
+        // Figure out which table object the string corresponds to.
         ObservableList<TaskConfig> relevantData = determineData(tableResult.get());
 
-        //Clear the data to avoid weird interactions with tables that already have data in them.
-        relevantData.clear();
-
-        //Open File Explorer for the user to choose the file to load, then grab its directory. All the CSVs should be saved into the Configurations folder.
-        //TODO Make the initial directory be the Configurations folder.
+        // Open File Explorer for the user to choose the file to load, then grab its directory. All the CSVs should be saved into the Configurations folder.
+        // TODO Make the initial directory be the Configurations folder.
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Configuration CSV");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv" ));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Comma Separated Values", "*.csv" )
+        );
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         File directory = fileChooser.showOpenDialog(root.getScene().getWindow());
 
-        //Parse the loaded file using OpenCSV to put into the table the user chose.
-        CSVReader csvReader = new CSVReader(new FileReader(directory.getPath()));
-        List<TaskConfig> taskConfigs = new ArrayList<>();
-        List<String[]> csv = csvReader.readAll();
+        // If a file has been chosen and is ready to be loaded
+        if (directory != null) {
+            //Parse the loaded file using OpenCSV to put into the table the user chose.
+            CSVReader csvReader = new CSVReader(new FileReader(directory.getPath()));
+            List<TaskConfig> taskConfigs = new ArrayList<>();
+            List<String[]> csv = csvReader.readAll();
 
-        for (int i = 0; i < csv.size(); i++) {
-            relevantData.add(new TaskConfig(AutonTask.fromString(csv.get(i)[0]), ScoringSide.fromString(csv.get(i)[1])));
+            //Clear the data to avoid weird interactions with tables that already have data in them.
+            relevantData.clear();
+
+            for (int i = 0; i < csv.size(); i++) {
+                relevantData.add(new TaskConfig(AutonTask.fromString(csv.get(i)[0]), ScoringSide.fromString(csv.get(i)[1])));
+            }
+
+            //Alert the user that the load was successful because reasons.
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Loaded successfully!");
+            alert.setTitle("Success");
+            alert.setHeaderText("");
+            alert.show();
         }
-
-        //Alert the user that the load was successful because reasons.
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("Loaded successfully!");
-        alert.setTitle("Success");
-        alert.setHeaderText("");
-        alert.show();
     }
 
     @FXML

@@ -103,7 +103,7 @@ public class AutonBuilderController {
 
         //Not even going to try to explain cell factories. Nope.
         Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
-            final ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell(FXCollections.observableArrayList(AutonTask.values()));
+            final ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(AutonTask.values()));
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
             comboBoxTableCell.setConverter(autonTaskStringConverter);

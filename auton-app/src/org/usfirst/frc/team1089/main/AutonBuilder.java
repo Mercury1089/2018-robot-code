@@ -25,10 +25,10 @@ public class AutonBuilder {
     private NetworkTableInstance ntInstance;
 
 
-    static {
-        // Load native libraries and whatnot
-        System.loadLibrary("ntcore");
-    }
+//    static {
+//        // Load native libraries and whatnot
+//        System.loadLibrary("ntcore");
+//    }
 
     public AutonBuilder() {
         // Initialize HashMap

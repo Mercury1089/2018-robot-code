@@ -10,6 +10,11 @@ import javafx.stage.Stage;
 public class Client extends Application {
     private static NetworkTableInstance ntInstance;
 
+    static {
+        // Load native libraries and whatnot
+        System.loadLibrary("ntcore");
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

@@ -158,7 +158,7 @@ public class Claw extends Subsystem {
 
     public boolean hasCube() {
         if (Robot.elevator.getCurrentHeight() == 0)
-            return lidar.getDistance() <= 3.6;
+            return lidar.getDistance() <= 8;
 
         return ultrasonic.getRawVoltage() <= 360;
     }

@@ -12,7 +12,7 @@ import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -107,7 +107,7 @@ public class OI {
 		right4 = new JoystickButton(rightStick, 4);
 		right4.whenPressed(dwl);
 		right5 = new JoystickButton(rightStick, 5);
-		right5.whenPressed(new DriveDistance(dwl, HistoryOriginator.HistoryTreatment.REVERSE, 0.2));
+		right5.whenPressed(new DriveDistance(dwl, Recallable.RecallMethod.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
 		right6.whenPressed(new MoveOnPath("InitialScaleFrontOppRight", MoveOnPath.Direction.FORWARD));

@@ -8,7 +8,7 @@ import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.GameData;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 
 /**
  * Command group that specifies the commands to be run
@@ -147,7 +147,7 @@ public class AutonCommand extends CommandGroup {
             //GRAB CUBE
             if (previousSide != null) {
                 if (i != 0) {
-                    addSequential(new RotateRelative(rotateRelative, HistoryOriginator.HistoryTreatment.REVERSE));
+                    addSequential(new RotateRelative(rotateRelative, Recallable.RecallMethod.REVERSE));
                 }
                 addSequential(new GetCubeAuton());
             }
@@ -237,10 +237,10 @@ public class AutonCommand extends CommandGroup {
     }
 
     private DriveDistance getHistoryDriveDistanceReverse(double pVolt) {
-        return new DriveDistance(historyDriveDistance, HistoryOriginator.HistoryTreatment.REVERSE, pVolt);
+        return new DriveDistance(historyDriveDistance, Recallable.RecallMethod.REVERSE, pVolt);
     }
 
     private RotateRelative getHistoryRotateRelativeReverse() {
-        return new RotateRelative(historyRotateRelative, HistoryOriginator.HistoryTreatment.REVERSE);
+        return new RotateRelative(historyRotateRelative, Recallable.RecallMethod.REVERSE);
     }*/
 }

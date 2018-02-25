@@ -7,8 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.util.DelayableLogger;
-import org.usfirst.frc.team1089.util.History;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
@@ -19,7 +18,7 @@ import static org.usfirst.frc.team1089.robot.subsystems.DriveTrain.PRIMARY_PID_L
 /**
  * Uses Talons and mag encoders to drive a setClawState distance.
  */
-public class DriveDistance extends Command implements HistoryOriginator {
+public class DriveDistance extends Command implements Recallable<Double> {
     private final double MOVE_THRESHOLD = 500;
     private final int ON_TARGET_MINIMUM_COUNT = 10;
     private int onTargetCount;
@@ -30,8 +29,8 @@ public class DriveDistance extends Command implements HistoryOriginator {
     protected double percentVoltage; // Voltage is NOW from [-1, 1]
 
     private double distanceTraveled = Double.NEGATIVE_INFINITY;
-    private HistoryOriginator originator;
-    private HistoryTreatment treatment;
+    private Recallable<Double> originator;
+    private RecallMethod treatment;
 
     /**
      * @param dist  distance to travel, in inches
@@ -45,11 +44,15 @@ public class DriveDistance extends Command implements HistoryOriginator {
         log.info(getName() + " Constructed");
     }
 
-    public DriveDistance(HistoryOriginator o, HistoryTreatment t, double pVolt) {
+    public DriveDistance(Recallable<Double> o, RecallMethod t, double pVolt) {
         this(0, pVolt);
 
-        originator = o;
-        treatment = t;
+        if (o.getType() == getType()) {
+            originator = o;
+            treatment = t;
+        } else {
+            log.warn("Recallable type not equal! Looking for " + getType() + ", found " + o.getType() + ".");
+        }
     }
 
     // Called just before this Command runs the first time
@@ -61,9 +64,9 @@ public class DriveDistance extends Command implements HistoryOriginator {
         distanceTraveled = Double.NEGATIVE_INFINITY;
 
         if (originator != null) {
-            distance = (Double) originator.getHistory().getValue();
+            distance = originator.recall();
 
-            if (treatment == HistoryTreatment.REVERSE)
+            if (treatment == RecallMethod.REVERSE)
                 distance *= -1;
         }
 
@@ -174,9 +177,9 @@ public class DriveDistance extends Command implements HistoryOriginator {
     }
 
     @Override
-    public History<Double> getHistory() {
+    public Double recall() {
         if (distanceTraveled > Double.NEGATIVE_INFINITY)
-            return new History<>(distanceTraveled);
+            return distanceTraveled;
 
         return null;
     }

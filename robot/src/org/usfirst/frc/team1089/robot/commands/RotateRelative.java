@@ -5,14 +5,13 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.util.History;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 
 /**
  * Turns the robot a set amount of degrees relative to its current angle.
  */
-public class RotateRelative extends PIDCommand implements HistoryOriginator {
+public class RotateRelative extends PIDCommand implements Recallable<Double> {
 	private static Logger log = LogManager.getLogger(RotateRelative.class);
 	private final double MIN_PERCENT_VBUS;
 	private final int ONTARGET_THRESHOLD = 3;
@@ -21,8 +20,8 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
 	private int counter;
 
 	private Gyro gyro;
-	private HistoryOriginator originator;
-	private HistoryTreatment treatment;
+	private Recallable<Double> originator;
+	private RecallMethod treatment;
 
 	public RotateRelative() {
 		this(0);
@@ -49,11 +48,15 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
         log.info("RotateRelative constructed");
     }
 
-	public RotateRelative(HistoryOriginator o, HistoryTreatment t) {
+	public RotateRelative(Recallable<Double> o, RecallMethod t) {
 		this(0);
 
-		originator = o;
-		treatment = t;
+		if (o.getType() == getType()) {
+			originator = o;
+			treatment = t;
+		} else {
+			log.warn("Recallable type not equal! Looking for " + getType() + ", found " + o.getType() + ".");
+		}
 	}
 
     // Called just before this Command runs the first time
@@ -62,9 +65,9 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
 	    double[] outputRange = DriveTrainSettings.getOutputRange("rotateRelative");
 
     	if (originator != null) {
-			targetHeading = (Double) originator.getHistory().getValue();
+			targetHeading = originator.recall();
 
-			if (treatment == HistoryTreatment.REVERSE)
+			if (treatment == RecallMethod.REVERSE)
 				targetHeading *= -1;
 		}
 
@@ -126,13 +129,14 @@ public class RotateRelative extends PIDCommand implements HistoryOriginator {
 	}
 	
 	protected void updateHeading(double heading) {
-		this.targetHeading = heading;
-		getPIDController().setSetpoint(this.targetHeading);
+		targetHeading = heading;
+
+		getPIDController().setSetpoint(targetHeading);
 	}
 
 	@Override
-	public History<Double> getHistory() {
-		return new History<>(targetHeading);
+	public Double recall() {
+		return targetHeading;
 	}
 
 	@Override

@@ -8,8 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.util.DelayableLogger;
-import org.usfirst.frc.team1089.util.History;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Turns the robot towards a target found with the PixyCam
  */
-public class RotateToTarget extends PIDCommand implements HistoryOriginator {
+public class RotateToTarget extends PIDCommand implements Recallable<Double> {
 	private final Logger LOG = LogManager.getLogger(RotateToTarget.class);
 	private DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 5, TimeUnit.SECONDS);
 	private int counter;
@@ -118,9 +117,9 @@ public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 	}
 
 	@Override
-	public History<Double> getHistory() {
+	public Double recall() {
 		if (finalRotation > Double.NEGATIVE_INFINITY)
-			return new History<>(finalRotation);
+			return finalRotation;
 
 		return null;
 	}

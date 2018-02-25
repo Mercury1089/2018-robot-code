@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 
 /**
  * Command group that calls both the AutoAlign command
@@ -37,11 +37,11 @@ public class GetCube extends CommandGroup {
         return distanceTraveled;
     }
 
-    public HistoryOriginator getAngleOriginator() {
-        return (HistoryOriginator) angleOriginator;
+    public Recallable getAngleOriginator() {
+        return (Recallable) angleOriginator;
     }
 
-    public HistoryOriginator getDistanceOriginator() {
-        return (HistoryOriginator) distanceOriginator;
+    public Recallable getDistanceOriginator() {
+        return (Recallable) distanceOriginator;
     }
 }

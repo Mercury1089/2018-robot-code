@@ -3,7 +3,7 @@ package org.usfirst.frc.team1089.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.usfirst.frc.team1089.util.HistoryOriginator;
+import org.usfirst.frc.team1089.util.Recallable;
 
 /**
  * GetCube autonomous routine.
@@ -17,7 +17,7 @@ public class GetCubeAuton extends CommandGroup {
         log.info(getName() + " Beginning constructor");
         GetCube getCubeCmd = new GetCube();
         addSequential(getCubeCmd);
-        addSequential(new RotateRelative(getCubeCmd.getAngleOriginator(), HistoryOriginator.HistoryTreatment.REVERSE));
+        addSequential(new RotateRelative(getCubeCmd.getAngleOriginator(), Recallable.RecallMethod.REVERSE));
         log.info(getName() + " Created");
     }
 }

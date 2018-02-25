@@ -162,7 +162,7 @@ public class AutonBuilderController {
         sideColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
 
 
-        //Make sure each table has at least one blank row to start with. Additional rows will be added when tasks are selected in blank rows.
+        // Make sure each table has at least one blank row to start with. Additional rows will be added when tasks are selected in blank rows.
         addBlankRow(dataLLL);
         addBlankRow(dataLRL);
         addBlankRow(dataRLR);
@@ -335,6 +335,7 @@ public class AutonBuilderController {
 
     /**
      * Adds a blank item to the given data. This will cause the table to display a blank, editable row.
+     *
      * @param data The table data to add a blank row to.
      */
     private void addBlankRow(ObservableList<TaskConfig> data) {

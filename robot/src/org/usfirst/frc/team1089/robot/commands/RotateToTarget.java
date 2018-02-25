@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.util.DelayableLogger;
 import org.usfirst.frc.team1089.util.History;
 import org.usfirst.frc.team1089.util.HistoryOriginator;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
+import org.usfirst.frc.team1089.util.config.SensorsSettings;
 
 import java.util.concurrent.TimeUnit;
 
@@ -60,7 +61,8 @@ public class RotateToTarget extends PIDCommand implements HistoryOriginator {
 
 		double[] outputRange = DriveTrainSettings.getOutputRange("rotateRelative");
 
-		getPIDController().setInputRange(-160, 160);
+		int camResWidth = SensorsSettings.getCameraResolution().width;
+		getPIDController().setInputRange(-camResWidth / 2, camResWidth / 2);
 		getPIDController().setOutputRange(outputRange[0], outputRange[1]);
 
 		//Set the controller to continuous AFTER setInputRange()

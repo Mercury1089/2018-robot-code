@@ -149,7 +149,7 @@ public class AutonCommand extends CommandGroup {
                 if (i != 0) {
                     addSequential(new RotateRelative(rotateRelative, HistoryOriginator.HistoryTreatment.REVERSE));
                 }
-                addSequential(new AutonGetCube());
+                addSequential(new GetCubeAuton());
             }
 
             switch (taskToComplete) {

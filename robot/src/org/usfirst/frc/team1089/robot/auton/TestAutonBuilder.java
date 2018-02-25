@@ -3,7 +3,7 @@ package org.usfirst.frc.team1089.robot.auton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.usfirst.frc.team1089.robot.commands.AutonGetCube;
+import org.usfirst.frc.team1089.robot.commands.GetCubeAuton;
 import org.usfirst.frc.team1089.robot.commands.MoveOnPath;
 import org.usfirst.frc.team1089.robot.commands.UseClaw;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
@@ -28,6 +28,6 @@ public class TestAutonBuilder extends CommandGroup {
         addSequential(new UseClaw(Claw.ClawState.EJECT));
         addSequential(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
         addParallel(new UseClaw(Claw.ClawState.GRAB));
-        addSequential(new AutonGetCube());
+        addSequential(new GetCubeAuton());
     }
 }

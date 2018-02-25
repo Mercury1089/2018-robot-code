@@ -87,7 +87,7 @@ public class OI {
 		left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
 		left3.whenPressed(new DriveDistance(24.0, .12));
 		left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
-		left4.whenPressed(new AutonGetCube());
+		left4.whenPressed(new GetCubeAuton());
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
@@ -99,7 +99,7 @@ public class OI {
 		//right2.whenPressed(new TestAutonBuilder());
 		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
-		right3.whenPressed(new AutonGetCube());
+		right3.whenPressed(new GetCubeAuton());
 
 		DriveDistance dd = new DriveDistance(24, 0.2);
 		DriveWithLIDAR dwl = new DriveWithLIDAR(20, 0.2);
@@ -128,9 +128,9 @@ public class OI {
 
 		gamepad_start.whenPressed(new DriveArcade());
 		gamepad_back.whenPressed(new DriveTank());
-		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //AutonGetCube());
+		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //GetCubeAuton());
 		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-		gamepad_y.whenPressed(new TeleopGetCube());
+		gamepad_y.whenPressed(new GetCube());
 		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);
 		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));

@@ -17,6 +17,7 @@ public class GetCube extends CommandGroup {
     private static Logger log = LogManager.getLogger(GetCube.class);
     private double angleTurned, distanceTraveled;
     private Command angleOriginator, distanceOriginator;
+
     public GetCube() {
         angleOriginator = new RotateToTarget();
         distanceOriginator = new DriveWithLIDAR(3.75, 0.3);

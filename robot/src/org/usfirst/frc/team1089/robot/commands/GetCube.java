@@ -15,26 +15,16 @@ import org.usfirst.frc.team1089.util.Recallable;
  */
 public class GetCube extends CommandGroup {
     private static Logger log = LogManager.getLogger(GetCube.class);
-    private double angleTurned, distanceTraveled;
     private Command angleOriginator, distanceOriginator;
     public GetCube() {
         angleOriginator = new RotateToTarget();
         distanceOriginator = new DriveWithLIDAR(3.75, 0.3);
 
         log.info(getName() + " Beginning constructor");
-        angleTurned = Robot.claw.getPixyCam().pidGet();
         addSequential(angleOriginator);
         addParallel(new UseClaw(Claw.ClawState.GRAB));
         addSequential(distanceOriginator);
         log.info(getName() + " Created");
-    }
-
-    public double getAngleTurned() {
-        return angleTurned;
-    }
-
-    public double getDistanceTraveled() {
-        return distanceTraveled;
     }
 
     public Recallable<Double> getAngleOriginator() {

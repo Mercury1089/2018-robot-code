@@ -36,7 +36,7 @@ public class DriveArcade extends Command {
 		tDrive = Robot.driveTrain.getTalonDrive();
 		//Robot.driveTrain.getGyro().reset();
 		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Coast);
-		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Coast);
+		Robot.driveTrain.getLeft().setNeutralMode(NeutralMode.Coast);
 		log.info(getName() + " command initialized");
 	}
 

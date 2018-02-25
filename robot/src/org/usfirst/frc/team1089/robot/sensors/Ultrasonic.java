@@ -48,4 +48,13 @@ public class Ultrasonic {
     	range = (range * distance_range) + min_distance;
     	return range;*/
     }
+
+    /**
+     * Gets the raw, unprocessed voltage from the ultrasonic
+     *
+     * @return the raw voltage being sent from the ultrasonic
+     */
+    public double getRawVoltage() {
+        return ultrasonic.getVoltage();
+    }
 }

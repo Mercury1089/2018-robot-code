@@ -42,6 +42,8 @@ subprojects {
     }
 
     dependencies {
+        compile 'org.apache.logging.log4j:log4j-api:2.10.0'
+        compile 'org.apache.logging.log4j:log4j-core:2.10.0'
         compile fileTree(dir: 'lib', include: '*.jar')
         config fileTree(dir: 'config', include: '*.properties')
     }

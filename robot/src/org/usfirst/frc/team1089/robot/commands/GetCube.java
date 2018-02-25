@@ -37,11 +37,11 @@ public class GetCube extends CommandGroup {
         return distanceTraveled;
     }
 
-    public Recallable getAngleOriginator() {
-        return (Recallable) angleOriginator;
+    public Recallable<Double> getAngleOriginator() {
+        return (Recallable<Double>) angleOriginator;
     }
 
-    public Recallable getDistanceOriginator() {
-        return (Recallable) distanceOriginator;
+    public Recallable<Double> getDistanceOriginator() {
+        return (Recallable<Double>) distanceOriginator;
     }
 }

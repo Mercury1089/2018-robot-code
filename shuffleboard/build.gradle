@@ -40,7 +40,6 @@ task runShuffleboard(type: Exec) {
     // Exec task fields
     workingDir = WPIToolsPlugin.shuffleboardDirectory()
     commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
-
 }
 
 task debugShuffleboard(type: Exec) {

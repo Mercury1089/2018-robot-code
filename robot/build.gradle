@@ -16,6 +16,10 @@ configurations {
     trajectory {
         description = "Trajectory files"
     }
+
+    outlineViewer {
+        description = "Outline viewer binaries"
+    }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
@@ -25,6 +29,7 @@ dependencies {
     compile ctre()
     compile navx()
     compile pathfinder()
+    outlineViewer 'edu.wpi.first.wpilib:OutlineViewer:2.0.6'
     nativeLib fileTree(dir: 'lib', include: '*.so')
     trajectory fileTree(dir: 'trajectories', include: '**/*_detailed.csv')
 }
@@ -79,6 +84,22 @@ task runProfileGenerator(type: Exec) {
 
     workingDir = "${projectDir}\\trajectories\\"
     commandLine 'java', '-jar', "${projectDir}\\trajectories\\motion-profile-generator.jar"
+}
+
+task runOutlineViewer(type: Exec) {
+    group = 'gradlerio'
+    description = "Runs the outline viewer to see network table values"
+
+    // Use outlineViewer configuration
+    def config = project.configurations.outlineViewer
+    def byteOut = new ByteArrayOutputStream()
+
+    // Get shuffleboard dependency from wpiTools config
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "OutlineViewer" })
+
+    // Exec task fields
+    workingDir = "${projectDir}"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

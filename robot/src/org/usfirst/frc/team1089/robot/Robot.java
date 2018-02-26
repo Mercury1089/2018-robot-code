@@ -16,6 +16,7 @@ import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.robot.subsystems.PDP;
+import org.usfirst.frc.team1089.util.GameData;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
 import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
 import org.usfirst.frc.team1089.util.config.SensorsSettings;
@@ -136,7 +137,7 @@ public class Robot extends IterativeRobot {
 			autonBuilderRRR = new AutonBuilder(autonPosition, rrrTasks, rrrSides);
 		}
 
-        switch (DriverStation.getInstance().getGameSpecificMessage()) {
+        switch (GameData.getInstance().toString()) {
 			case "LLL":
 				autonCommand = new AutonCommand(autonBuilderLLL);
 				break;
@@ -149,6 +150,8 @@ public class Robot extends IterativeRobot {
 			case "RLR":
 				autonCommand = new AutonCommand(autonBuilderRLR);
 				break;
+			default:
+				return;
 		}
 		if (autonCommand != null) {
 		    autonCommand.start();

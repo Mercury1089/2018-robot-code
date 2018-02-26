@@ -14,7 +14,7 @@ public class GameData {
     public enum PlateSide {
         LEFT,
         RIGHT,
-        UNKNOWN;
+        UNKNOWN
     }
 
     public GameData() {
@@ -50,5 +50,14 @@ public class GameData {
 
     public PlateSide getScaleSide() {
         return plateSides[1];
+    }
+
+    @Override
+    public String toString() {
+        String message = "";
+        for(int i = 0; i < 3; i++) {
+            message += plateSides[i];
+        }
+        return message;
     }
 }

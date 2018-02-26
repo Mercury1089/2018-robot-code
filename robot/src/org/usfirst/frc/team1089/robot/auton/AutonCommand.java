@@ -27,7 +27,6 @@ public class AutonCommand extends CommandGroup {
             CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1;
 
     public AutonCommand(AutonBuilder autonBuilder) {
-        String data = DriverStation.getInstance().getGameSpecificMessage();
         GameData gameData = GameData.getInstance();
         // Add Commands here:
         // e.g. addSequential(new Command1());

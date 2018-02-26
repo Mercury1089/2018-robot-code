@@ -3,14 +3,17 @@ apply plugin: "jaci.openrio.gradle.GradleRIO"
 import jaci.openrio.gradle.GradleRIOPlugin
 import jaci.openrio.gradle.frc.FRCJavaArtifact
 import jaci.openrio.gradle.frc.RoboRIO
-import jaci.openrio.gradle.wpi.dependencies.WPIToolsPlugin
-import jaci.openrio.gradle.ExternalLaunchTask
+import jaci.openrio.gradle.wpi.WPIExtension
 
 def TEAM = 1089
 def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
+def wpiext = project.extensions.getByType(WPIExtension)
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+wpiext.wpilibVersion = '2018.3.3'
+wpiext.ctreVersion = '5.2.2.0'
 
 configurations {
     trajectory {

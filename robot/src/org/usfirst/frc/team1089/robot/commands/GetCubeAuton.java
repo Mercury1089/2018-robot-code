@@ -17,6 +17,7 @@ public class GetCubeAuton extends CommandGroup {
         log.info(getName() + " Beginning constructor");
         GetCube getCubeCmd = new GetCube();
         addSequential(getCubeCmd);
+        addSequential(new DriveDistance(getCubeCmd.getDistanceOriginator(), Recallable.RecallMethod.REVERSE, .5));
         addSequential(new RotateRelative(getCubeCmd.getAngleOriginator(), Recallable.RecallMethod.REVERSE));
         log.info(getName() + " Created");
     }

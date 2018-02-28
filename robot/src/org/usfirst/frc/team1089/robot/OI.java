@@ -110,13 +110,13 @@ public class OI {
 		right5.whenPressed(new DriveDistance(dwl, Recallable.RecallMethod.REVERSE, 0.2));
 
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("CubeSetupPickupOppRight", MoveOnPath.Direction.BACKWARD));
+		right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("SwitchBackRight", MoveOnPath.Direction.BACKWARD));
+		right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("SwitchBackOppRight", MoveOnPath.Direction.FORWARD));
+		right10.whenPressed(new MoveOnPath("SwitchMidLeft", MoveOnPath.Direction.FORWARD));
 		right11 = new JoystickButton(rightStick, 11);
-		right11.whenPressed(new MoveOnPath("InitialScaleFrontOppRight", MoveOnPath.Direction.FORWARD));
+		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupLeft", MoveOnPath.Direction.BACKWARD));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);
@@ -126,8 +126,8 @@ public class OI {
 		gamepad_start = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.START);
 		gamepad_back = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.BACK);
 
-		gamepad_start.whenPressed(new DriveArcade());
-		gamepad_back.whenPressed(new DriveTank());
+		gamepad_start.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
+		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveTank));
 		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //GetCubeAuton());
 		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
 		gamepad_y.whenPressed(new GetCube());

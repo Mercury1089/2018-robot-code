@@ -123,6 +123,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         tMasterLeft.set(ControlMode.Velocity, 0);
         tMasterRight.set(ControlMode.Velocity, 0);
     }
+
     public void initDefaultCommand() {
         setDefaultCommand(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
     }

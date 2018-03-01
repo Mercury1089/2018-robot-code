@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot.auton;
 public enum AutonTask {
     SCORE_SWITCH,
     SCORE_SCALE,
+    AUTO_LINE,
     DELETE,
     DONE;
 
@@ -16,6 +17,9 @@ public enum AutonTask {
             }
             case SCORE_SWITCH: {
                 return "Score Switch";
+            }
+            case AUTO_LINE: {
+                return "Auto Line";
             }
             case DELETE: {
                 return "Delete";
@@ -35,6 +39,9 @@ public enum AutonTask {
             }
             case "Score Switch": {
                 return AutonTask.SCORE_SWITCH;
+            }
+            case "Auto Line": {
+                return AutonTask.AUTO_LINE;
             }
             case "Done": {
                 return AutonTask.DONE;

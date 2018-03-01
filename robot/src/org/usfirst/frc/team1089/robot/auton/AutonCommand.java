@@ -67,6 +67,21 @@ public class AutonCommand extends CommandGroup {
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();
 
+        for(AutonTask at : autonTasks) {
+            if(at == AutonTask.AUTO_LINE) {
+                switch(workingSide) {
+                    case LEFT_MID:
+                        addSequential(new MoveOnPath("SwitchFrontLeft", MoveOnPath.Direction.FORWARD));
+                        break;
+                    case RIGHT_MID:
+                        addSequential(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
+                        break;
+                    default:
+                        addSequential(new DriveDistance(168, 0.8));
+                }
+            }
+        }
+
         RotateRelative rotateRelative = null;      //History RotateRelative that will be used to return to pickup position
 
         switch (workingSide) {

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.usfirst.frc.team1089.robot.commands.DriveArcade;
+import org.usfirst.frc.team1089.robot.commands.DriveWithJoysticks;
 import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.TalonDrive;
 import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
@@ -125,7 +125,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveArcade());
+        setDefaultCommand(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
     }
 
     /**
@@ -199,5 +199,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 
     public void setMaxOutput(double maxOutput) {
         tDrive.setMaxOutput(maxOutput);
+    }
+
+    public void setNeutralMode(NeutralMode neutralMode) {
+        tMasterLeft.setNeutralMode(neutralMode);
+        tMasterRight.setNeutralMode(neutralMode);
+        vFollowerLeft.setNeutralMode(neutralMode);
+        vFollowerRight.setNeutralMode(neutralMode);
     }
 }

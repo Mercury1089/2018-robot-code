@@ -17,16 +17,23 @@ import java.util.concurrent.TimeUnit;
  * Command that puts the drive train into a manual control mode.
  * This puts the robot in arcade drive.
  */
-public class DriveArcade extends Command {
+public class DriveWithJoysticks extends Command {
 	private TalonDrive tDrive;
-	private static Logger log = LogManager.getLogger(DriveArcade.class);
+	private static Logger log = LogManager.getLogger(DriveWithJoysticks.class);
 	private DelayableLogger everySecond = new DelayableLogger(log, 1_000, TimeUnit.MILLISECONDS);
+	private DriveType driveType;
 	//TODO: think of better naming convention for InfrequentLogger
 
+	public enum DriveType {
+		DriveTank,
+		DriveArcade
+	}
 
-	public DriveArcade() {
+
+	public DriveWithJoysticks(DriveType type) {
 		requires(Robot.driveTrain);
-		setName("DriveArcade Command");
+		setName("DriveWithJoysticks Command");
+		driveType = type;
 		log.debug(getName() + " command created");
 	}
 
@@ -34,17 +41,26 @@ public class DriveArcade extends Command {
 	@Override
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
-		//Robot.driveTrain.getGyro().reset();
-		Robot.driveTrain.getRight().setNeutralMode(NeutralMode.Coast);
-		Robot.driveTrain.getLeft().setNeutralMode(NeutralMode.Coast);
+		Robot.driveTrain.setNeutralMode(NeutralMode.Brake);
 		log.info(getName() + " command initialized");
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		tDrive.arcadeDrive(Robot.oi.getY(DS_USB.LEFT_STICK), -Robot.oi.getX(DS_USB.RIGHT_STICK), true);
-		everySecond.run(log -> log.info("arcade driving"));
+		if (tDrive != null) {
+			switch (driveType) {
+				case DriveTank:
+					tDrive.tankDrive(Robot.oi.getY(DS_USB.LEFT_STICK), Robot.oi.getY(DS_USB.RIGHT_STICK));
+					break;
+				case DriveArcade:
+					tDrive.arcadeDrive(Robot.oi.getY(DS_USB.LEFT_STICK), -Robot.oi.getX(DS_USB.RIGHT_STICK), true);
+					break;
+			}
+		} else {
+			log.info("Talon Drive is not initialized!");
+		}
+		everySecond.run(log -> log.info(driveType.toString() + " driving"));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -56,14 +72,16 @@ public class DriveArcade extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
+        Robot.driveTrain.setNeutralMode(NeutralMode.Brake);
 		Robot.driveTrain.stop();
+		log.info(getName() + "ended");
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	@Override
 	protected void interrupted() {
-		log.info("interrupted");
+		log.info(getName() + "interrupted");
 		end();
 	}
 }

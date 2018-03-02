@@ -57,8 +57,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		GameData.updateGameData();
-
 		elevator = new Elevator(CAN.ELEVATOR_M, CAN.ELEVATOR_S);
 
 	    driveTrain = new DriveTrain(

@@ -30,6 +30,7 @@ public class AutonCommand extends CommandGroup {
         GameData.PlateSide
             scaleSide = GameData.getScaleSide(),
             switchSide = GameData.getSwitchSide();
+
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

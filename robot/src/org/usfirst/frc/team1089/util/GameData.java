@@ -37,11 +37,11 @@ public class GameData {
     }
 
     public static GameData getInstance() {
-        if(gameData == null) {
-            gameData = new GameData();
-
-        }
         return gameData;
+    }
+
+    public static void updateGameData() {
+        gameData = new GameData();
     }
 
     public PlateSide getSwitchSide() {

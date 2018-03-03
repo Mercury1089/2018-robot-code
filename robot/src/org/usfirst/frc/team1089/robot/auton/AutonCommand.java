@@ -17,6 +17,7 @@ import org.usfirst.frc.team1089.util.Recallable;
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
     private AutonPosition workingSide;
+    private GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
     private String posStr;
@@ -47,7 +48,6 @@ public class AutonCommand extends CommandGroup {
 
             //Number of cubes picked up
         workingSide = autonBuilder.getAutonPos();
-        GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
         switch (workingSide) {
             case LEFT:
                 comparableWorkingSide = GameData.PlateSide.LEFT;
@@ -226,11 +226,13 @@ public class AutonCommand extends CommandGroup {
         switch (workingSide) {
             case RIGHT:
                 workingSide = AutonPosition.LEFT;
+                comparableWorkingSide = GameData.PlateSide.LEFT;
                 posStr = workingSide.toString();
                 rotationFactor = 1;
                 break;
             case LEFT:
                 workingSide = AutonPosition.RIGHT;
+                comparableWorkingSide = GameData.PlateSide.RIGHT;
                 posStr = workingSide.toString();
                 rotationFactor = -1;
                 break;

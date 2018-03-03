@@ -3,6 +3,11 @@ package org.usfirst.frc.team1089.main;
 import com.opencsv.CSVWriter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import javafx.collections.ObservableList;
+import org.fxmisc.easybind.EasyBind;
+import org.usfirst.frc.team1089.main.util.AutonPosition;
+import org.usfirst.frc.team1089.main.util.FieldSide;
+import org.usfirst.frc.team1089.main.util.TaskConfig;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,7 +22,10 @@ public class AutonBuilder {
         TASK_PREFIX = "task",
         SIDE_PREFIX = "side";
 
+    private AutonPosition startingPosition;
     private HashMap<String, List<TaskConfig>> configMap;
+    private HashMap<String, FieldSide> fieldSideMap;
+
     private NetworkTableInstance ntInstance;
 
 
@@ -26,13 +34,24 @@ public class AutonBuilder {
 //        System.loadLibrary("ntcore");
 //    }
 
-    public AutonBuilder() {
+    public AutonBuilder(ObservableList<TaskConfig> dataLLL, ObservableList<TaskConfig> dataLRL, ObservableList<TaskConfig> dataRLR, ObservableList<TaskConfig> dataRRR) {
         // Initialize HashMap
         configMap = new HashMap<>();
         configMap.put("LLL", new ArrayList<>());
         configMap.put("LRL", new ArrayList<>());
         configMap.put("RLR", new ArrayList<>());
         configMap.put("RRR", new ArrayList<>());
+
+        EasyBind.listBind(configMap.get("LLL"), dataLLL);
+        EasyBind.listBind(configMap.get("LRL"), dataLRL);
+        EasyBind.listBind(configMap.get("RLR"), dataRLR);
+        EasyBind.listBind(configMap.get("RRR"), dataRRR);
+
+        fieldSideMap = new HashMap<>();
+        fieldSideMap.put("LLL", FieldSide.LEFT_SIDE);
+        fieldSideMap.put("LRL", FieldSide.LEFT_SIDE);
+        fieldSideMap.put("RLR", FieldSide.RIGHT_SIDE);
+        fieldSideMap.put("RRR", FieldSide.RIGHT_SIDE);
 
         ntInstance = NetworkTableInstance.getDefault();
         ntInstance.setServerTeam(1089);
@@ -70,14 +89,12 @@ public class AutonBuilder {
      * @return whether or not the action was successful
      */
     public boolean save(File csv, String... configKeys) {
+        System.out.println("Attempting to save...");
         boolean successful = true;
         List<List<TaskConfig>> configLists = new ArrayList<>();
         int numKeys;
 
         for (String key : configKeys) {
-            if (!allDone(key))
-                return false;
-
             configLists.add(configMap.get(key));
         }
 
@@ -103,18 +120,24 @@ public class AutonBuilder {
 
             writer.writeNext(header);
 
-            int maxRows = Integer.MIN_VALUE;
+            int maxRows = 0;
 
+            // We need the largest table in the set of data
+            // We will use that number for the amount of times to iterate
+            // through ALL tables.
+            // I'm very lazy.
             for (List<TaskConfig> list : configLists)
                 maxRows = list.size() > maxRows ? list.size() : maxRows;
 
-            for (int table = 0; table < numKeys; table++) {
+            for (int table = 0; table < numKeys - 1; table += 2) {
                 List<TaskConfig> curConfigList = configLists.get(table);
                 for (int row = 0; row < maxRows; row++) {
                     TaskConfig curConfig = curConfigList.get(row);
 
-                    valueBuffer[2 * table] = curConfig.autonTask.toString();
-                    valueBuffer[2 * table + 1] = curConfig.scoringSide.toString();
+                    System.out.println(curConfig);
+
+                    valueBuffer[2 * table] = curConfig.autonTask.getValue().toString();
+                    valueBuffer[2 * table + 1] = curConfig.scoringSide.getValue().toString();
                 }
 
                 writer.writeNext(valueBuffer);
@@ -123,6 +146,8 @@ public class AutonBuilder {
                 // Who cares, going for MVP bois.
                 valueBuffer = new String[numKeys];
             }
+
+            writer.close();
         } catch (Exception e) { // Definitely not the best way to do this
             e.printStackTrace();
             successful = false;
@@ -131,18 +156,11 @@ public class AutonBuilder {
         return successful;
     }
 
-    /**
-     * Check whether or not the specified task config lists end with "Done"
-     *
-     * @param config the config to check
-     *
-     * @return {@code true} if task config exists and list ends with {@code AutonTask.DONE}
-     */
-    public boolean allDone(String config) {
-        List<TaskConfig> configList = configMap.get(config.toUpperCase());
+    public void setStartingPosition(AutonPosition newPosition) {
+        startingPosition = newPosition;
+    }
 
-        return
-            configList != null && !configList.isEmpty() &&
-            configList.get(configList.size() - 1).autonTask.get() != AutonTask.DONE;
+    public void setFieldSide(String configKey, FieldSide newSide) {
+        fieldSideMap.replace(configKey, newSide);
     }
 }

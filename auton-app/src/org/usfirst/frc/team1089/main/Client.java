@@ -21,7 +21,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Pane root = FXMLLoader.load(getClass().getResource("AutonBuilder.fxml"));
+        Pane root = FXMLLoader.load(getClass().getResource("gui/AutonBuilder.fxml"));
         primaryStage.setTitle("Mercury Auton Builder");
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1089.main;
+package org.usfirst.frc.team1089.main.gui;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -13,7 +13,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
+import org.usfirst.frc.team1089.main.Client;
+import org.usfirst.frc.team1089.main.util.TaskConfig;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -50,30 +51,6 @@ public class AutonBuilderController {
             dataRLR = FXCollections.observableArrayList(),
             dataRRR = FXCollections.observableArrayList();
 
-    private StringConverter autonTaskStringConverter = new StringConverter() {
-        @Override
-        public String toString(Object object) {
-            return AutonTask.toString(((AutonTask) object));
-        }
-
-        @Override
-        public Object fromString(String string) {
-            return AutonTask.fromString(string);
-        }
-    };
-
-    private StringConverter scoringSideStringConverter = new StringConverter() {
-        @Override
-        public String toString(Object object) {
-            return ScoringSide.toString(((ScoringSide) object));
-        }
-
-        @Override
-        public Object fromString(String string) {
-            return ScoringSide.fromString(string);
-        }
-    };
-
     @FXML
     public void initialize() {
         //Setup up the radio buttons to be in a group.
@@ -102,42 +79,17 @@ public class AutonBuilderController {
         sideColRRR.setResizable(false);
 
         //Not even going to try to explain cell factories. Nope.
-        Callback<TableColumn<TaskConfig, AutonTask>, TableCell> autonTaskCellFactory = param -> {
-            final ComboBoxTableCell<TaskConfig, AutonTask> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(AutonTask.values()));
+        Callback<TableColumn<TaskConfig, TaskConfig.AutonTask>, TableCell> autonTaskCellFactory = param -> {
+            final ComboBoxTableCell<TaskConfig, TaskConfig.AutonTask> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values()));
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
-            comboBoxTableCell.setConverter(autonTaskStringConverter);
             return comboBoxTableCell;
         };
 
-        EventHandler<TableColumn.CellEditEvent<TaskConfig, AutonTask>> taskEditHandler = (TableColumn.CellEditEvent<TaskConfig, AutonTask> t) -> {
-            TableView table = t.getTableView();
-            int ind = t.getTablePosition().getRow();
-
-            ObservableList<TaskConfig> taskList = table.getItems();
-
-            if (t.getNewValue() == AutonTask.DELETE) {
-                taskList.remove(ind);
-            } else {
-                if (t.getNewValue() == AutonTask.DONE) {
-                    taskList.get(ind).scoringSide.setValue(ScoringSide.NOT_APPLICABLE);
-                } else if (t.getOldValue() == null || t.getOldValue() == AutonTask.DONE) {
-                    taskList.add(new TaskConfig(null, null));
-                }
-                taskList.get(ind).autonTask.set(t.getNewValue());
-            }
-        };
-
-        taskColLLL.setOnEditCommit(taskEditHandler);
-        taskColLRL.setOnEditCommit(taskEditHandler);
-        taskColRLR.setOnEditCommit(taskEditHandler);
-        taskColRRR.setOnEditCommit(taskEditHandler);
-
-        Callback<TableColumn<TaskConfig, ScoringSide>, TableCell> scoringSideCellFactory = param -> {
-            ComboBoxTableCell<TaskConfig, ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(ScoringSide.values()));
+        Callback<TableColumn<TaskConfig, TaskConfig.ScoringSide>, TableCell> scoringSideCellFactory = param -> {
+            ComboBoxTableCell<TaskConfig, TaskConfig.ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.ScoringSide.values()));
             comboBoxTableCell.setEditable(true);
             comboBoxTableCell.setComboBoxEditable(false);
-            comboBoxTableCell.setConverter(scoringSideStringConverter);
             return comboBoxTableCell;
         };
 
@@ -151,15 +103,15 @@ public class AutonBuilderController {
         sideColRLR.setCellFactory(scoringSideCellFactory);
         sideColRRR.setCellFactory(scoringSideCellFactory);
 
-        taskColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
-        taskColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
-        taskColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
-        taskColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
+        taskColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
+        taskColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
+        taskColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
+        taskColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
 
-        sideColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
-        sideColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
-        sideColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
-        sideColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
+        sideColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
+        sideColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
+        sideColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
+        sideColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
 
 
         // Make sure each table has at least one blank row to start with. Additional rows will be added when tasks are selected in blank rows.
@@ -191,7 +143,7 @@ public class AutonBuilderController {
         ObservableList<TaskConfig> relevantData = determineData(tableResult.get());
 
         //Make sure that the table they chose has been finished by checking the last row for AutonTask.Done.
-        if (relevantData != null && relevantData.get(relevantData.size() - 1).autonTask.getValue() == AutonTask.DONE) {
+        if (relevantData != null) {
             //Open the File Explorer for the user to chose a directory to save to. This should always be the Configurations folder.
             //TODO Make the initial directory be the Configurations folder.
             FileChooser fileChooser = new FileChooser();
@@ -204,8 +156,8 @@ public class AutonBuilderController {
                 //Write to the CSV file using OpenCSV.
                 CSVWriter csvWriter = new CSVWriter(new FileWriter(directory));
                 for (TaskConfig tc : relevantData) {
-                    String task = AutonTask.toString(tc.autonTask.getValue());
-                    String side = ScoringSide.toString(tc.scoringSide.getValue());
+                    String task = tc.autonTask.getValue().toString();
+                    String side = tc.scoringSide.getValue().toString();
                     String[] entry = {task, side};
                     csvWriter.writeNext(entry, false);
                 }
@@ -265,7 +217,7 @@ public class AutonBuilderController {
             relevantData.clear();
 
             for (int i = 0; i < csv.size(); i++) {
-                relevantData.add(new TaskConfig(AutonTask.fromString(csv.get(i)[0]), ScoringSide.fromString(csv.get(i)[1])));
+                relevantData.add(new TaskConfig(TaskConfig.AutonTask.fromString(csv.get(i)[0]), TaskConfig.ScoringSide.fromString(csv.get(i)[1])));
             }
 
             //Alert the user that the load was successful because reasons.
@@ -291,44 +243,42 @@ public class AutonBuilderController {
             rlrTable = rootTable.getSubTable("RLR"),
             rrrTable = rootTable.getSubTable("RRR");
 
-        if (isCompletelyFinished()) {
-            // First off get the starting position
-            if (radioGroup.getSelectedToggle() == rightRadioButton)
-                startingPos = 3;
-            else if (radioGroup.getSelectedToggle() == middleLeftRadioButton)
-                startingPos = 2;
-            else if (radioGroup.getSelectedToggle() == middleRightRadioButton)
-                startingPos = 1;
-            else
-                startingPos = 0;
+        // First off get the starting position
+        if (radioGroup.getSelectedToggle() == rightRadioButton)
+            startingPos = 3;
+        else if (radioGroup.getSelectedToggle() == middleLeftRadioButton)
+            startingPos = 2;
+        else if (radioGroup.getSelectedToggle() == middleRightRadioButton)
+            startingPos = 1;
+        else
+            startingPos = 0;
 
-            // Get all auton tasks and scoring side
-            String[]
-                    autonTaskLLL = AutonTask.arrayToString(dataLLL.toArray()),
-                    autonTaskLRL = AutonTask.arrayToString(dataLRL.toArray()),
-                    autonTaskRLR = AutonTask.arrayToString(dataRLR.toArray()),
-                    autonTaskRRR = AutonTask.arrayToString(dataRRR.toArray()),
+        // Get all auton tasks and scoring side
+        String[]
+                autonTaskLLL = TaskConfig.AutonTask.arrayToString(dataLLL.toArray()),
+                autonTaskLRL = TaskConfig.AutonTask.arrayToString(dataLRL.toArray()),
+                autonTaskRLR = TaskConfig.AutonTask.arrayToString(dataRLR.toArray()),
+                autonTaskRRR = TaskConfig.AutonTask.arrayToString(dataRRR.toArray()),
 
-                    scoringSideLLL = ScoringSide.arrayToString(dataLLL.toArray()),
-                    scoringSideLRL = ScoringSide.arrayToString(dataLRL.toArray()),
-                    scoringSideRLR = ScoringSide.arrayToString(dataRLR.toArray()),
-                    scoringSideRRR = ScoringSide.arrayToString(dataRRR.toArray());
+                scoringSideLLL = TaskConfig.ScoringSide.arrayToString(dataLLL.toArray()),
+                scoringSideLRL = TaskConfig.ScoringSide.arrayToString(dataLRL.toArray()),
+                scoringSideRLR = TaskConfig.ScoringSide.arrayToString(dataRLR.toArray()),
+                scoringSideRRR = TaskConfig.ScoringSide.arrayToString(dataRRR.toArray());
 
-            // Place values in table
-            rootTable.getEntry("startingPos").setNumber(startingPos);
+        // Place values in table
+        rootTable.getEntry("startingPos").setNumber(startingPos);
 
-            lllTable.getEntry("tasks").setStringArray(autonTaskLLL);
-            lllTable.getEntry("sides").setStringArray(scoringSideLLL);
+        lllTable.getEntry("tasks").setStringArray(autonTaskLLL);
+        lllTable.getEntry("sides").setStringArray(scoringSideLLL);
 
-            lrlTable.getEntry("tasks").setStringArray(autonTaskLRL);
-            lrlTable.getEntry("sides").setStringArray(scoringSideLRL);
+        lrlTable.getEntry("tasks").setStringArray(autonTaskLRL);
+        lrlTable.getEntry("sides").setStringArray(scoringSideLRL);
 
-            rlrTable.getEntry("tasks").setStringArray(autonTaskRLR);
-            rlrTable.getEntry("sides").setStringArray(scoringSideRLR);
+        rlrTable.getEntry("tasks").setStringArray(autonTaskRLR);
+        rlrTable.getEntry("sides").setStringArray(scoringSideRLR);
 
-            rrrTable.getEntry("tasks").setStringArray(autonTaskRRR);
-            rrrTable.getEntry("sides").setStringArray(scoringSideRRR);
-        }
+        rrrTable.getEntry("tasks").setStringArray(autonTaskRRR);
+        rrrTable.getEntry("sides").setStringArray(scoringSideRRR);
     }
 
     //HELPER METHODS
@@ -366,31 +316,7 @@ public class AutonBuilderController {
      * Checks to see if all the tables are complete AND if a starting auton position has been selected. The method will throw an error depending on what is not finished.
      * @return All the tables are complete AND if a starting auton position has been selected.
      */
-    private boolean isCompletelyFinished() {
-        boolean tableIsComplete =
-                ((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
-                ((TaskConfig) tableLRL.getItems().get(tableLRL.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
-                ((TaskConfig) tableRLR.getItems().get(tableRLR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE &&
-                ((TaskConfig) tableRRR.getItems().get(tableRRR.getItems().size() - 1)).autonTask.getValue() == AutonTask.DONE;
-        System.out.println(((TaskConfig) tableLLL.getItems().get(tableLLL.getItems().size() - 1)).autonTask.getValue().toString());
-        boolean radioSelected = radioGroup.getSelectedToggle() != null;
 
-        if (!tableIsComplete || !radioSelected) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("");
-            if (!tableIsComplete && !radioSelected) {
-                alert.setContentText("Finish each configuration and select a starting auton position before continuing.");
-            }
-            else if (!tableIsComplete && radioSelected) {
-                alert.setContentText("Finish each configuration before continuing.");
-            }
-            else if (tableIsComplete && !radioSelected) {
-                alert.setContentText("Select a starting auton position before continuing.");
-            }
-            alert.show();
-        }
-        return tableIsComplete && radioSelected;
-    }
 
     /**
      * Determines the data that the input String is referring to.

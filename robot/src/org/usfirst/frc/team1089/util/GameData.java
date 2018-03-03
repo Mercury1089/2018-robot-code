@@ -21,7 +21,7 @@ public class GameData {
             CHAR = c;
         }
 
-        public static PlateSide toChar(char c) {
+        public static PlateSide fromChar(char c) {
             for (PlateSide p : values()) {
                 if (p.CHAR == c)
                     return p;
@@ -42,39 +42,37 @@ public class GameData {
 
     public static void updateGameData() {
         String msg = DriverStation.getInstance().getGameSpecificMessage();
-        boolean validMsg = msg.length() == MSG_LENGTH && msg.charAt(0) == msg.charAt(MSG_LENGTH - 1);
+        boolean validMsg = msg != null && msg.length() == MSG_LENGTH && msg.charAt(0) == msg.charAt(MSG_LENGTH - 1);
 
         plateSides = new PlateSide[3];
 
-        if (msg != null) {
-            int i = 0;
-
-            while (i < msg.length()) {
-                if (validMsg) {
-                    char cMsg = msg.charAt(i);
-                    switch (cMsg) {
-                        case 'L':
-                        case 'R':
-                            plateSides[i] = PlateSide.toChar(cMsg);
-                            break;
-                        default:
-                            validMsg = false;
-                            i = 0;
-                            break;
-                    }
-                } else
-                    plateSides[i] = PlateSide.UNKNOWN;
-
-                i++;
-            }
+        for (int i = 0; i < MSG_LENGTH; i++) {
+            if (validMsg) {
+                char cMsg = msg.charAt(i);
+                switch (cMsg) {
+                    case 'L':
+                    case 'R':
+                        plateSides[i] = PlateSide.fromChar(cMsg);
+                        break;
+                    default:
+                        validMsg = false;
+                        i = 0;
+                        break;
+                }
+            } else
+                plateSides[i] = PlateSide.UNKNOWN;
         }
     }
 
     public static PlateSide getSwitchSide() {
+        updateGameData();
+
         return plateSides[0];
     }
 
     public static PlateSide getScaleSide() {
+        updateGameData();
+
         return plateSides[1];
     }
 

@@ -28,7 +28,10 @@ public class AutonCommand extends CommandGroup {
             CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1;
 
     public AutonCommand(AutonBuilder autonBuilder) {
-        GameData gameData = GameData.getInstance();
+        GameData.PlateSide
+            scaleSide = GameData.getScaleSide(),
+            switchSide = GameData.getSwitchSide();
+
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -90,9 +93,9 @@ public class AutonCommand extends CommandGroup {
                 switch (autonTasks[0]) {
                     case SCORE_SWITCH:
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                        if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                        if (switchSide == scaleSide) {
                             //TODO make a path that replaces the "CubeSetupPickup" and "SwitchBack" and the following DriveDistance
-                            if (gameData.getSwitchSide() == comparableWorkingSide) {
+                            if (switchSide == comparableWorkingSide) {
                                 if (scoreSide[0] == ScoringSide.BACK) {
                                     addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new UseClaw(Claw.ClawState.EJECT));
@@ -117,7 +120,7 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(rotateRelative);
                             }
                         } else {
-                            if (gameData.getSwitchSide() == comparableWorkingSide) {
+                            if (switchSide == comparableWorkingSide) {
                                 addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 switchWorkingSide();
@@ -134,7 +137,7 @@ public class AutonCommand extends CommandGroup {
                         break;
                 case SCORE_SCALE:
                     addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-                    if (gameData.getSwitchSide() == comparableWorkingSide) {
+                    if (switchSide == comparableWorkingSide) {
                         addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                     } else {
                         addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
@@ -198,16 +201,16 @@ public class AutonCommand extends CommandGroup {
                         //TODO add opps...
                         switch (sideToScoreOn) {
                             case BACK:
-                                if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                                if (switchSide == scaleSide) {
                                     rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, -75));
                                     addSequential(rotateRelative);
                                     addSequential(new DriveDistance(15, .8));
                                     addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                    addSequential(new DriveDistance(-15, .8));  //TODO change these arbitrary values
+                                    addSequential(new DriveDistance(-15, .8));  // TODO change these arbitrary values
                                 }
                                 break;
-                            case MID:       //PLEASE BE ADVISED NOT TO USE THIS
-                                if (gameData.getSwitchSide() == gameData.getScaleSide()) {
+                            case MID: // PLEASE BE ADVISED NOT TO USE THIS
+                                if (switchSide == scaleSide) {
                                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, rotationFactor, 0));
                                     addSequential(rotateRelative);
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.FORWARD));

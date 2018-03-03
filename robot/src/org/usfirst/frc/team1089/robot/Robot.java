@@ -57,8 +57,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		GameData.updateGameData();
-
 		elevator = new Elevator(CAN.ELEVATOR_M, CAN.ELEVATOR_S);
 
 	    driveTrain = new DriveTrain(
@@ -109,6 +107,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		GameData.updateGameData();
+
         NetworkTable
                 rootTable = NetworkTableInstance.getDefault().getTable("AutonConfiguration"),
                 lllTable = rootTable.getSubTable("LLL"),
@@ -137,7 +137,7 @@ public class Robot extends IterativeRobot {
 			autonBuilderRRR = new AutonBuilder(autonPosition, rrrTasks, rrrSides);
 		}
 
-        switch (GameData.getInstance().toString()) {
+        switch (GameData.getParsedString()) {
 			case "LLL":
 				autonCommand = new AutonCommand(autonBuilderLLL);
 				break;
@@ -153,6 +153,7 @@ public class Robot extends IterativeRobot {
 			default:
 				return;
 		}
+
 		if (autonCommand != null) {
 		    autonCommand.start();
         }

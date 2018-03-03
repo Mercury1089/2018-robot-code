@@ -17,6 +17,8 @@ import org.usfirst.frc.team1089.util.Recallable;
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
     private AutonPosition workingSide;
+    private FieldSide fieldSide;
+    private GameData.PlateSide comparableFieldSide;
     private GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
@@ -66,6 +68,18 @@ public class AutonCommand extends CommandGroup {
                 comparableWorkingSide = GameData.PlateSide.UNKNOWN;
                 rotationFactor = 0;
         }
+        fieldSide = autonBuilder.getFieldSide();
+        switch(fieldSide) {
+            case LEFT_SIDE:
+                comparableFieldSide = GameData.PlateSide.LEFT;
+                break;
+            case RIGHT_SIDE:
+                comparableFieldSide = GameData.PlateSide.RIGHT;
+                break;
+            default:
+                comparableFieldSide = null;
+        }
+
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
         posStr = workingSide.toString();

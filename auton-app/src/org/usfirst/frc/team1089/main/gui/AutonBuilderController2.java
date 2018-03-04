@@ -1,8 +1,11 @@
 package org.usfirst.frc.team1089.main.gui;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -19,6 +22,8 @@ import org.usfirst.frc.team1089.main.util.TaskConfig;
 import org.usfirst.frc.team1089.main.util.*;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.function.Supplier;
 
 public class AutonBuilderController2 {
 
@@ -116,18 +121,43 @@ public class AutonBuilderController2 {
 
         //Set up cell factories to create the cells we need for the TableViews.
         Callback<TableColumn<TaskConfig, TaskConfig.AutonTask>, TableCell> autonTaskCellFactory = param -> {
-            final ComboBoxTableCell<TaskConfig, TaskConfig.AutonTask> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values()));
+            final TransparentComboBoxTableCell<TaskConfig, TaskConfig.AutonTask> comboBoxTableCell = new TransparentComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values()));
             comboBoxTableCell.setEditable(true);
+            //ComboBoxTableCell does not have an itemsproperty for the list of items that can be displayed. However, ComboBox does.
+            //Using the TransparentComboBoxTableCell, we can access the ComboBox used in the ComboBoxTableCell.
+            //So, we can use bindings to change the items displayed in the ComboBox.
+            comboBoxTableCell.comboBox.itemsProperty().bind(Bindings
+                    .when(comboBoxTableCell.indexProperty().isEqualTo(0))
+                    .then(new SimpleObjectProperty<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values())))
+                    .otherwise(new SimpleObjectProperty<>(FXCollections.observableArrayList(TaskConfig.AutonTask.SCORE_SCALE, TaskConfig.AutonTask.SCORE_SWITCH)))
+            );
             comboBoxTableCell.setComboBoxEditable(false);
             return comboBoxTableCell;
         };
 
         Callback<TableColumn<TaskConfig, TaskConfig.ScoringSide>, TableCell> scoringSideCellFactory = param -> {
-            ComboBoxTableCell<TaskConfig, TaskConfig.ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.ScoringSide.values()));
-            comboBoxTableCell.setEditable(true);
+            ComboBoxTableCell<TaskConfig, TaskConfig.ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(TaskConfig.ScoringSide.FRONT, TaskConfig.ScoringSide.MID, TaskConfig.ScoringSide.BACK);
             comboBoxTableCell.setComboBoxEditable(false);
+            comboBoxTableCell.editableProperty().bind(comboBoxTableCell.itemProperty().isNotEqualTo(new SimpleObjectProperty<>(TaskConfig.ScoringSide.NOT_APPLICABLE)));
             return comboBoxTableCell;
         };
+
+        EventHandler<TableColumn.CellEditEvent<TaskConfig,TaskConfig.AutonTask>> taskEditHandler = (TableColumn.CellEditEvent<TaskConfig, TaskConfig.AutonTask> t) -> {
+            if (t.getNewValue() == TaskConfig.AutonTask.AUTO_LINE) {
+                t.getTableView().setItems(FXCollections.observableArrayList(new TaskConfig(TaskConfig.AutonTask.AUTO_LINE, TaskConfig.ScoringSide.NOT_APPLICABLE)));
+            }
+
+            if (t.getOldValue() == TaskConfig.AutonTask.AUTO_LINE && t.getNewValue() != TaskConfig.AutonTask.AUTO_LINE) {
+                t.getRowValue().scoringSide.setValue(TaskConfig.ScoringSide.FRONT);
+            }
+
+            t.getRowValue().autonTask.setValue(t.getNewValue());
+        };
+
+        taskColLLL.setOnEditCommit(taskEditHandler);
+        taskColLRL.setOnEditCommit(taskEditHandler);
+        taskColRLR.setOnEditCommit(taskEditHandler);
+        taskColRRR.setOnEditCommit(taskEditHandler);
 
         taskColLLL.setCellFactory(autonTaskCellFactory);
         taskColLRL.setCellFactory(autonTaskCellFactory);
@@ -217,10 +247,10 @@ public class AutonBuilderController2 {
     }
 
     private void addNewRow(TableView table) {
-        table.getItems().add(new TaskConfig(TaskConfig.AutonTask.SCORE_SCALE, TaskConfig.ScoringSide.FRONT));
+        if (table.getItems().isEmpty() || (!table.getItems().isEmpty() && ((TaskConfig) table.getItems().get(0)).autonTask.get() != (TaskConfig.AutonTask.AUTO_LINE))) {
+            table.getItems().add(new TaskConfig(TaskConfig.AutonTask.SCORE_SCALE, TaskConfig.ScoringSide.FRONT));
+        }
     }
-
-
 
     private void openSaveDialog() {
         SaveDialog saveDialog = new SaveDialog();
@@ -265,4 +295,37 @@ public class AutonBuilderController2 {
     private void openAbout() {
 
     }
+
+    /**
+     * Class used to get access to the ComboBoxTableCell's ComboBox, which cannot be accessed outside of using the Reflection API.
+     */
+    private static class TransparentComboBoxTableCell<S, T> extends ComboBoxTableCell<S, T> {
+        public TransparentComboBoxTableCell() {
+            this(FXCollections.observableArrayList());
+        }
+        public TransparentComboBoxTableCell(ObservableList<T> startingItems) {
+            super(startingItems);
+            try {
+                Field f = ComboBoxTableCell.class.getDeclaredField("comboBox");
+                f.setAccessible(true);
+                f.set(this, new ComboBox<>());
+                comboBox = (ComboBox<T>) f.get(this);
+                // Setup out of javafx.scene.control.cell.CellUtils.createComboBox
+                // comboBox.converterProperty().bind(converter);
+                comboBox.setMaxWidth(Double.MAX_VALUE);
+                comboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                    if (this.isEditing()) {
+                        this.commitEdit((T) newValue);
+                    }
+                });
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                throw new Error("Error extracting 'comboBox' from ComboBoxTableCell", ex);
+            }
+            tableValue = () -> (S) this.getTableRow().getItem();
+        }
+
+        public final ComboBox<T> comboBox;
+        public final Supplier<S> tableValue;
+    }
+
 }

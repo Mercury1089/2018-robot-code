@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.robot.auton.TaskConfig.AutonTask;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
@@ -22,7 +23,7 @@ public class AutonCommand extends CommandGroup {
     private GameData.PlateSide comparableFieldSide;
     private GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
     private AutonTask[] autonTasks;
-    private ScoringSide[] scoreSide;
+    private TaskConfig.ScoringSide[] scoreSide;
     private String posStr;
     private int rotationFactor;
     private final double
@@ -128,7 +129,7 @@ public class AutonCommand extends CommandGroup {
                         if (switchSide == scaleSide) {
                             //TODO make a path that replaces the "CubeSetupPickup" and "SwitchBack" and the following DriveDistance
                             if (switchSide == comparableWorkingSide) {
-                                if (scoreSide[0] == ScoringSide.BACK) {
+                                if (scoreSide[0] == TaskConfig.ScoringSide.BACK) {
                                     addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                                     addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
@@ -192,8 +193,8 @@ public class AutonCommand extends CommandGroup {
         for (int i = 1; i < autonTasks.length; i++) {
             AutonTask taskToComplete = autonTasks[i];           //The task to execute
             AutonTask previousTask = autonTasks[i - 1];         //The task just executed
-            ScoringSide sideToScoreOn = scoreSide[i];           //The side to score on
-            ScoringSide previousSide = scoreSide[i - 1];        //The side just scored on
+            TaskConfig.ScoringSide sideToScoreOn = scoreSide[i];           //The side to score on
+            TaskConfig.ScoringSide previousSide = scoreSide[i - 1];        //The side just scored on
 
             //GRAB CUBE
             if (previousSide != null) {
@@ -205,7 +206,7 @@ public class AutonCommand extends CommandGroup {
 
             switch (taskToComplete) {
                 case SCORE_SCALE:
-                    if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != ScoringSide.BACK) {
+                    if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != TaskConfig.ScoringSide.BACK) {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                         switch (sideToScoreOn) {
                             case FRONT:
@@ -228,7 +229,7 @@ public class AutonCommand extends CommandGroup {
                     }
                     break;
                 case SCORE_SWITCH:
-                    if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != ScoringSide.FRONT) {
+                    if ((workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) && sideToScoreOn != TaskConfig.ScoringSide.FRONT) {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         //TODO add opps...
                         switch (sideToScoreOn) {

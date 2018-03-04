@@ -7,11 +7,11 @@ package org.usfirst.frc.team1089.robot.auton;
  */
 public class AutonBuilder {
     private AutonPosition autonPos;
-    private AutonTask[] autonTasks;
-    private ScoringSide[] scoreSide;
+    private TaskConfig.AutonTask[] autonTasks;
+    private TaskConfig.ScoringSide[] scoreSide;
     private FieldSide fieldSide;
 
-    public AutonBuilder(AutonPosition autonPos, FieldSide fieldSide, AutonTask[] autonTasks, ScoringSide[] scoreSide) {
+    public AutonBuilder(AutonPosition autonPos, FieldSide fieldSide, TaskConfig.AutonTask[] autonTasks, TaskConfig.ScoringSide[] scoreSide) {
         this.autonPos = autonPos;
         this.fieldSide = fieldSide;
         this.autonTasks = autonTasks;
@@ -24,11 +24,11 @@ public class AutonBuilder {
 
     public FieldSide getFieldSide() { return fieldSide; }
 
-    public AutonTask[] getAutonTasks() {
+    public TaskConfig.AutonTask[] getAutonTasks() {
         return autonTasks;
     }
 
-    public ScoringSide[] getScoreSide() {
+    public TaskConfig.ScoringSide[] getScoreSide() {
         return scoreSide;
     }
 

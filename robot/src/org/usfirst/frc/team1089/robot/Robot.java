@@ -3,15 +3,12 @@ package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.*;
 import org.usfirst.frc.team1089.robot.auton.*;
-import org.usfirst.frc.team1089.robot.sensors.PiVision;
-import org.usfirst.frc.team1089.robot.sensors.Ultrasonic;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
@@ -72,7 +69,7 @@ public class Robot extends IterativeRobot {
 
 		pdp = new PDP();
 
-		claw = new Claw(AIO.ULTRASONIC, CAN.CANIFIER, PWM.LIDAR, CAN.TALON_CLAW_LEADER, CAN.TALON_CLAW_FOLLOWER);
+		claw = new Claw(AIO.ULTRASONIC, CAN.CANIFIER, PWM.LIDAR, CAN.LEFT_CLAW_LEADER, CAN.RIGHT_CLAW_FOLLOWER);
 
 		// OI NEEDS to be constructed as the last line for everything to work.
 		oi = new OI();

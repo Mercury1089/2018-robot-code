@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.commands.LogPDPInfo;
@@ -17,6 +18,17 @@ public class PDP extends Subsystem {
 	
 	public PDP() {
 		pdpPanel = new PowerDistributionPanel();
+	}
+
+	public void periodic() {
+		double[] currentVals = new double[16];
+
+		for (int i = 0; i < 16; i++)
+			currentVals[i] = pdpPanel.getCurrent(i);
+
+		SmartDashboard.putNumberArray("PDP: Current Values", currentVals);
+		SmartDashboard.putNumber("PDP: Voltage", pdpPanel.getVoltage());
+		SmartDashboard.putNumber("PDP: Total Current", pdpPanel.getTotalCurrent());
 	}
 	
 	@Override

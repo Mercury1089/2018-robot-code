@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.robot.auton;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,6 +101,23 @@ public class AutonCommand extends CommandGroup {
         }
 
         RotateRelative rotateRelative = null;      //History RotateRelative that will be used to return to pickup position
+
+        //TEMPORARY SWITCH SIDE LRL/RLR for MT OLIVE. TODO edit this
+        if (comparableWorkingSide == switchSide && switchSide != scaleSide) {
+            addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+            addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+            addSequential(new UseClaw(Claw.ClawState.EJECT));
+            addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
+            addSequential(new DriveDistance(-20, .8));
+            while (RobotState.isAutonomous()) {
+                addSequential(new GetCube());
+                addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                addSequential(new DriveDistance(20, .8));
+                addSequential(new UseClaw(Claw.ClawState.EJECT));
+                addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
+                addSequential(new DriveDistance(-20, .8));
+            }
+        }
 
         switch (workingSide) {
             case LEFT:

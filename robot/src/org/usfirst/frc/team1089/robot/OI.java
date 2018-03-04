@@ -66,7 +66,7 @@ public class OI {
 
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4, right5, right6, right7, right8, right9, right10, right11;
-	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb, gamepad_start, gamepad_back;
+	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb, gamepad_start, gamepad_back, gamepad_L3, gamepad_R3;
 
 	private UseClaw useClaw;
 
@@ -118,9 +118,10 @@ public class OI {
 		right11 = new JoystickButton(rightStick, 11);
 		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupLeft", MoveOnPath.Direction.BACKWARD));
 
-		int rotationFactor = 1,
-			addDeg = 0,
-			cubesPickedUp = 0;
+		int
+				cubesPickedUp = 0,
+				rotationFactor = -1,
+				addDeg = 0;
 		final double
 				CUBE_PICKUP_X_OFFSET = 38.825,
 				CUBE_PICKUP_Y_CONSTANT_OFFSET = 12.25,
@@ -128,6 +129,8 @@ public class OI {
 
 		right8 = new JoystickButton(rightStick, 8);
 		right8.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
+		right9 = new JoystickButton(rightStick, 9);
+		right9.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);
@@ -147,6 +150,8 @@ public class OI {
 		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		gamepad_rb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.RB);
 		gamepad_rb.whenPressed(new UseClaw(Claw.ClawState.EJECT));
+		gamepad_L3 = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.L3);
+		gamepad_L3.whenPressed(new CalibrateGyro());
 
 		log.info("OI initialized");
 

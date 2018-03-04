@@ -88,10 +88,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         tMasterRight.setInverted(false);
         vFollowerRight.setInverted(false);
 
-        tMasterLeft.setNeutralMode(NeutralMode.Brake);
-        vFollowerLeft.setNeutralMode(NeutralMode.Brake);
-        tMasterRight.setNeutralMode(NeutralMode.Brake);
-        vFollowerRight.setNeutralMode(NeutralMode.Brake);
+        setNeutralMode(NeutralMode.Brake);
 
         //Account for encoder orientation.
         tMasterLeft.setSensorPhase(true);

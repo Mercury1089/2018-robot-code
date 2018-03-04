@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import org.usfirst.frc.team1089.main.AutonBuilder;
 import org.usfirst.frc.team1089.main.util.TaskConfig;
@@ -33,7 +34,7 @@ public class AutonBuilderController2 {
     private Menu fileMenu, editMenu, helpMenu;
 
     @FXML
-    private MenuItem saveMenuItem, loadMenuItem, moveToMenuItem, aboutMenuItem;
+    private MenuItem saveMenuItem, loadMenuItem, moveToMenuItem, publishMenuItem, aboutMenuItem;
 
     @FXML
     private FlowPane headerRoot;
@@ -165,6 +166,8 @@ public class AutonBuilderController2 {
         loadMenuItem.setOnAction(event -> openLoadDialog());
         moveToMenuItem.setOnAction(event -> openMoveToDialog());
         aboutMenuItem.setOnAction(event -> openAbout());
+        publishMenuItem.setOnAction(event -> publishToNetworkTable());
+
 
         leftRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.LEFT));
         middleLeftRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.LEFT_MID));
@@ -232,11 +235,31 @@ public class AutonBuilderController2 {
 
 
     private void openLoadDialog() {
+        // Open File Explorer for the user to choose the file to load, then grab its directory. All the CSVs should be saved into the Configurations folder.
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Configuration CSV");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Comma Separated Values", "*.csv" )
+        );
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        File chosenFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 
+        if (chosenFile.exists()) {
+            backend.load(chosenFile);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Invalid file");
+            alert.show();
+        }
     }
 
     private void openMoveToDialog() {
 
+    }
+
+    private void publishToNetworkTable() {
+        backend.publish();
     }
 
     private void openAbout() {

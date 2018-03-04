@@ -39,10 +39,10 @@ public class TaskConfig {
             return null;
         }
 
-        public static String[] arrayToString(Object[] tasks) {
+        public static String[] arrayToString(TaskConfig[] tasks) {
             String[] output = new String[tasks.length];
             for (int i = 0; i < tasks.length; i++) {
-                output[i] = tasks[i].toString();
+                output[i] = tasks[i].autonTask.getValue().toString();
             }
             return output;
         }
@@ -82,10 +82,10 @@ public class TaskConfig {
             return null;
         }
 
-        public static String[] arrayToString(Object[] sides) {
-            String[] output = new String[sides.length];
-            for (int i = 0; i < sides.length; i++) {
-                output[i] = sides[i].toString();
+        public static String[] arrayToString(TaskConfig[] configs) {
+            String[] output = new String[configs.length];
+            for (int i = 0; i < configs.length; i++) {
+                output[i] = configs[i].scoringSide.getValue().toString();
             }
             return output;
         }

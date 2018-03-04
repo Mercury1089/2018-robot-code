@@ -116,10 +116,7 @@ public class Robot extends IterativeRobot {
                 rlrTable = rootTable.getSubTable("RLR"),
                 rrrTable = rootTable.getSubTable("RRR");
 
-        int autonPositionOrdinal = rootTable.getEntry("startingPos").getNumber(-1).intValue();
-
-        if (autonPositionOrdinal != -1) {
-			AutonPosition autonPosition = AutonPosition.values()[autonPositionOrdinal];
+        AutonPosition startingPosition = AutonPosition.fromString(rootTable.getEntry("startingPosition").getValue().getString());
 
 			AutonTask[] lllTasks = AutonTask.arrayFromString(lllTable.getEntry("tasks").getValue().getStringArray());
 			AutonTask[] lrlTasks = AutonTask.arrayFromString(lrlTable.getEntry("tasks").getValue().getStringArray());
@@ -131,11 +128,16 @@ public class Robot extends IterativeRobot {
 			ScoringSide[] rlrSides = ScoringSide.arrayFromString(rlrTable.getEntry("sides").getValue().getStringArray());
 			ScoringSide[] rrrSides = ScoringSide.arrayFromString(rrrTable.getEntry("sides").getValue().getStringArray());
 
-			/*autonBuilderLLL = new AutonBuilder(autonPosition, lllTasks, lllSides);
-			autonBuilderLRL = new AutonBuilder(autonPosition, lrlTasks, lrlSides);
-			autonBuilderRLR = new AutonBuilder(autonPosition, rlrTasks, rlrSides);
-			autonBuilderRRR = new AutonBuilder(autonPosition, rrrTasks, rrrSides);*/
-		}
+        FieldSide lllFieldSide = FieldSide.fromString(lllTable.getEntry("fieldSide").getValue().getString());
+        FieldSide lrlFieldSide = FieldSide.fromString(lrlTable.getEntry("fieldSide").getValue().getString());
+        FieldSide rlrFieldSide = FieldSide.fromString(rlrTable.getEntry("fieldSide").getValue().getString());
+        FieldSide rrrFieldSide = FieldSide.fromString(rrrTable.getEntry("fieldSide").getValue().getString());
+
+
+        autonBuilderLLL = new AutonBuilder(startingPosition, lllFieldSide, lllTasks, lllSides);
+        autonBuilderLRL = new AutonBuilder(startingPosition, lrlFieldSide, lrlTasks, lrlSides);
+        autonBuilderRLR = new AutonBuilder(startingPosition, rlrFieldSide, rlrTasks, rlrSides);
+        autonBuilderRRR = new AutonBuilder(startingPosition, rrrFieldSide, rrrTasks, rrrSides);
 
         switch (GameData.getParsedString()) {
 			case "LLL":

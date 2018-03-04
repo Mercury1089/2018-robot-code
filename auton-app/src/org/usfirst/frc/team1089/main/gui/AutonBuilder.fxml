@@ -23,8 +23,9 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem id="saveMenuItem" fx:id="saveMenuItem" mnemonicParsing="false" text="Save..." />
-                        <MenuItem id="loadMenuItem" fx:id="loadMenuItem" mnemonicParsing="false" text="Load..." />
+                        <MenuItem id="saveMenuItem" fx:id="saveMenuItem" mnemonicParsing="false" text="Save (Ctrl+S)" />
+                        <MenuItem id="loadMenuItem" fx:id="loadMenuItem" mnemonicParsing="false" text="Load (Ctrl+O)" />
+                  <MenuItem id="publishMenuItem" fx:id="publishMenuItem" mnemonicParsing="false" text="Publish (Ctrl+P)" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -175,7 +176,7 @@
                         <Font size="21.0" />
                     </font>
                 </Label>
-                <Slider id="sliderRLR" fx:id="sliderRLR" majorTickUnit="1.0" max="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="14.0" prefWidth="41.0" snapToTicks="true" value="1.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                <Slider id="sliderRLR" fx:id="sliderRLR" majorTickUnit="1.0" max="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="14.0" prefWidth="41.0" snapToTicks="true" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                 <Label prefHeight="62.0" prefWidth="22.0" text="  L" textAlignment="CENTER" translateX="20.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                     <font>
                         <Font size="21.0" />

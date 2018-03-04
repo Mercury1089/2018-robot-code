@@ -21,7 +21,7 @@ public enum AutonPosition {
 
     public static AutonPosition fromString(String positionString) {
         for (AutonPosition ap : values()) {
-            if (ap.POSITION == positionString) {
+            if (ap.POSITION.equals(positionString)) {
                 return ap;
             }
         }

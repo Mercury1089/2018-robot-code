@@ -1,16 +1,17 @@
 package org.usfirst.frc.team1089.main;
 
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ChoiceDialog;
 import org.fxmisc.easybind.EasyBind;
 import org.usfirst.frc.team1089.main.util.AutonPosition;
 import org.usfirst.frc.team1089.main.util.FieldSide;
 import org.usfirst.frc.team1089.main.util.TaskConfig;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -89,63 +90,82 @@ public class AutonBuilder {
      * @return whether or not the action was successful
      */
     public boolean save(File csv, String... configKeys) {
-        System.out.println("Attempting to save...");
         boolean successful = true;
-        List<List<TaskConfig>> configLists = new ArrayList<>();
-        int numKeys;
-
-        for (String key : configKeys) {
-            configLists.add(configMap.get(key));
-        }
-
-        numKeys = configLists.size() * 2;
-
-        if (!csv.toString().endsWith(".csv"))
-            return false;
-
+        String[] filteredKeys = new String[0];
+        List<List<TaskConfig>> configTableLists = new ArrayList<>();
+        List<String> filteredKeysList = new ArrayList<>();
         File dir = csv.getParentFile();
 
-        if (!dir.isDirectory() || (!dir.exists() && !dir.mkdirs()))
-            return false;
+        // Check if file directory exists first.
+        if (!dir.exists())
+            dir.mkdirs();
 
-        try {
-            CSVWriter writer = new CSVWriter(new FileWriter(csv));
-            String[]
-                header = new String[numKeys], valueBuffer = new String[numKeys];
+        // Filter bad keys
+        for (String s : configKeys) {
+            if (s != null) {
+                List<TaskConfig> taskList = configMap.get(s);
 
-            for (int i = 0; i < configKeys.length; i++) {
-                header[2 * i] = TASK_PREFIX + configKeys[i].toUpperCase();
-                header[2 * i + 1] = SIDE_PREFIX + configKeys[i].toUpperCase();
-            }
-
-            writer.writeNext(header);
-
-            int maxRows = 0;
-
-            // We need the largest table in the set of data
-            // We will use that number for the amount of times to iterate
-            // through ALL tables.
-            // I'm very lazy.
-            for (List<TaskConfig> list : configLists)
-                maxRows = list.size() > maxRows ? list.size() : maxRows;
-
-            for (int table = 0; table < numKeys - 1; table += 2) {
-                List<TaskConfig> curConfigList = configLists.get(table);
-                for (int row = 0; row < maxRows; row++) {
-                    TaskConfig curConfig = curConfigList.get(row);
-
-                    System.out.println(curConfig);
-
-                    valueBuffer[2 * table] = curConfig.autonTask.getValue().toString();
-                    valueBuffer[2 * table + 1] = curConfig.scoringSide.getValue().toString();
+                if (taskList != null) {
+                    filteredKeysList.add(s);
+                    configTableLists.add(taskList);
                 }
 
-                writer.writeNext(valueBuffer);
-
-                // Probably shouldn't reallocate memory in a loop.
-                // Who cares, going for MVP bois.
-                valueBuffer = new String[numKeys];
             }
+        }
+
+        filteredKeys = filteredKeysList.toArray(filteredKeys);
+
+        try {
+            int numTables = 0;
+            int numCols = 0;
+            int maxNumRows = 0;
+            CSVWriter writer = new CSVWriter(new FileWriter(csv));
+
+            // Get all tables from keys
+            // Also get numTables, numCols, and maxNumRows
+            numTables = configTableLists.size();
+            numCols = numTables * 2;
+
+            for (List<TaskConfig> l: configTableLists) {
+                maxNumRows = maxNumRows < l.size() ? l.size() : maxNumRows;
+            }
+
+            // Start by applying header
+            String[] rowBuffer = new String[numCols];
+
+            for (int i = 0; i < numTables; i++) {
+                rowBuffer[2 * i] = "task" + filteredKeys[i];
+                rowBuffer[2 * i + 1] = "side" + filteredKeys[i];
+            }
+
+            writer.writeNext(rowBuffer, false);
+
+            // Start adding all values here
+            for (int row = 0; row < maxNumRows; row++) {
+                // Clear string array
+                for (int i = 0; i < numCols; i++)
+                    rowBuffer[i] = "";
+
+                // NOW start adding all values
+                for (int table = 0; table < numTables; table++) {
+                    String task = "", side = "";
+                    List<TaskConfig> taskList = configTableLists.get(table);
+
+                    if (row < taskList.size()) {
+                        TaskConfig t = taskList.get(row);
+
+                        task = t.autonTask.get().toString();
+                        side = t.scoringSide.get().toString();
+
+                    }
+
+                    rowBuffer[2 * table] = task;
+                    rowBuffer[2 * table + 1] = side;
+                }
+
+                writer.writeNext(rowBuffer, false);
+            }
+
 
             writer.close();
         } catch (Exception e) { // Definitely not the best way to do this
@@ -155,6 +175,55 @@ public class AutonBuilder {
 
         return successful;
     }
+
+    public void load(File csv) {
+        try {
+            CSVReader reader = new CSVReader(new FileReader(csv.getPath()));
+            String[] csvBuffer = reader.readNext();
+
+        } catch (IOException e) {
+            System.out.println("AutonBuilder.load has thrown an IOException!");
+        }
+    }
+
+    public void publish() {
+        NetworkTable
+                rootTable = Client.getNT().getTable("AutonConfiguration"),
+                lllTable = rootTable.getSubTable("LLL"),
+                lrlTable = rootTable.getSubTable("LRL"),
+                rlrTable = rootTable.getSubTable("RLR"),
+                rrrTable = rootTable.getSubTable("RRR");
+
+        String[]
+                autonTaskLLL = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("LLL").toArray())),
+                autonTaskLRL = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("LRL").toArray())),
+                autonTaskRLR = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("RLR").toArray())),
+                autonTaskRRR = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("RRR").toArray())),
+
+                scoringSideLLL = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("LLL").toArray())),
+                scoringSideLRL = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("LRL").toArray())),
+                scoringSideRLR = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("RLR").toArray())),
+                scoringSideRRR = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("RRR").toArray()));
+
+        rootTable.getEntry("startingPosition").setString(startingPosition.toString());
+
+        lllTable.getEntry("fieldSide").setString(fieldSideMap.get("LLL").toString());
+        lllTable.getEntry("tasks").setStringArray(autonTaskLLL);
+        lllTable.getEntry("sides").setStringArray(scoringSideLLL);
+
+        lrlTable.getEntry("fieldSide").setString(fieldSideMap.get("LRL").toString());
+        lrlTable.getEntry("tasks").setStringArray(autonTaskLRL);
+        lrlTable.getEntry("sides").setStringArray(scoringSideLRL);
+
+        lrlTable.getEntry("fieldSide").setString(fieldSideMap.get("RLR").toString());
+        rlrTable.getEntry("tasks").setStringArray(autonTaskRLR);
+        rlrTable.getEntry("sides").setStringArray(scoringSideRLR);
+
+        rrrTable.getEntry("fieldSide").setString(fieldSideMap.get("RRR").toString());
+        rrrTable.getEntry("tasks").setStringArray(autonTaskRRR);
+        rrrTable.getEntry("sides").setStringArray(scoringSideRRR);
+    }
+
 
     public void setStartingPosition(AutonPosition newPosition) {
         startingPosition = newPosition;

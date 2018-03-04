@@ -190,7 +190,6 @@ public class AutonBuilderController {
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Table LLL", "Table LLL", "Table LRL", "Table RLR", "Table RRR");
         choiceDialog.setTitle("Choosing Load Method...");
         choiceDialog.setHeaderText("Warning: Loading data into a table will clear the current contents!");
-        choiceDialog.setContentText("Choose which table to load into:");
         Optional<String> tableResult = choiceDialog.showAndWait();
 
         // Figure out which table object the string corresponds to.
@@ -255,15 +254,15 @@ public class AutonBuilderController {
 
         // Get all auton tasks and scoring side
         String[]
-                autonTaskLLL = TaskConfig.AutonTask.arrayToString(dataLLL.toArray()),
-                autonTaskLRL = TaskConfig.AutonTask.arrayToString(dataLRL.toArray()),
-                autonTaskRLR = TaskConfig.AutonTask.arrayToString(dataRLR.toArray()),
-                autonTaskRRR = TaskConfig.AutonTask.arrayToString(dataRRR.toArray()),
+                autonTaskLLL = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) dataLLL.toArray())),
+                autonTaskLRL = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) dataLRL.toArray())),
+                autonTaskRLR = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) dataRLR.toArray())),
+                autonTaskRRR = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) dataRRR.toArray())),
 
-                scoringSideLLL = TaskConfig.ScoringSide.arrayToString(dataLLL.toArray()),
-                scoringSideLRL = TaskConfig.ScoringSide.arrayToString(dataLRL.toArray()),
-                scoringSideRLR = TaskConfig.ScoringSide.arrayToString(dataRLR.toArray()),
-                scoringSideRRR = TaskConfig.ScoringSide.arrayToString(dataRRR.toArray());
+                scoringSideLLL = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) dataLLL.toArray())),
+                scoringSideLRL = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) dataLRL.toArray())),
+                scoringSideRLR = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) dataRLR.toArray())),
+                scoringSideRRR = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) dataRRR.toArray()));
 
         // Place values in table
         rootTable.getEntry("startingPos").setNumber(startingPos);

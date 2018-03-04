@@ -56,14 +56,21 @@ public class AutonBuilderController2 {
     private GridPane contentRoot;
 
     @FXML
-    private TableView tableLLL, tableLRL, tableRLR, tableRRR;
+    private TableView<TaskConfig> tableLLL, tableLRL, tableRLR, tableRRR;
 
     @FXML
-    private TableColumn
-            taskColLLL, sideColLLL,
-            taskColLRL, sideColLRL,
-            taskColRLR, sideColRLR,
-            taskColRRR, sideColRRR;
+    private TableColumn<TaskConfig, TaskConfig.AutonTask>
+            taskColLLL,
+            taskColLRL,
+            taskColRLR,
+            taskColRRR;
+
+    @FXML
+    private TableColumn<TaskConfig, TaskConfig.ScoringSide>
+            sideColLLL,
+            sideColLRL,
+            sideColRLR,
+            sideColRRR;
 
     private ObservableList<TaskConfig>
             dataLLL = FXCollections.observableArrayList(),
@@ -120,7 +127,7 @@ public class AutonBuilderController2 {
         sideColRRR.setResizable(false);
 
         //Set up cell factories to create the cells we need for the TableViews.
-        Callback<TableColumn<TaskConfig, TaskConfig.AutonTask>, TableCell> autonTaskCellFactory = param -> {
+        Callback<TableColumn<TaskConfig, TaskConfig.AutonTask>, TableCell<TaskConfig, TaskConfig.AutonTask>> autonTaskCellFactory = param -> {
             final TransparentComboBoxTableCell<TaskConfig, TaskConfig.AutonTask> comboBoxTableCell = new TransparentComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values()));
             comboBoxTableCell.setEditable(true);
             //ComboBoxTableCell does not have an itemsproperty for the list of items that can be displayed. However, ComboBox does.
@@ -135,7 +142,7 @@ public class AutonBuilderController2 {
             return comboBoxTableCell;
         };
 
-        Callback<TableColumn<TaskConfig, TaskConfig.ScoringSide>, TableCell> scoringSideCellFactory = param -> {
+        Callback<TableColumn<TaskConfig, TaskConfig.ScoringSide>, TableCell<TaskConfig, TaskConfig.ScoringSide>> scoringSideCellFactory = param -> {
             ComboBoxTableCell<TaskConfig, TaskConfig.ScoringSide> comboBoxTableCell = new ComboBoxTableCell<>(TaskConfig.ScoringSide.FRONT, TaskConfig.ScoringSide.MID, TaskConfig.ScoringSide.BACK);
             comboBoxTableCell.setComboBoxEditable(false);
             comboBoxTableCell.editableProperty().bind(comboBoxTableCell.itemProperty().isNotEqualTo(new SimpleObjectProperty<>(TaskConfig.ScoringSide.NOT_APPLICABLE)));
@@ -154,6 +161,12 @@ public class AutonBuilderController2 {
             t.getRowValue().autonTask.setValue(t.getNewValue());
         };
 
+        Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue<TaskConfig.AutonTask>>
+                taskValueFactory = param -> param.getValue().autonTask;
+
+        Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue<TaskConfig.ScoringSide>>
+                sideValueFactory = param -> param.getValue().scoringSide;
+
         taskColLLL.setOnEditCommit(taskEditHandler);
         taskColLRL.setOnEditCommit(taskEditHandler);
         taskColRLR.setOnEditCommit(taskEditHandler);
@@ -169,15 +182,15 @@ public class AutonBuilderController2 {
         sideColRLR.setCellFactory(scoringSideCellFactory);
         sideColRRR.setCellFactory(scoringSideCellFactory);
 
-        taskColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
-        taskColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
-        taskColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
-        taskColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.AutonTask>, ObservableValue>) param -> param.getValue().autonTask);
+        taskColLLL.setCellValueFactory(taskValueFactory);
+        taskColLRL.setCellValueFactory(taskValueFactory);
+        taskColRLR.setCellValueFactory(taskValueFactory);
+        taskColRRR.setCellValueFactory(taskValueFactory);
 
-        sideColLLL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
-        sideColLRL.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
-        sideColRLR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
-        sideColRRR.setCellValueFactory((Callback<TableColumn.CellDataFeatures<TaskConfig, TaskConfig.ScoringSide>, ObservableValue>) param -> param.getValue().scoringSide);
+        sideColLLL.setCellValueFactory(sideValueFactory);
+        sideColLRL.setCellValueFactory(sideValueFactory);
+        sideColRLR.setCellValueFactory(sideValueFactory);
+        sideColRRR.setCellValueFactory(sideValueFactory);
 
 
         //Set up events

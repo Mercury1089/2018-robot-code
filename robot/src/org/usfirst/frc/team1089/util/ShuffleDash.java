@@ -40,6 +40,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
         SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getElevatorTalon().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
+        SmartDashboard.putBoolean("Elevator Limit Switch Closed", Robot.elevator.isLimitSwitchClosed());
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
         SmartDashboard.putNumber("Left Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
         SmartDashboard.putNumber("Right Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));

@@ -32,7 +32,7 @@ public class Elevator extends Subsystem {
      */
     public enum ElevatorPosition {
         // TODO: Temporary Values
-        SCALE_HIGH(36000.0), // Scale at its highest point
+        SCALE_HIGH(81000.0), // Scale at its highest point
         SCALE_LOW(20000.0),   // Scale at its lowest point
         SWITCH(15000.0),      // Above switch fence
         FLOOR(0.0);         // Elevator bottomed out
@@ -58,6 +58,7 @@ public class Elevator extends Subsystem {
     /**
      * Creates a new elevator, using the specified CAN IDs for the
      * leader controller (Talon SRX) and follower controller (Victor SPX).
+
      *
      * @param talonID  Leader (Talon SRX) CAN ID
      * @param victorID Follower (Victor SPX) CAN ID
@@ -76,18 +77,18 @@ public class Elevator extends Subsystem {
         elevatorTalon.config_kP(DriveTrain.PRIMARY_PID_LOOP, pid[0], 10);
         elevatorTalon.config_kI(DriveTrain.PRIMARY_PID_LOOP, pid[1], 10);
         elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);
-        elevatorTalon.setSensorPhase(true);
+        elevatorTalon.setSensorPhase(false);
 
         elevatorTalon.configNominalOutputForward(.1, 10);
         elevatorTalon.configNominalOutputReverse(-.1, 10);
-        elevatorTalon.configPeakOutputForward(.3, 10);
-        elevatorTalon.configPeakOutputReverse(-.3, 10);
+        elevatorTalon.configPeakOutputForward(1, 10);
+        elevatorTalon.configPeakOutputReverse(-1, 10);
 
         elevatorTalon.configAllowableClosedloopError(0, 5, 10);
 
         elevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, RobotMap.PID.PRIMARY_PID_LOOP, DriveTrain.TIMEOUT_MS);
 
-        elevatorTalon.configSetParameter(ParamEnum.eClearPositionOnLimitF, 1, 0, 0, 10);
+        elevatorTalon.configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, 10);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class TestElevator extends Command {
     protected void execute() {
         SLOW_LOG.run(log -> log.debug(getName() + " executing"));
 
-        Robot.elevator.getElevatorTalon().set(ControlMode.PercentOutput, Robot.oi.getY(RobotMap.DS_USB.GAMEPAD) * 0.5);
+        Robot.elevator.getElevatorTalon().set(ControlMode.PercentOutput, Robot.oi.getY(RobotMap.DS_USB.GAMEPAD));
     }
 
     @Override

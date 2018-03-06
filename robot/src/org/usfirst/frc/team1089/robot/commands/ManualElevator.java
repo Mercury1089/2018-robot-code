@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.RobotMap;
-import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;
 
 import java.util.concurrent.TimeUnit;
@@ -15,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Command that gives direct control of the elevator using the gamepad's joysticks
  */
-public class TestElevator extends Command {
-    private final Logger LOG = LogManager.getLogger(TestElevator.class);
+public class ManualElevator extends Command {
+    private final Logger LOG = LogManager.getLogger(ManualElevator.class);
     private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
 
     private int counter = 0;
 
-    public TestElevator() {
+    public ManualElevator() {
         requires(Robot.elevator);
 
         LOG.info(getName() + " Constructed");

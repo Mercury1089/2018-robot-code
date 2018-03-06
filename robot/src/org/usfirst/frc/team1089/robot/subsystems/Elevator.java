@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap;
-import org.usfirst.frc.team1089.robot.commands.TestElevator;
-import org.usfirst.frc.team1089.robot.commands.UseElevator;
+import org.usfirst.frc.team1089.robot.commands.ManualElevator;
 import org.usfirst.frc.team1089.util.config.ManipulatorSettings;
 
 /**
@@ -32,10 +31,11 @@ public class Elevator extends Subsystem {
      */
     public enum ElevatorPosition {
         // TODO: Temporary Values
-        SCALE_HIGH(81000.0), // Scale at its highest point
-        SCALE_LOW(20000.0),   // Scale at its lowest point
-        SWITCH(15000.0),      // Above switch fence
-        FLOOR(0.0);         // Elevator bottomed out
+        SCALE_HIGH(81000.0),    // Scale at its highest point
+        SCALE_LOW(20000.0),     // Scale at its lowest point
+        SWITCH(15000.0),        // Above switch fence
+        DRIVE_CUBE(5000.0),     //TODO temporary value for driving around
+        FLOOR(0.0);             // Elevator bottomed out
 
         public final double encPos;
 
@@ -94,7 +94,7 @@ public class Elevator extends Subsystem {
     @Override
     protected void initDefaultCommand() {
         // setDefaultCommand(new UseElevator(ElevatorPosition.FLOOR));
-        setDefaultCommand(new TestElevator());
+        setDefaultCommand(new ManualElevator());
     }
 
     public WPI_TalonSRX getElevatorTalon() {

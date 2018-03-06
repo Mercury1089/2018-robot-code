@@ -81,41 +81,35 @@ public class OI {
 
 		// Left stick button binds
 		left1 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN1);
-		left1.whenPressed(new RotateRelative(90));
-		left2 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN2);
-		left2.whenPressed(new DriveWithLIDAR(4, .3));
-		left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
-		left3.whenPressed(new DriveDistance(24.0, .12));
-		left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
-		left4.whenPressed(new GetCubeAuton());
+        left2 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN2);
+        left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
+        left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
+
+		left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+		left3.whenPressed(new UseClaw(Claw.ClawState.STOP));
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
-		//right1.whenPressed(new MoveOnPath("CubePickupSetupRight", MoveOnPath.Direction.BACKWARD));
-		right1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		right2 = new JoystickButton(rightStick, 2);
-		//right2.whenPressed(new MoveOnPath("InitialSwitchBackRight", MoveOnPath.Direction.FORWARD));
-		right2.whenPressed(new UseClaw(Claw.ClawState.EJECT));
-		//right2.whenPressed(new TestAutonBuilder());
-		//right2.whenPressed(new TestAutonBuilder());
 		right3 = new JoystickButton(rightStick, 3);
-		right3.whenPressed(new GetCubeAuton());
-
-		DriveDistance dd = new DriveDistance(24, 0.2);
-		DriveWithLIDAR dwl = new DriveWithLIDAR(20, 0.2);
-
 		right4 = new JoystickButton(rightStick, 4);
-		right4.whenPressed(dwl);
 		right5 = new JoystickButton(rightStick, 5);
-		right5.whenPressed(new DriveDistance(dwl, Recallable.RecallMethod.REVERSE, 0.2));
-
 		right6 = new JoystickButton(rightStick, 6);
-		right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		right7 = new JoystickButton(rightStick, 7);
-		right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
+        right8 = new JoystickButton(rightStick, 8);
+        right9 = new JoystickButton(rightStick, 9);
 		right10 = new JoystickButton(rightStick, 10);
-		right10.whenPressed(new MoveOnPath("SwitchMidLeft", MoveOnPath.Direction.FORWARD));
 		right11 = new JoystickButton(rightStick, 11);
+
+		right1.whenPressed(new UseClaw(Claw.ClawState.EJECT));
+		right8.whenPressed(new CalibrateGyro());
+
+//TODO TESTING:
+        left4.whenPressed(new GetCubeAuton());
+
+		right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
+		right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
+		right10.whenPressed(new MoveOnPath("SwitchMidLeft", MoveOnPath.Direction.FORWARD));
 		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupLeft", MoveOnPath.Direction.BACKWARD));
 
 		int
@@ -127,10 +121,11 @@ public class OI {
 				CUBE_PICKUP_Y_CONSTANT_OFFSET = 12.25,
 				CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1;
 
-		right8 = new JoystickButton(rightStick, 8);
-		right8.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
-		right9 = new JoystickButton(rightStick, 9);
-		right9.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
+
+		//right8.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
+		//right9.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
+//TODO END TESTING
+
 
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);
@@ -139,19 +134,19 @@ public class OI {
 		gamepad_y = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.Y);
 		gamepad_start = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.START);
 		gamepad_back = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.BACK);
-
-		gamepad_start.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
-		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveTank));
-		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR)); //GetCubeAuton());
-		gamepad_b.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-		gamepad_y.whenPressed(new GetCube());
-		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_lb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.LB);
-		gamepad_lb.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		gamepad_rb = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.RB);
-		gamepad_rb.whenPressed(new UseClaw(Claw.ClawState.EJECT));
 		gamepad_L3 = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.L3);
-		gamepad_L3.whenPressed(new CalibrateGyro());
+		gamepad_R3 = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.R3);
+
+		gamepad_a.whenPressed(new UseElevator(Elevator.ElevatorPosition.FLOOR));
+		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE));
+		gamepad_b.whenPressed(new ManualElevator());
+		gamepad_y.whenPressed(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+		gamepad_start.whenPressed(new GetCube());
+		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveTank));
+		gamepad_lb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
+		gamepad_rb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
 
 		log.info("OI initialized");
 
@@ -178,7 +173,7 @@ public class OI {
 				val = rightStick.getY();
 				break;
 			case DS_USB.GAMEPAD:
-				val = gamepad.getRawAxis(1);
+				val = -(gamepad.getRawAxis(5));
 				break;
 			default:
 				val = -1;
@@ -205,7 +200,7 @@ public class OI {
 				val = rightStick.getX();
 				break;
 			case DS_USB.GAMEPAD:
-				val = gamepad.getRawAxis(0);
+				val = gamepad.getRawAxis(4);
 				break;
 			default:
 				val = -1;
@@ -222,10 +217,6 @@ public class OI {
 	 */
 	private double applyDeadzone(double val) {
 		return Math.abs(val) >= DEADZONE ? val : 0;
-	}
-
-	private void buildAuton() {
-
 	}
 
 	public void rumbleController(boolean rumble) {

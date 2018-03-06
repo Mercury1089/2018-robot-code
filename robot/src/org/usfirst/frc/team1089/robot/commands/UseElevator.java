@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.Robot;
+import org.usfirst.frc.team1089.robot.RobotMap;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;

@@ -128,8 +128,13 @@ public class AutonBuilderController2 {
 
         //Set up cell factories to create the cells we need for the TableViews.
         Callback<TableColumn<TaskConfig, TaskConfig.AutonTask>, TableCell<TaskConfig, TaskConfig.AutonTask>> autonTaskCellFactory = param -> {
-            final TransparentComboBoxTableCell<TaskConfig, TaskConfig.AutonTask> comboBoxTableCell = new TransparentComboBoxTableCell<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values()));
+            final TransparentComboBoxTableCell<TaskConfig, TaskConfig.AutonTask>
+                    comboBoxTableCell = new TransparentComboBoxTableCell<>(
+                            FXCollections.observableArrayList(TaskConfig.AutonTask.values())
+                    );
+
             comboBoxTableCell.setEditable(true);
+            comboBoxTableCell.setComboBoxEditable(false);
 
             // ComboBoxTableCell does not have an items property for the list of items that can be displayed. However, ComboBox does.
             // Using the TransparentComboBoxTableCell, we can access the ComboBox used in the ComboBoxTableCell.
@@ -139,7 +144,7 @@ public class AutonBuilderController2 {
                     .then(new SimpleObjectProperty<>(FXCollections.observableArrayList(TaskConfig.AutonTask.values())))
                     .otherwise(new SimpleObjectProperty<>(FXCollections.observableArrayList(TaskConfig.AutonTask.SCORE_SCALE, TaskConfig.AutonTask.SCORE_SWITCH)))
             );
-            comboBoxTableCell.setComboBoxEditable(false);
+
             return comboBoxTableCell;
         };
 
@@ -197,9 +202,7 @@ public class AutonBuilderController2 {
         sideColRLR.setCellValueFactory(sideValueFactory);
         sideColRRR.setCellValueFactory(sideValueFactory);
 
-
         //Set up events
-
         addRowButtonLLL.setOnAction(event -> addNewRow(tableLLL));
         addRowButtonLRL.setOnAction(event -> addNewRow(tableLRL));
         addRowButtonRLR.setOnAction(event -> addNewRow(tableRLR));

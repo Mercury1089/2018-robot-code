@@ -2,56 +2,18 @@ apply plugin: 'application'
 
 mainClassName = "org.usfirst.frc.team1089.main.Client"
 
-configurations {
-    nativeLib {
-
-    }
-}
-
 dependencies {
     compile "edu.wpi.first.ntcore:ntcore-java:4.0.0"
-    nativeLib "edu.wpi.first.ntcore:ntcore-jni:4.0.0:windowsx86-64"
-    compile group: 'org.fxmisc.easybind', name: 'easybind', version: '1.0.3'
+    compile "edu.wpi.first.ntcore:ntcore-jni:4.0.0:all"
+    compile "org.fxmisc.easybind:easybind:1.0.3"
     compile "com.opencsv:opencsv:4.0"
     compile "edu.wpi.first.wpiutil:wpiutil-java:3.1.0"
 }
 
-task run(overwrite: true) {
-    group = null
-
-    doLast {
-        println "Use :auton-app:runJar instead."
-    }
-}
-
-task runJar(type: Exec) {
-    group = "application"
-    description = "Runs the jarfile by building it and running it inside /build/libs"
-
-    dependsOn("jar")
-
-    workingDir "${projectDir}/build/libs"
-
-    commandLine 'java', '-jar', "${project.name}.jar"
-}
-
 jar {
-    dependsOn("unzipNatives")
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     // Set up manifest to point the main class to the right class.
     manifest {
         attributes 'Main-Class': mainClassName
     }
-}
-
-task unzipNatives(type: Copy) {
-    group = "build"
-    description = "Unzip native libraries to /natives/ directory"
-
-    from project.configurations.nativeLib.collect {
-        include "**/*.dll"
-        it.isDirectory() ? it : zipTree(it)
-    }
-
-    into "${projectDir}/build/libs/"
 }

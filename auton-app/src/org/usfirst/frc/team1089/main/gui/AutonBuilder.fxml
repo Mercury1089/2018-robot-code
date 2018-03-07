@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="root" alignment="CENTER" prefHeight="474.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.usfirst.frc.team1089.main.gui.AutonBuilderController2">
+<VBox fx:id="root" alignment="CENTER" prefHeight="474.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.usfirst.frc.team1089.main.gui.AutonBuilderController">
     <children>
         <MenuBar id="menuBar" fx:id="menuBar" prefHeight="14.0" prefWidth="985.0">
             <menus>

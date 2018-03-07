@@ -31,10 +31,32 @@ public class AutonBuilder {
 
     private NetworkTableInstance ntInstance;
 
-//    static {
-//        // Load native libraries and whatnot
-//        System.loadLibrary("ntcore");
-//    }
+    static {
+        try {
+            String
+                env = System.getProperty("os.name", "generic").toLowerCase(),
+                path = "/";
+            boolean is64 = System.getProperty("os.arch", "32").contains("64");
+
+            if (env.contains("win")) { // Windows environment
+                path += "windows/";
+                path += "x86" + (is64 ? "-64" : "") + "/";
+                NativeUtils.loadLibraryFromJar(path + "ntcore.dll");
+            } else if (env.contains("mac")) { // macOS environment
+                path += "osx/";
+                path += "x86" + (is64 ? "-64" : "") + "/";
+                NativeUtils.loadLibraryFromJar(path + "libntcore.dylib");
+            } else if (env.contains("nux")) { // Unix environment
+                path += "linux/";
+                path += "x86" + (is64 ? "-64" : "") + "/";
+                NativeUtils.loadLibraryFromJar(path + "libntcore.so");
+            } else {
+                System.out.println("WARNING: ntcore NOT LOADED! On OS " + env);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public AutonBuilder() {
         // Initialize HashMap
@@ -210,7 +232,7 @@ public class AutonBuilder {
 
     public void publish() {
         NetworkTable
-                rootTable = Client.getNT().getTable("AutonConfiguration"),
+                rootTable = ntInstance.getTable("AutonConfiguration"),
                 lllTable = rootTable.getSubTable("LLL"),
                 lrlTable = rootTable.getSubTable("LRL"),
                 rlrTable = rootTable.getSubTable("RLR"),

@@ -59,7 +59,6 @@ import org.usfirst.frc.team1089.util.ShuffleDash;
  */
 public class OI {
 	private final double DEADZONE = 0.29;
-	private SendableChooser<AutonPosition> startingPosition;
 	private static Logger log = LogManager.getLogger(OI.class);
 
 	private Joystick leftStick, rightStick, gamepad;
@@ -67,10 +66,6 @@ public class OI {
 	private JoystickButton left1, left2, left3, left4;
 	private JoystickButton right1, right2, right3, right4, right5, right6, right7, right8, right9, right10, right11;
 	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb, gamepad_start, gamepad_back, gamepad_L3, gamepad_R3;
-
-	private UseClaw useClaw;
-
-	private AutonBuilder autonBuilderLLL, autonBuilderLRL, autonBuilderRLR, autonBuilderRRR;
 
 	private ShuffleDash shuffleboard;
 
@@ -114,18 +109,6 @@ public class OI {
 		right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 
-		int
-				cubesPickedUp = 0,
-				rotationFactor = -1,
-				addDeg = 0;
-		final double
-				CUBE_PICKUP_X_OFFSET = 38.825,
-				CUBE_PICKUP_Y_CONSTANT_OFFSET = 12.25,
-				CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1;
-
-
-		//right8.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
-		//right9.whenPressed(new RotateRelative(rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))))));
 //TODO END TESTING
 
 

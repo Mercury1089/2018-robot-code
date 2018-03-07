@@ -85,8 +85,13 @@ public class AutonBuilder {
      *
      * @return whether or not the action was successful
      */
-    public boolean save(File csv, String... configKeys) {
-        boolean successful = true;
+    public void save(File csv, String... configKeys) throws IOException {
+        int numTables = 0;
+        int numCols = 0;
+        int maxNumRows = 0;
+
+        CSVWriter writer;
+
         String[] filteredKeys = new String[0];
         List<List<TaskConfig>> configTableLists = new ArrayList<>();
         List<String> filteredKeysList = new ArrayList<>();
@@ -105,71 +110,60 @@ public class AutonBuilder {
                     filteredKeysList.add(s);
                     configTableLists.add(taskList);
                 }
-
             }
         }
 
         filteredKeys = filteredKeysList.toArray(filteredKeys);
 
-        try {
-            int numTables = 0;
-            int numCols = 0;
-            int maxNumRows = 0;
-            CSVWriter writer = new CSVWriter(new FileWriter(csv));
+        writer = new CSVWriter(new FileWriter(csv));
 
-            // Get all tables from keys
-            // Also get numTables, numCols, and maxNumRows
-            numTables = configTableLists.size();
-            numCols = numTables * 2;
+        // Get all tables from keys
+        // Also get numTables, numCols, and maxNumRows
+        numTables = configTableLists.size();
+        numCols = numTables * 2;
 
-            for (List<TaskConfig> l: configTableLists) {
-                maxNumRows = maxNumRows < l.size() ? l.size() : maxNumRows;
-            }
+        for (List<TaskConfig> l: configTableLists) {
+            maxNumRows = maxNumRows < l.size() ? l.size() : maxNumRows;
+        }
 
-            // Start by applying header
-            String[] rowBuffer = new String[numCols];
+        // Start by applying header
+        String[] rowBuffer = new String[numCols];
 
-            for (int i = 0; i < numTables; i++) {
-                rowBuffer[2 * i] = "task" + filteredKeys[i];
-                rowBuffer[2 * i + 1] = "side" + filteredKeys[i];
+        for (int i = 0; i < numTables; i++) {
+            rowBuffer[2 * i] = "task" + filteredKeys[i];
+            rowBuffer[2 * i + 1] = "side" + filteredKeys[i];
+        }
+
+        writer.writeNext(rowBuffer, false);
+
+        // Start adding all values here
+        for (int row = 0; row < maxNumRows; row++) {
+            // Clear string array
+            for (int i = 0; i < numCols; i++)
+                rowBuffer[i] = "";
+
+            // NOW start adding all values
+            for (int table = 0; table < numTables; table++) {
+                String task = "", side = "";
+                List<TaskConfig> taskList = configTableLists.get(table);
+
+                if (row < taskList.size()) {
+                    TaskConfig t = taskList.get(row);
+
+                    task = t.autonTask.get().toString();
+                    side = t.scoringSide.get().toString();
+
+                }
+
+                rowBuffer[2 * table] = task;
+                rowBuffer[2 * table + 1] = side;
             }
 
             writer.writeNext(rowBuffer, false);
-
-            // Start adding all values here
-            for (int row = 0; row < maxNumRows; row++) {
-                // Clear string array
-                for (int i = 0; i < numCols; i++)
-                    rowBuffer[i] = "";
-
-                // NOW start adding all values
-                for (int table = 0; table < numTables; table++) {
-                    String task = "", side = "";
-                    List<TaskConfig> taskList = configTableLists.get(table);
-
-                    if (row < taskList.size()) {
-                        TaskConfig t = taskList.get(row);
-
-                        task = t.autonTask.get().toString();
-                        side = t.scoringSide.get().toString();
-
-                    }
-
-                    rowBuffer[2 * table] = task;
-                    rowBuffer[2 * table + 1] = side;
-                }
-
-                writer.writeNext(rowBuffer, false);
-            }
-
-
-            writer.close();
-        } catch (Exception e) { // Definitely not the best way to do this
-            e.printStackTrace();
-            successful = false;
         }
 
-        return successful;
+
+        writer.close();
     }
 
     public void load(File csv) throws IOException, CsvConstraintViolationException {

@@ -287,7 +287,11 @@ public class AutonBuilderController2 {
         File chosenFile = saveDialog.getFileResult();
 
         if (chosenFile.getParentFile().exists() && tableKeyResult[0] != null) {
-            System.out.println(backend.save(chosenFile, tableKeyResult));
+            try {
+                backend.save(chosenFile, tableKeyResult);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

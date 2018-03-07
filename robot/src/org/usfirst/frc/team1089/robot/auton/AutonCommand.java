@@ -53,21 +53,29 @@ public class AutonCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
 
-            //Number of cubes picked up
         workingSide = autonBuilder.getAutonPos();
         switch (workingSide) {
             case LEFT:
+                posStr = "Left";
                 comparableWorkingSide = GameData.PlateSide.LEFT;
                 rotationFactor = 1;
                 break;
             case RIGHT:
+                posStr = "Right";
                 comparableWorkingSide = GameData.PlateSide.RIGHT;
                 rotationFactor = -1;
                 break;
             case LEFT_MID:
-            case RIGHT_MID:
-            default:
+                posStr = "Left";
                 comparableWorkingSide = GameData.PlateSide.UNKNOWN;
+                rotationFactor = 0;
+                break;
+            case RIGHT_MID:
+                posStr = "Right";
+                comparableWorkingSide = GameData.PlateSide.UNKNOWN;
+                rotationFactor = 0;
+                break;
+            default:
                 rotationFactor = 0;
         }
         fieldSide = autonBuilder.getFieldSide();
@@ -84,15 +92,16 @@ public class AutonCommand extends CommandGroup {
 
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
-        posStr = workingSide.toString();
 
         for(AutonTask at : autonTasks) {
             if(at == AutonTask.AUTO_LINE) {
                 switch(workingSide) {
                     case LEFT_MID:
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         addSequential(new MoveOnPath("SwitchFrontLeft", MoveOnPath.Direction.FORWARD));
                         break;
                     case RIGHT_MID:
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         addSequential(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
                         break;
                     default:
@@ -104,9 +113,14 @@ public class AutonCommand extends CommandGroup {
         RotateRelative rotateRelative = null;      //History RotateRelative that will be used to return to pickup position
 
         //TEMPORARY SWITCH SIDE LRL/RLR for MT OLIVE. TODO edit this
-        if (comparableWorkingSide == switchSide && switchSide != scaleSide) {
+        if (switchSide != scaleSide && comparableFieldSide == switchSide) {
             addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-            addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+            if(comparableWorkingSide == switchSide)
+                addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
+            else {
+                addSequential(new MoveOnPath("InitialSwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                switchWorkingSide();
+            }
             addSequential(new UseClaw(Claw.ClawState.EJECT));
             addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
             addSequential(new DriveDistance(-20, .8));
@@ -185,14 +199,13 @@ public class AutonCommand extends CommandGroup {
             case LEFT_MID:
             case RIGHT_MID:
                 String taskStr = autonTasks[0].toString();
-                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(0, taskStr.indexOf("_")), MoveOnPath.Direction.FORWARD));
+                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(0, taskStr.indexOf("_")), MoveOnPath.Direction.FORWARD));  //TODO this doesnt work
                 break;
         }
 
         //TODO check all RotateRelative angle signs.
         for (int i = 1; i < autonTasks.length; i++) {
-            AutonTask taskToComplete = autonTasks[i];           //The task to execute
-            AutonTask previousTask = autonTasks[i - 1];         //The task just executed
+            AutonTask taskToComplete = autonTasks[i];                      //The task to execute
             TaskConfig.ScoringSide sideToScoreOn = scoreSide[i];           //The side to score on
             TaskConfig.ScoringSide previousSide = scoreSide[i - 1];        //The side just scored on
 

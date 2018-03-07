@@ -303,7 +303,26 @@ public class AutonBuilderController2 {
         File chosenFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 
         if (chosenFile.exists()) {
-            backend.load(chosenFile);
+            try {
+                backend.getTaskList("LLL").clear();
+                backend.getTaskList("LRL").clear();
+                backend.getTaskList("RLR").clear();
+                backend.getTaskList("RRR").clear();
+
+                backend.load(chosenFile);
+
+                tableLLL.refresh();
+                tableLRL.refresh();
+                tableRLR.refresh();
+                tableRRR.refresh();
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error!");
+                alert.setHeaderText(e.getMessage());
+                alert.show();
+
+                e.printStackTrace();
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error!");

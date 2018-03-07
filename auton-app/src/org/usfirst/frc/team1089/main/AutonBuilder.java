@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.main;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvConstraintViolationException;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import org.usfirst.frc.team1089.main.util.TaskConfig;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Backend for auton builder app
@@ -170,14 +172,46 @@ public class AutonBuilder {
         return successful;
     }
 
-    public void load(File csv) {
-        try {
-            CSVReader reader = new CSVReader(new FileReader(csv.getPath()));
-            String[] csvBuffer = reader.readNext();
+    public void load(File csv) throws IOException, CsvConstraintViolationException {
+        CSVReader reader = new CSVReader(new FileReader(csv.getPath()));
+        String[] csvBuffer = reader.readNext(), headers;
 
-        } catch (IOException e) {
-            System.out.println("AutonBuilder.load has thrown an IOException!");
+        if (csvBuffer.length % 2 != 0)
+            throw new CsvConstraintViolationException("Data is missing a header; assume that the data is broken");
+
+        headers = new String[csvBuffer.length / 2];
+
+        // Find ALL valid headers first
+        // We parse the table by-row, so there's no point to parse
+        // the entire table here.
+        for (int i = 0; i < csvBuffer.length; i += 2) {
+            String
+                taskTable = csvBuffer[i].replaceFirst(TASK_PREFIX, ""),
+                sideTable = csvBuffer[i + 1].replaceFirst(SIDE_PREFIX, ""),
+                header = "X";
+
+            if (taskTable.equals(sideTable))
+                header = taskTable;
+
+            headers[i / 2] = header;
         }
+
+        // Iterate through remaining rows
+        // Assume that the table is square and it hasn't been edited
+        // outside of the auton app.
+        reader.iterator().forEachRemaining(csvRow -> {
+            for (int i = 0; i < headers.length; i++) {
+                if (!"X".equals(headers[i])) {
+                    List<TaskConfig> curList = configMap.get(headers[i]);
+                    TaskConfig.AutonTask auton = TaskConfig.AutonTask.fromString(csvRow[2 * i]);
+                    TaskConfig.ScoringSide score = TaskConfig.ScoringSide.fromString(csvRow[2 * i + 1]);
+
+                    if (auton != null && score != null)
+                        curList.add(new TaskConfig(auton, score));
+                }
+            }
+        });
+
     }
 
     public void publish() {

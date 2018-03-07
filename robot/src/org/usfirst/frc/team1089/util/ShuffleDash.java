@@ -12,21 +12,8 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
  * Helper class to interface with the Shuffleboard Dashboard.
  */
 public class ShuffleDash {
-    public double maxRevsPerMinRight = 0.0, maxRevsPerMinLeft = 0.0;
-    public SendableChooser<AutonPosition> startingPosition;
-
-    //tOdO find out what to do here
-    /*public SendableChooser<AutonTask> autonTaskLLL_1, autonTaskLLL_2, autonTaskLLL_3, autonTaskLLL_4,
-            autonTaskLRL_1, autonTaskLRL_2, autonTaskLRL_3, autonTaskLRL_4,
-            autonTaskRLR_1, autonTaskRLR_2, autonTaskRLR_3, autonTaskRLR_4,
-            autonTaskRRR_1, autonTaskRRR_2, autonTaskRRR_3, autonTaskRRR_4;
-    public SendableChooser<ScoringSide> scoringSideLLL_1, scoringSide_2, scoringSideLLL_3, scoringSideLLL_4,
-            scoringSideLRL_1, scoringSideLRL_2, scoringSideLRL_3, scoringSideLRL_4,
-            scoringSideRLR_1, scoringSideRLR_2, scoringSideRLR_3, scoringSideRLR_4,
-            scoringSideRRR_1, scoringSideRRR_2, scoringSideRRR_3, scoringSideRRR_4;*/
 
     public ShuffleDash() {
-        runAutonOnShuffleboard();
         new Notifier(this::updateDash).startPeriodic(0.050);
     }
 
@@ -39,7 +26,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
-        SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getElevatorTalon().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
+        SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getCurrentHeight());
         SmartDashboard.putBoolean("Elevator Limit Switch Closed", Robot.elevator.isLimitSwitchClosed());
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
         SmartDashboard.putNumber("Left Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
@@ -50,14 +37,5 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
         SmartDashboard.putNumber("Ultrasonic Distance", Robot.claw.getUltrasonic().getRange());
         SmartDashboard.putNumber("Pixy Displacement", Robot.claw.getPixyCam().pidGet());
-
-        double recentRevsPerMinLeft = MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP));
-    }
-
-    private void runAutonOnShuffleboard() {
-        startingPosition = new SendableChooser<>();
-        startingPosition.addObject("Left", AutonPosition.LEFT);
-        startingPosition.addObject("Right", AutonPosition.RIGHT);
-        SmartDashboard.putData("Auton Starting Position", startingPosition);
     }
 }

@@ -50,12 +50,7 @@ public class UseElevator extends Command {
         SLOW_LOG.run(log -> log.debug(getName() + " executing"));
 
         if (targetPos == Elevator.ElevatorPosition.FLOOR) {
-            if (Math.abs(Robot.elevator.getCurrentHeight()) <= 2.0 && !Robot.elevator.isLimitSwitchClosed()) {
-                Robot.elevator.getElevatorTalon().set(ControlMode.Position, counter++);
-
-                LOG.info("Did not reach, setting setpoint to " + targetPos.encPos + counter);
-            } else {
-                counter = 0;
+            if (Robot.elevator.isLimitSwitchClosed()) {
                 Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
                 LOG.info("Reached!");
             }

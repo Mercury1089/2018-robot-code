@@ -87,6 +87,7 @@ public class OI {
 
 		left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		left3.whenPressed(new UseClaw(Claw.ClawState.STOP));
+		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
 
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
@@ -105,12 +106,13 @@ public class OI {
 		right8.whenPressed(new CalibrateGyro());
 
 //TODO TESTING:
-        left4.whenPressed(new GetCubeAuton());
+
+        left4.whenPressed(new GetCube());
 
 		right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-		right10.whenPressed(new MoveOnPath("SwitchMidLeft", MoveOnPath.Direction.FORWARD));
-		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupLeft", MoveOnPath.Direction.BACKWARD));
+		right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
+		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 
 		int
 				cubesPickedUp = 0,

@@ -33,7 +33,7 @@ public class PixyI2C implements PIDSource {
         PIXY = new I2C(I2C.Port.kOnboard, 0x54);
 
         BOXES = new BoundingBox[7];
-        DISPLACEMENT_OFFSET = 20;
+        DISPLACEMENT_OFFSET = 10;
 
         PIXY_UPDATE_NOTIFIER.setHandler(() -> {
             this.read(1);

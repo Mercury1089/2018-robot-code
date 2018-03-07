@@ -32,10 +32,10 @@ public class Elevator extends Subsystem {
     public enum ElevatorPosition {
         // TODO: Temporary Values
         SCALE_HIGH(81000.0),    // Scale at its highest point
-        SCALE_LOW(20000.0),     // Scale at its lowest point
+        SCALE_LOW(62000.0),     // Scale at its lowest point
         SWITCH(15000.0),        // Above switch fence
         DRIVE_CUBE(5000.0),     //TODO temporary value for driving around
-        FLOOR(0.0);             // Elevator bottomed out
+        FLOOR(-200.0);             // Elevator bottomed out
 
         public final double encPos;
 
@@ -52,7 +52,7 @@ public class Elevator extends Subsystem {
 
     private ElevatorPosition position;
 
-    public static final double MAX_HEIGHT = ElevatorPosition.SCALE_HIGH.encPos; //TODO Random value, change to the max height of the elevator
+    public static final double MAX_HEIGHT = ElevatorPosition.SCALE_HIGH.encPos;
     private double curHeight;
 
     /**
@@ -102,7 +102,7 @@ public class Elevator extends Subsystem {
     }
 
     public boolean isLimitSwitchClosed() {
-        return elevatorTalon.getSensorCollection().isFwdLimitSwitchClosed();
+        return elevatorTalon.getSensorCollection().isRevLimitSwitchClosed();
     }
 
     /**

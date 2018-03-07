@@ -195,15 +195,15 @@ public class AutonBuilder {
                 rrrTable = rootTable.getSubTable("RRR");
 
         String[]
-                autonTaskLLL = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("LLL").toArray())),
-                autonTaskLRL = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("LRL").toArray())),
-                autonTaskRLR = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("RLR").toArray())),
-                autonTaskRRR = TaskConfig.AutonTask.arrayToString(((TaskConfig[]) configMap.get("RRR").toArray())),
+                autonTaskLLL = TaskConfig.AutonTask.arrayToString(configMap.get("LLL").toArray(new TaskConfig[configMap.get("LLL").size()])),
+                autonTaskLRL = TaskConfig.AutonTask.arrayToString(configMap.get("LRL").toArray(new TaskConfig[configMap.get("LRL").size()])),
+                autonTaskRLR = TaskConfig.AutonTask.arrayToString(configMap.get("RLR").toArray(new TaskConfig[configMap.get("RLR").size()])),
+                autonTaskRRR = TaskConfig.AutonTask.arrayToString(configMap.get("RRR").toArray(new TaskConfig[configMap.get("RRR").size()])),
 
-                scoringSideLLL = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("LLL").toArray())),
-                scoringSideLRL = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("LRL").toArray())),
-                scoringSideRLR = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("RLR").toArray())),
-                scoringSideRRR = TaskConfig.ScoringSide.arrayToString(((TaskConfig[]) configMap.get("RRR").toArray()));
+                scoringSideLLL = TaskConfig.ScoringSide.arrayToString(configMap.get("LLL").toArray(new TaskConfig[configMap.get("LLL").size()])),
+                scoringSideLRL = TaskConfig.ScoringSide.arrayToString(configMap.get("LRL").toArray(new TaskConfig[configMap.get("LRL").size()])),
+                scoringSideRLR = TaskConfig.ScoringSide.arrayToString(configMap.get("RLR").toArray(new TaskConfig[configMap.get("RLR").size()])),
+                scoringSideRRR = TaskConfig.ScoringSide.arrayToString(configMap.get("RRR").toArray(new TaskConfig[configMap.get("RRR").size()]));
 
         rootTable.getEntry("startingPosition").setString(startingPosition.toString());
 
@@ -215,7 +215,7 @@ public class AutonBuilder {
         lrlTable.getEntry("tasks").setStringArray(autonTaskLRL);
         lrlTable.getEntry("sides").setStringArray(scoringSideLRL);
 
-        lrlTable.getEntry("fieldSide").setString(fieldSideMap.get("RLR").toString());
+        rlrTable.getEntry("fieldSide").setString(fieldSideMap.get("RLR").toString());
         rlrTable.getEntry("tasks").setStringArray(autonTaskRLR);
         rlrTable.getEntry("sides").setStringArray(scoringSideRLR);
 

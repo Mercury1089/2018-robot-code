@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.main.gui;
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -17,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import org.fxmisc.easybind.EasyBind;
 import org.usfirst.frc.team1089.main.AutonBuilder;
 import org.usfirst.frc.team1089.main.util.TaskConfig;
 import org.usfirst.frc.team1089.main.util.*;
@@ -87,7 +89,12 @@ public class AutonBuilderController2 {
 
     @FXML
     public void initialize() {
-        backend = new AutonBuilder(dataLLL, dataLRL, dataRLR, dataRRR);
+        backend = new AutonBuilder();
+
+        dataLLL = new ObservableListWrapper<>(backend.getTaskList("LLL"));
+        dataLRL = new ObservableListWrapper<>(backend.getTaskList("LRL"));
+        dataRLR = new ObservableListWrapper<>(backend.getTaskList("RLR"));
+        dataRRR = new ObservableListWrapper<>(backend.getTaskList("RRR"));
 
         //Add each button to the group so that only one can be selected.
         leftRadioButton.setToggleGroup(radioGroup);

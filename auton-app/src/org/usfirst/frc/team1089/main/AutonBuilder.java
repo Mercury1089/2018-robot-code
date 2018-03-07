@@ -29,24 +29,18 @@ public class AutonBuilder {
 
     private NetworkTableInstance ntInstance;
 
-
 //    static {
 //        // Load native libraries and whatnot
 //        System.loadLibrary("ntcore");
 //    }
 
-    public AutonBuilder(ObservableList<TaskConfig> dataLLL, ObservableList<TaskConfig> dataLRL, ObservableList<TaskConfig> dataRLR, ObservableList<TaskConfig> dataRRR) {
+    public AutonBuilder() {
         // Initialize HashMap
         configMap = new HashMap<>();
         configMap.put("LLL", new ArrayList<>());
         configMap.put("LRL", new ArrayList<>());
         configMap.put("RLR", new ArrayList<>());
         configMap.put("RRR", new ArrayList<>());
-
-        EasyBind.listBind(configMap.get("LLL"), dataLLL);
-        EasyBind.listBind(configMap.get("LRL"), dataLRL);
-        EasyBind.listBind(configMap.get("RLR"), dataRLR);
-        EasyBind.listBind(configMap.get("RRR"), dataRRR);
 
         fieldSideMap = new HashMap<>();
         fieldSideMap.put("LLL", FieldSide.LEFT_SIDE);
@@ -231,5 +225,9 @@ public class AutonBuilder {
 
     public void setFieldSide(String configKey, FieldSide newSide) {
         fieldSideMap.replace(configKey, newSide);
+    }
+
+    public List<TaskConfig> getTaskList(String key) {
+        return configMap.get(key);
     }
 }

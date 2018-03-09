@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,9 @@ public class Claw extends Subsystem {
     private CANifier canifier;
     private PixyI2C pixyCam;
     private Ultrasonic ultrasonic;
+
+    private double[] currentLEDOutput = new double[3];
+    private LinearDigitalFilter linearDF;
 
     private boolean hasCube;
     private boolean hasCubeUltrasonic;
@@ -95,24 +99,33 @@ public class Claw extends Subsystem {
     private void updateState() {
         boolean rumble = false;
 
-        if (pixyCam.inRange()) { // Cube is in range to auto pickup
-            // White
-            colorLED(255, 255, 255);
-            rumble = true;
-        } else if (hasCube()) { // Have cube?
+        if (hasCube()) { // Have cube?
             // Listen from SmartDash
 
             // Fun colors to note:
             // Orange (In range): 255, 30, 0
             // Purple (Something about a cube): 255, 0, 255
             // Cyan (Very nice color): 0, 255, 255
-            int r = (int) SmartDashboard.getNumber("LED Color (R)", 255);
-            int g = (int) SmartDashboard.getNumber("LED Color (G)", 161);
-            int b = (int) SmartDashboard.getNumber("LED Color (B)", 0);
-            colorLED(r, g, b);
+            //int r = (int) SmartDashboard.getNumber("LED Color (R)", 255);
+            //int g = (int) SmartDashboard.getNumber("LED Color (G)", 161);
+            //int b = (int) SmartDashboard.getNumber("LED Color (B)", 0);
+            currentLEDOutput[0] = 255;
+            currentLEDOutput[1] = 0;
+            currentLEDOutput[2] = 255;
+            colorLED(255, 0, 255);
+        } else if (pixyCam.inRange()) { // Cube is in range to auto pickup
+            // White
+            currentLEDOutput[0] = 255;
+            currentLEDOutput[1] = 255;
+            currentLEDOutput[2] = 255;
+            colorLED(255, 255, 255);
+            rumble = true;
         } else {
             // None
-            colorLED(0, 0, 0);
+            currentLEDOutput[0] = 255;
+            currentLEDOutput[1] = 30;
+            currentLEDOutput[2] = 0;
+            colorLED(255, 30, 0);
         }
 
         Robot.oi.rumbleController(rumble);
@@ -129,6 +142,10 @@ public class Claw extends Subsystem {
         canifier.setLEDOutput((double) g / 255.0, CANifier.LEDChannel.LEDChannelA);
         canifier.setLEDOutput((double) r / 255.0, CANifier.LEDChannel.LEDChannelB);
         canifier.setLEDOutput((double) b / 255.0, CANifier.LEDChannel.LEDChannelC);
+    }
+
+    public double[] getCurrentLEDOutput() {
+        return currentLEDOutput;
     }
 
     @Override
@@ -158,9 +175,9 @@ public class Claw extends Subsystem {
 
     public boolean hasCube() {
         if (Robot.elevator.getCurrentHeight() == 0)
-            return lidar.getDistance() <= 8;
+            return lidar.getDistance() <= 5;
 
-        return ultrasonic.getRawVoltage() <= 360;
+        return ultrasonic.getRawVoltage() <= 3.0;
     }
 
     public boolean getEjecting() {

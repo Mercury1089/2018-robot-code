@@ -80,8 +80,8 @@ public class OI {
         left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
         left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
 
-		left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
-		left3.whenPressed(new UseClaw(Claw.ClawState.STOP));
+		//left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+        left3.whenPressed(new UseClaw(Claw.ClawState.STOP));
 		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
 
 		// Right stick button binds
@@ -98,7 +98,7 @@ public class OI {
 		right11 = new JoystickButton(rightStick, 11);
 
 		right1.whenPressed(new UseClaw(Claw.ClawState.EJECT));
-		right8.whenPressed(new CalibrateGyro());
+		right2.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 
 //TODO TESTING:
 

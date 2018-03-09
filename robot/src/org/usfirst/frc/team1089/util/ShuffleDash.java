@@ -28,6 +28,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
         SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getCurrentHeight());
         SmartDashboard.putBoolean("Elevator Limit Switch Closed", Robot.elevator.isLimitSwitchClosed());
+        SmartDashboard.putBoolean("Has Cube", Robot.claw.hasCube());
         SmartDashboard.putString("DriveTrain", Robot.driveTrain.getCurrentCommandName());
         SmartDashboard.putNumber("Left Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getLeft().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP))); //ticks per tenth of a second
         SmartDashboard.putNumber("Right Wheel RPM", MercMath.ticksPerTenthToRevsPerMinute(Robot.driveTrain.getRight().getSelectedSensorVelocity(DriveTrain.PRIMARY_PID_LOOP)));
@@ -37,5 +38,6 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
         SmartDashboard.putNumber("Ultrasonic Distance", Robot.claw.getUltrasonic().getRange());
         SmartDashboard.putNumber("Pixy Displacement", Robot.claw.getPixyCam().pidGet());
+        SmartDashboard.putString("LED Output",Robot.claw.getCurrentLEDOutput()[0]+","+Robot.claw.getCurrentLEDOutput()[1]+","+Robot.claw.getCurrentLEDOutput()[2]);
     }
 }

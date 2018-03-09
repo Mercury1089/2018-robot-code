@@ -1,15 +1,20 @@
 package org.usfirst.frc.team1089.robot.sensors;
 import com.ctre.phoenix.CANifier;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import org.usfirst.frc.team1089.util.MercMath;
 
 /**
  * Wrapper class for the entire LIDAR system that we are using to check for distance.
  */
-public class LIDAR {
+public class LIDAR  implements PIDSource {
     private CANifier canifier;
     private CANifier.PWMChannel pwmChannel;
     private final double[] PWM_INPUT = new double[2];
     private PWMOffset equation;
+
+    private LinearDigitalFilter linearDigitalFilter;
 
     public enum PWMOffset {
         EQUATION_A(-5.55, 1.0),
@@ -47,6 +52,8 @@ public class LIDAR {
         pwmChannel = channel;
         equation = o;
 
+        linearDigitalFilter = LinearDigitalFilter.movingAverage(this, 5);
+
         // canifier(channel.value, true);
     }
 
@@ -64,11 +71,14 @@ public class LIDAR {
      *
      * @return raw distance from LIDAR, with applied offset
      */
-    public double getDistance() {
+    @Override
+    public double pidGet() {
         // Apply offset equation
-        if (equation.apply(getRawDistance()) < 1)
-            return Double.POSITIVE_INFINITY;
         return equation.apply(getRawDistance());
+    }
+
+    public double getDistance() {
+        return linearDigitalFilter.pidGet();
     }
 
     /**
@@ -92,5 +102,15 @@ public class LIDAR {
      */
     public double getPeriod() {
         return PWM_INPUT[1];
+    }
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        return PIDSourceType.kDisplacement;
     }
 }

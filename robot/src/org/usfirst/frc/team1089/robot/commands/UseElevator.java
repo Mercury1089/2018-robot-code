@@ -56,8 +56,8 @@ public class UseElevator extends Command {
             }
         }
 
-        double maxOut = targetPos == Elevator.ElevatorPosition.FLOOR || targetPos == Elevator.ElevatorPosition.DRIVE_CUBE ? 1.0 :
-                DriveTrain.MAX_SPEED - (Robot.elevator.getCurrentHeight() / Elevator.MAX_HEIGHT) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
+        double maxOut = Robot.elevator.getCurrentHeight() > 38000 ? 1.0 :
+                DriveTrain.MAX_SPEED - ((Robot.elevator.getCurrentHeight() - 38000) / (Elevator.MAX_HEIGHT - 38000)) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
         LOG.info("Set max output to " + maxOut);
         Robot.driveTrain.setMaxOutput(maxOut);
     }

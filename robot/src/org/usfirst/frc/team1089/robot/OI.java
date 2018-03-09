@@ -81,7 +81,7 @@ public class OI {
         left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
 
 		//left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
-        left3.whenPressed(new UseClaw(Claw.ClawState.STOP));
+        left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
 
 		// Right stick button binds
@@ -98,16 +98,17 @@ public class OI {
 		right11 = new JoystickButton(rightStick, 11);
 
 		right1.whenPressed(new UseClaw(Claw.ClawState.EJECT));
-		right2.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+		right3.whenPressed(new UseClaw(Claw.ClawState.STOP));
+		right8.whenPressed(new CalibrateGyro());
 
 //TODO TESTING:
 
-        left4.whenPressed(new GetCube());
+        //left4.whenPressed(new GetCube());
 
-		right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
-		right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-		right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
-		right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
+		//right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
+		//right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
+		//right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
+		//right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 
 //TODO END TESTING
 

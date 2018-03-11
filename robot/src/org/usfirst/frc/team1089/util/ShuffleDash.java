@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.util;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -12,9 +13,12 @@ import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
  * Helper class to interface with the Shuffleboard Dashboard.
  */
 public class ShuffleDash {
+    private NetworkTableInstance ntInstance;
 
     public ShuffleDash() {
         new Notifier(this::updateDash).startPeriodic(0.050);
+
+        ntInstance = NetworkTableInstance.getDefault();
     }
 
     private void updateDash() {
@@ -37,6 +41,7 @@ public class ShuffleDash {
         SmartDashboard.putNumber("Gyro Angle", Robot.driveTrain.getGyro().getAngle());
         SmartDashboard.putNumber("Ultrasonic Distance", Robot.claw.getUltrasonic().getRange());
         SmartDashboard.putNumber("Pixy Displacement", Robot.claw.getPixyCam().pidGet());
+        SmartDashboard.putBoolean("Auton Initialized", ntInstance.getTable("AutonConfiguration").containsKey("startingPosition"));
         //SmartDashboard.putString("LED Output",Robot.claw.getCurrentLEDOutput()[0]+","+Robot.claw.getCurrentLEDOutput()[1]+","+Robot.claw.getCurrentLEDOutput()[2]);
     }
 }

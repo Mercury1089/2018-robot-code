@@ -286,6 +286,10 @@ public class AutonCommand extends CommandGroup {
         }
     }
 
+    public AutonCommand() {
+        addSequential(new DriveDistance(168, 0.8));
+    }
+
     private double getCubeTurnAngleScale(int cubesPickedUp, int rotationFactor, int addDeg) {
         return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
     }

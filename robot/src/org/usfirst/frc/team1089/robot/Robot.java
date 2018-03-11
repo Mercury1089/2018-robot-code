@@ -119,7 +119,6 @@ public class Robot extends IterativeRobot {
 			AutonPosition startingPosition = AutonPosition.RIGHT;
 			NetworkTableValue startPosValue = rootTable.getEntry("startingPosition").getValue();
 
-
 			// This value has the possibility to not exist in the table.
 			// If it DOES exist, however, it will have a table type of kString.
 			// We can pull the value from it then.
@@ -164,12 +163,14 @@ public class Robot extends IterativeRobot {
                 default:
                     return;
             }
-
-			if (autonCommand != null) {
-                autonCommand.start();
-            }
 		} catch (Exception e) {
+			log.warn("AUTON COULD NOT INIT! DEFAULTING TO AUTO-LINE!");
 			log.catching(e);
+			autonCommand = new AutonCommand();
+		}
+
+		if (autonCommand != null) {
+			autonCommand.start();
 		}
 	}
 

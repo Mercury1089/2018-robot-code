@@ -1,8 +1,7 @@
 
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.apache.logging.log4j.LogManager;
@@ -109,14 +108,24 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		GameData.updateGameData();
 
-        NetworkTable
-                rootTable = NetworkTableInstance.getDefault().getTable("AutonConfiguration"),
-                lllTable = rootTable.getSubTable("LLL"),
-                lrlTable = rootTable.getSubTable("LRL"),
-                rlrTable = rootTable.getSubTable("RLR"),
-                rrrTable = rootTable.getSubTable("RRR");
+		try {
+			NetworkTable
+                    rootTable = NetworkTableInstance.getDefault().getTable("AutonConfiguration"),
+                    lllTable = rootTable.getSubTable("LLL"),
+                    lrlTable = rootTable.getSubTable("LRL"),
+                    rlrTable = rootTable.getSubTable("RLR"),
+                    rrrTable = rootTable.getSubTable("RRR");
 
-        AutonPosition startingPosition = AutonPosition.fromString(rootTable.getEntry("startingPosition").getValue().getString());
+			AutonPosition startingPosition = AutonPosition.RIGHT;
+			NetworkTableValue startPosValue = rootTable.getEntry("startingPosition").getValue();
+
+
+			// This value has the possibility to not exist in the table.
+			// If it DOES exist, however, it will have a table type of kString.
+			// We can pull the value from it then.
+			if (startPosValue.getType() == NetworkTableType.kString) {
+                startingPosition = AutonPosition.fromString(startPosValue.getString());
+            }
 
 			AutonTask[] lllTasks = AutonTask.arrayFromString(lllTable.getEntry("tasks").getValue().getStringArray());
 			AutonTask[] lrlTasks = AutonTask.arrayFromString(lrlTable.getEntry("tasks").getValue().getStringArray());
@@ -128,37 +137,40 @@ public class Robot extends IterativeRobot {
 			ScoringSide[] rlrSides = ScoringSide.arrayFromString(rlrTable.getEntry("sides").getValue().getStringArray());
 			ScoringSide[] rrrSides = ScoringSide.arrayFromString(rrrTable.getEntry("sides").getValue().getStringArray());
 
-        FieldSide lllFieldSide = FieldSide.fromString(lllTable.getEntry("fieldSide").getValue().getString());
-        FieldSide lrlFieldSide = FieldSide.fromString(lrlTable.getEntry("fieldSide").getValue().getString());
-        FieldSide rlrFieldSide = FieldSide.fromString(rlrTable.getEntry("fieldSide").getValue().getString());
-        FieldSide rrrFieldSide = FieldSide.fromString(rrrTable.getEntry("fieldSide").getValue().getString());
+			FieldSide lllFieldSide = FieldSide.fromString(lllTable.getEntry("fieldSide").getValue().getString());
+			FieldSide lrlFieldSide = FieldSide.fromString(lrlTable.getEntry("fieldSide").getValue().getString());
+			FieldSide rlrFieldSide = FieldSide.fromString(rlrTable.getEntry("fieldSide").getValue().getString());
+			FieldSide rrrFieldSide = FieldSide.fromString(rrrTable.getEntry("fieldSide").getValue().getString());
 
 
-        autonBuilderLLL = new AutonBuilder(startingPosition, lllFieldSide, lllTasks, lllSides);
-        autonBuilderLRL = new AutonBuilder(startingPosition, lrlFieldSide, lrlTasks, lrlSides);
-        autonBuilderRLR = new AutonBuilder(startingPosition, rlrFieldSide, rlrTasks, rlrSides);
-        autonBuilderRRR = new AutonBuilder(startingPosition, rrrFieldSide, rrrTasks, rrrSides);
+			autonBuilderLLL = new AutonBuilder(startingPosition, lllFieldSide, lllTasks, lllSides);
+			autonBuilderLRL = new AutonBuilder(startingPosition, lrlFieldSide, lrlTasks, lrlSides);
+			autonBuilderRLR = new AutonBuilder(startingPosition, rlrFieldSide, rlrTasks, rlrSides);
+			autonBuilderRRR = new AutonBuilder(startingPosition, rrrFieldSide, rrrTasks, rrrSides);
 
-        switch (GameData.getParsedString()) {
-			case "LLL":
-				autonCommand = new AutonCommand(autonBuilderLLL);
-				break;
-			case "RRR":
-				autonCommand = new AutonCommand(autonBuilderRRR);
-				break;
-			case "LRL":
-				autonCommand = new AutonCommand(autonBuilderLRL);
-				break;
-			case "RLR":
-				autonCommand = new AutonCommand(autonBuilderRLR);
-				break;
-			default:
-				return;
+			switch (GameData.getParsedString()) {
+                case "LLL":
+                    autonCommand = new AutonCommand(autonBuilderLLL);
+                    break;
+                case "RRR":
+                    autonCommand = new AutonCommand(autonBuilderRRR);
+                    break;
+                case "LRL":
+                    autonCommand = new AutonCommand(autonBuilderLRL);
+                    break;
+                case "RLR":
+                    autonCommand = new AutonCommand(autonBuilderRLR);
+                    break;
+                default:
+                    return;
+            }
+
+			if (autonCommand != null) {
+                autonCommand.start();
+            }
+		} catch (Exception e) {
+			log.catching(e);
 		}
-
-		if (autonCommand != null) {
-		    autonCommand.start();
-        }
 	}
 
 	/**

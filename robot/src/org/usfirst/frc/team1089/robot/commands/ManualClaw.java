@@ -31,7 +31,6 @@ public class ManualClaw extends Command {
     @Override
     protected void initialize() {
         LOG.info(getName() + " initialized");
-        Robot.claw.getClawMotor_S().setInverted(false);
         Robot.claw.setEjecting(targetState == Claw.ClawState.EJECT);
         timeMillis = System.currentTimeMillis();
     }
@@ -52,7 +51,6 @@ public class ManualClaw extends Command {
     protected void end() {
         LOG.info(getName() + " ended");
 
-        Robot.claw.getClawMotor_S().setInverted(true);
         if (targetState == Claw.ClawState.GRAB) {
             // ???
         } else if (targetState == Claw.ClawState.EJECT) {

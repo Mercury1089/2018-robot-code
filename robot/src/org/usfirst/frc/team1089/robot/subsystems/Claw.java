@@ -109,23 +109,23 @@ public class Claw extends Subsystem {
             //int r = (int) SmartDashboard.getNumber("LED Color (R)", 255);
             //int g = (int) SmartDashboard.getNumber("LED Color (G)", 161);
             //int b = (int) SmartDashboard.getNumber("LED Color (B)", 0);
-            currentLEDOutput[0] = 255;
-            currentLEDOutput[1] = 0;
-            currentLEDOutput[2] = 255;
-            colorLED(255, 0, 255);
+            currentLEDOutput[0] = 0;
+            currentLEDOutput[1] = 255;
+            currentLEDOutput[2] = 0;
+            colorLED(0, 255, 0);
         } else if (pixyCam.inRange()) { // Cube is in range to auto pickup
             // White
-            currentLEDOutput[0] = 255;
-            currentLEDOutput[1] = 255;
+            currentLEDOutput[0] = 0;
+            currentLEDOutput[1] = 0;
             currentLEDOutput[2] = 255;
-            colorLED(255, 255, 255);
+            colorLED(0, 0, 255);
             rumble = true;
         } else {
             // None
-            currentLEDOutput[0] = 255;
-            currentLEDOutput[1] = 30;
-            currentLEDOutput[2] = 0;
-            colorLED(255, 30, 0);
+            currentLEDOutput[0] = 0;
+            currentLEDOutput[1] = 255;
+            currentLEDOutput[2] = 255;
+            colorLED(0, 255, 255);
         }
 
         Robot.oi.rumbleController(rumble);
@@ -171,6 +171,14 @@ public class Claw extends Subsystem {
 
     public Ultrasonic getUltrasonic() {
         return ultrasonic;
+    }
+
+    public WPI_VictorSPX getClawMotor_M() {
+        return clawMotor_M;
+    }
+
+    public WPI_VictorSPX getClawMotor_S() {
+        return clawMotor_S;
     }
 
     public boolean hasCube() {

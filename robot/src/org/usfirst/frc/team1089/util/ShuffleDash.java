@@ -20,11 +20,11 @@ public class ShuffleDash {
     private void updateDash() {
         //SmartDashboard.putString("Alliance Color", DriverStation.getInstance().getAlliance().toString());
 
-        /*SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
+        SmartDashboard.putNumber("Left Enc in ticks", Robot.driveTrain.getLeft().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
         SmartDashboard.putNumber("Right Enc in ticks", Robot.driveTrain.getRight().getSelectedSensorPosition(DriveTrain.PRIMARY_PID_LOOP));
-        SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
-        SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());
-        SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getCurrentHeight());*/
+        /*SmartDashboard.putNumber("Left Enc in feet", Robot.driveTrain.getLeftEncPositionInFeet());
+        SmartDashboard.putNumber("Right Enc in feet", Robot.driveTrain.getRightEncPositionInFeet());*/
+        SmartDashboard.putNumber("Elevator Enc in ticks", Robot.elevator.getCurrentHeight());
         SmartDashboard.putBoolean("Limit Switch Closed", Robot.elevator.isLimitSwitchClosed());
         SmartDashboard.putBoolean("Cube Acquired", Robot.claw.hasCube());
         SmartDashboard.putBoolean("Cube Acquirable", Robot.claw.getPixyCam().inRange());

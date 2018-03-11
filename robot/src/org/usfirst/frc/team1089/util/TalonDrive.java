@@ -18,7 +18,7 @@ public class TalonDrive {
 	private final Logger LOG = LogManager.getLogger(TalonDrive.class);
 	private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 10, TimeUnit.SECONDS);
 	private final WPI_TalonSRX TALON_LEFT, TALON_RIGHT;
-	public double maxOutput = 0.5;
+	private double maxOutput = 1.0;
 	
 	/**
 	 * Creates a drive train, assuming there is one Talon for the left side

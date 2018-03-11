@@ -105,6 +105,11 @@ public class AutonBuilderController {
         //Add a listener so that selecting a new starting position will automatically update the backend.
         radioGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             RadioButton selectedButton = ((RadioButton) newValue);
+            int newSliderValue = selectedButton == leftRadioButton ? 0 : 1;
+            sliderLLL.setValue(newSliderValue);
+            sliderLRL.setValue(newSliderValue);
+            sliderRLR.setValue(newSliderValue);
+            sliderRRR.setValue(newSliderValue);
             backend.setStartingPosition(AutonPosition.fromString(selectedButton.getText()));
         });
 
@@ -168,7 +173,8 @@ public class AutonBuilderController {
         EventHandler<TableColumn.CellEditEvent<TaskConfig,TaskConfig.AutonTask>>
                 taskEditHandler = (TableColumn.CellEditEvent<TaskConfig, TaskConfig.AutonTask> t) -> {
                     if (t.getNewValue() == TaskConfig.AutonTask.AUTO_LINE) {
-                        t.getTableView().setItems(FXCollections.observableArrayList(new TaskConfig(TaskConfig.AutonTask.AUTO_LINE, TaskConfig.ScoringSide.NOT_APPLICABLE)));
+                        t.getTableView().getItems().clear();
+                        t.getTableView().getItems().add(new TaskConfig(TaskConfig.AutonTask.AUTO_LINE, TaskConfig.ScoringSide.NOT_APPLICABLE));
                     }
 
                     if (t.getOldValue() == TaskConfig.AutonTask.AUTO_LINE && t.getNewValue() != TaskConfig.AutonTask.AUTO_LINE) {

@@ -59,6 +59,8 @@ public class AutonBuilder {
     }
 
     public AutonBuilder() {
+        //Left is the default, gets updated later.
+        startingPosition = AutonPosition.LEFT;
         // Initialize HashMap
         configMap = new HashMap<>();
         configMap.put("LLL", new ArrayList<>());

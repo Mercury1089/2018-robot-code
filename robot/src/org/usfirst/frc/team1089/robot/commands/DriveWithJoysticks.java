@@ -41,6 +41,7 @@ public class DriveWithJoysticks extends Command {
 	@Override
 	protected void initialize() {
 		tDrive = Robot.driveTrain.getTalonDrive();
+		log.info("Set max output to: " + tDrive.getMaxOutput());
 		Robot.driveTrain.setNeutralMode(NeutralMode.Brake);
 		log.info(getName() + " command initialized");
 	}

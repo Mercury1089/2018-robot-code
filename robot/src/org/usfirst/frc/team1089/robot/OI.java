@@ -58,12 +58,12 @@ import org.usfirst.frc.team1089.util.ShuffleDash;
  *
  */
 public class OI {
-	private final double DEADZONE = 0.29;
+	private final double DEADZONE = 0.2;
 	private static Logger log = LogManager.getLogger(OI.class);
 
 	private Joystick leftStick, rightStick, gamepad;
 
-	private JoystickButton left1, left2, left3, left4;
+	private JoystickButton left1, left2, left3, left4, left5;
 	private JoystickButton right1, right2, right3, right4, right5, right6, right7, right8, right9, right10, right11;
 	private JoystickButton gamepad_a, gamepad_b, gamepad_x, gamepad_y, gamepad_rb, gamepad_lb, gamepad_start, gamepad_back, gamepad_L3, gamepad_R3;
 
@@ -79,11 +79,11 @@ public class OI {
         left2 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN2);
         left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
         left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
-
+		left5 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN5);
 		//left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
         left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
 		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
-
+		left5.whileHeld(new ManualClaw(Claw.ClawState.GRAB));
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
 		right2 = new JoystickButton(rightStick, 2);
@@ -107,7 +107,7 @@ public class OI {
 
 		//right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		//right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-		//right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
+		right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		//right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 
 //TODO END TESTING

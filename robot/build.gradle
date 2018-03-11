@@ -12,8 +12,8 @@ def wpiext = project.extensions.getByType(WPIExtension)
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-wpiext.wpilibVersion = '2018.3.3'
-wpiext.ctreVersion = '5.2.2.0'
+//wpiext.wpilibVersion = '2018.3.3'
+//wpiext.ctreVersion = '5.2.2.0'
 
 configurations {
     trajectory {

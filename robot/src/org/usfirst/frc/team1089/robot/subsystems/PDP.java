@@ -23,12 +23,12 @@ public class PDP extends Subsystem {
 	public void periodic() {
 		double[] currentVals = new double[16];
 
-		for (int i = 0; i < 16; i++)
-			currentVals[i] = pdpPanel.getCurrent(i);
+		//for (int i = 0; i < 16; i++)
+			//currentVals[i] = pdpPanel.getCurrent(i);
 
-		SmartDashboard.putNumberArray("PDP: Current Values", currentVals);
-		SmartDashboard.putNumber("PDP: Voltage", pdpPanel.getVoltage());
-		SmartDashboard.putNumber("PDP: Total Current", pdpPanel.getTotalCurrent());
+		//SmartDashboard.putNumberArray("PDP: Current Values", currentVals);
+		//SmartDashboard.putNumber("PDP: Voltage", pdpPanel.getVoltage());
+		//SmartDashboard.putNumber("PDP: Total Current", pdpPanel.getTotalCurrent());
 	}
 	
 	@Override

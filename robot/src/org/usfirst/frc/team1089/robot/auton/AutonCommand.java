@@ -93,27 +93,26 @@ public class AutonCommand extends CommandGroup {
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
 
-        for(AutonTask at : autonTasks) {
-            if(at == AutonTask.AUTO_LINE) {
-                switch(workingSide) {
-                    case LEFT_MID:
-                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                        addSequential(new MoveOnPath("SwitchFrontLeft", MoveOnPath.Direction.FORWARD));
-                        break;
-                    case RIGHT_MID:
-                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                        addSequential(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
-                        break;
-                    default:
-                        addSequential(new DriveDistance(168, 0.8));
-                }
+
+        if(autonTasks[0] == AutonTask.AUTO_LINE) {
+            switch(workingSide) {
+                case LEFT_MID:
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                    addSequential(new MoveOnPath("SwitchFrontLeft", MoveOnPath.Direction.FORWARD));
+                    break;
+                case RIGHT_MID:
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                    addSequential(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
+                    break;
+                default:
+                    addSequential(new DriveDistance(168, 0.8));
             }
         }
 
         RotateRelative rotateRelative = null;      //History RotateRelative that will be used to return to pickup position
 
         //TEMPORARY SWITCH SIDE LRL/RLR for MT OLIVE. TODO edit this
-        if (switchSide != scaleSide && comparableFieldSide == switchSide) {
+        /*if (switchSide != scaleSide && comparableFieldSide == switchSide) {
             addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
             if(comparableWorkingSide == switchSide)
                 addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
@@ -124,15 +123,13 @@ public class AutonCommand extends CommandGroup {
             addSequential(new UseClaw(Claw.ClawState.EJECT));
             addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
             addSequential(new DriveDistance(-20, .8));
-            while (RobotState.isAutonomous()) {
-                addSequential(new GetCube());
-                addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                addSequential(new DriveDistance(20, .8));
-                addSequential(new UseClaw(Claw.ClawState.EJECT));
-                addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
-                addSequential(new DriveDistance(-20, .8));
-            }
-        }
+            addSequential(new GetCube());
+            addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+            addSequential(new DriveDistance(20, .8));
+            addSequential(new UseClaw(Claw.ClawState.EJECT));
+            addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
+            addSequential(new DriveDistance(-20, .8));
+        }*/
 
         switch (workingSide) {
             case LEFT:
@@ -191,6 +188,7 @@ public class AutonCommand extends CommandGroup {
                         switchWorkingSide();
                     }
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
                     addSequential(new DriveDistance(-51.825, .8));
                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
                     addSequential(rotateRelative);
@@ -199,7 +197,7 @@ public class AutonCommand extends CommandGroup {
             case LEFT_MID:
             case RIGHT_MID:
                 String taskStr = autonTasks[0].toString();
-                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(0, taskStr.indexOf("_")), MoveOnPath.Direction.FORWARD));  //TODO this doesnt work
+                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(4, taskStr.length()), MoveOnPath.Direction.FORWARD));  //TODO this doesnt work
                 break;
         }
 
@@ -229,15 +227,15 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 addSequential(new DriveDistance(-51.825, .8));
                                 break;
-                            case MID:       //PLEASE BE ADVISED NOT TO USE THIS
-                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 0));
+                            //case MID:       //PLEASE BE ADVISED NOT TO USE THIS
+                                /*rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 0));
                                 addSequential(rotateRelative);
                                 addSequential(new DriveDistance(-43.5, .8));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 addSequential(new MoveOnPath("ScaleSide" + posStr, MoveOnPath.Direction.BACKWARD));
                                 addSequential(new DriveDistance(43.5, .8));
-                                break;
+                                break;*/
                         }
                     }
                     break;
@@ -255,7 +253,7 @@ public class AutonCommand extends CommandGroup {
                                     addSequential(new DriveDistance(-15, .8));  // TODO change these arbitrary values
                                 }
                                 break;
-                            case MID: // PLEASE BE ADVISED NOT TO USE THIS
+                            /*case MID: // PLEASE BE ADVISED NOT TO USE THIS
                                 if (switchSide == scaleSide) {
                                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, rotationFactor, 0));
                                     addSequential(rotateRelative);
@@ -263,7 +261,7 @@ public class AutonCommand extends CommandGroup {
                                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                                     addSequential(new MoveOnPath("CubePickupSetup" + posStr, MoveOnPath.Direction.BACKWARD));
                                 }
-                                break;
+                                break;*/
                         }
                     }
                     break;

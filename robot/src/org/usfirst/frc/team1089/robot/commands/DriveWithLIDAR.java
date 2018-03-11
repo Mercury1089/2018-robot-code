@@ -38,7 +38,7 @@ public class DriveWithLIDAR extends DriveDistance {
 
     @Override
     protected boolean isFinished() {
-        return super.isFinished() && Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
+        return Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
     }
 
     @Override

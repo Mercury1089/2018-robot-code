@@ -30,7 +30,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final int PRIMARY_PID_LOOP = 0;
 
     public static final double MAX_SPEED = 1.0;
-    public static final double MIN_SPEED = 0.45;
+    public static final double MIN_SPEED = .3;
+
 
     private WPI_TalonSRX tMasterLeft, tMasterRight;
     private BaseMotorController vFollowerLeft, vFollowerRight;
@@ -95,7 +96,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         tMasterRight.setSensorPhase(true);
 
         tDrive = new TalonDrive(tMasterLeft, tMasterRight);
-        tDrive.setMaxOutput(0.25);
 
         // Set follower control on back talons. Use follow() instead of ControlMode.Follower so that Talons can follow Victors and vice versa.
         vFollowerLeft.follow(tMasterLeft);

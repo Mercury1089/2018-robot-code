@@ -12,15 +12,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Command that utilizes the claw depending on the state given.
  */
-public class UseClaw extends Command {
-    private static final Logger LOG = LogManager.getLogger(UseClaw.class);
+public class ManualClaw extends Command {
+    private static final Logger LOG = LogManager.getLogger(ManualClaw.class);
 
     private Claw.ClawState targetState;
     private DelayableLogger exeLog = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
-    private final double minimumDistance = 8, maximumDistance = 4, timeThreshold = 850;
+    private final double minimumDistance = 8, maximumDistance = 4, timeThreshold = 1200;
     private long timeMillis;
 
-    public UseClaw(Claw.ClawState state) {
+    public ManualClaw(Claw.ClawState state) {
         LOG.info(getName() + "Beginning constructor");
         requires(Robot.claw);
         setName(state + "_Claw");
@@ -31,6 +31,7 @@ public class UseClaw extends Command {
     @Override
     protected void initialize() {
         LOG.info(getName() + " initialized");
+        Robot.claw.getClawMotor_S().setInverted(false);
         Robot.claw.setEjecting(targetState == Claw.ClawState.EJECT);
         timeMillis = System.currentTimeMillis();
     }
@@ -44,11 +45,14 @@ public class UseClaw extends Command {
     @Override
     protected void interrupted() {
         LOG.info(getName() + " interrupted");
+        end();
     }
 
     @Override
     protected void end() {
         LOG.info(getName() + " ended");
+
+        Robot.claw.getClawMotor_S().setInverted(true);
         if (targetState == Claw.ClawState.GRAB) {
             // ???
         } else if (targetState == Claw.ClawState.EJECT) {
@@ -60,9 +64,6 @@ public class UseClaw extends Command {
 
     @Override
     protected boolean isFinished() {
-        if (targetState == Claw.ClawState.GRAB)
-            return Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
-
-        return System.currentTimeMillis() - timeMillis > timeThreshold || maximumDistance - Robot.claw.getUltrasonic().getRange() <= 0;
+        return false;
     }
 }

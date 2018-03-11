@@ -31,11 +31,11 @@ public class Elevator extends Subsystem {
      */
     public enum ElevatorPosition {
         // TODO: Temporary Values
-        SCALE_HIGH(81000.0),    // Scale at its highest point
-        SCALE_LOW(62000.0),     // Scale at its lowest point
-        SWITCH(15000.0),        // Above switch fence
+        SCALE_HIGH(75000.0),    // Scale at its highest point
+        SCALE_LOW(58000.0),     // Scale at its lowest point
+        SWITCH(21000),        // Above switch fence
         DRIVE_CUBE(5000.0),     //TODO temporary value for driving around
-        FLOOR(-200.0);             // Elevator bottomed out
+        FLOOR(-500.0);             // Elevator bottomed out
 
         public final double encPos;
 
@@ -81,8 +81,8 @@ public class Elevator extends Subsystem {
 
         elevatorTalon.configNominalOutputForward(.1, 10);
         elevatorTalon.configNominalOutputReverse(-.1, 10);
-        elevatorTalon.configPeakOutputForward(1, 10);
-        elevatorTalon.configPeakOutputReverse(-1, 10);
+        elevatorTalon.configPeakOutputForward(.8, 10);
+        elevatorTalon.configPeakOutputReverse(-.8, 10);
 
         elevatorTalon.configAllowableClosedloopError(0, 5, 10);
 

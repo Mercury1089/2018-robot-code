@@ -81,8 +81,8 @@ public class Elevator extends Subsystem {
 
         elevatorTalon.configNominalOutputForward(.1, 10);
         elevatorTalon.configNominalOutputReverse(-.1, 10);
-        elevatorTalon.configPeakOutputForward(.8, 10);
-        elevatorTalon.configPeakOutputReverse(-.8, 10);
+        elevatorTalon.configPeakOutputForward(1, 10);
+        elevatorTalon.configPeakOutputReverse(-1,10);
 
         elevatorTalon.configAllowableClosedloopError(0, 5, 10);
 

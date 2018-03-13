@@ -143,7 +143,7 @@ public class AutonCommand extends CommandGroup {
                                 if (scoreSide[0] == TaskConfig.ScoringSide.BACK) {
                                     addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                    addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                    //addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD)); TODO untuned profile
                                     addSequential(new DriveDistance(43.5, .8));
                                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, 0));
                                     addSequential(rotateRelative);
@@ -158,7 +158,7 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 switchWorkingSide();
-                                addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD));
+                                //addSequential(new MoveOnPath("SwitchBack" + posStr, MoveOnPath.Direction.BACKWARD)); TODO untuned profile
                                 addSequential(new DriveDistance(43.5, .8));
                                 rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));
                                 addSequential(rotateRelative);
@@ -168,11 +168,11 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 switchWorkingSide();
-                                addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                                //addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD)); TODO untuned profile
                             } else {
                                 addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD));
+                                //addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD)); TODO untuned profile
                             }
                             addSequential(new DriveDistance(43.5, .8));
                             rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));

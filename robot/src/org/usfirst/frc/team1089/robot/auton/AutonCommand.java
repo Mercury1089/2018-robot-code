@@ -93,8 +93,10 @@ public class AutonCommand extends CommandGroup {
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
 
+        log.info(getName() + ": constructing with starting position " + posStr +" and final field side " + comparableFieldSide.toString());
 
         if(autonTasks[0] == AutonTask.AUTO_LINE) {
+            log.info(getName() + "Moving to AutoLine!");
             switch(workingSide) {
                 case LEFT_MID:
                     addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
@@ -107,6 +109,8 @@ public class AutonCommand extends CommandGroup {
                 default:
                     addSequential(new DriveDistance(168, 0.8));
             }
+            log.info(getName() + "AutoLine complete!");
+            return;
         }
 
         RotateRelative rotateRelative = null;      //History RotateRelative that will be used to return to pickup position
@@ -135,10 +139,11 @@ public class AutonCommand extends CommandGroup {
             case LEFT:
             case RIGHT:
                 switch (autonTasks[0]) {
-                    case SCORE_SWITCH:
+                    case SCORE_SWITCH:  //TODO this case statement has all sorts of problems. Start by addressing logic issues - first if condition is incorrect.
+                                        //TODO then go through the addSequential logic.
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                        log.info(getName() + ": Elevator set to switch height!");
                         if (switchSide == scaleSide) {
-                            //TODO make a path that replaces the "CubeSetupPickup" and "SwitchBack" and the following DriveDistance
                             if (switchSide == comparableWorkingSide) {
                                 if (scoreSide[0] == TaskConfig.ScoringSide.BACK) {
                                     addSequential(new MoveOnPath("InitialSwitchBack" + posStr, MoveOnPath.Direction.FORWARD));
@@ -147,12 +152,14 @@ public class AutonCommand extends CommandGroup {
                                     addSequential(new DriveDistance(43.5, .8));
                                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, 0));
                                     addSequential(rotateRelative);
+                                    log.info(getName() + ": InitialSwitchBack, Eject, SwitchBack, DriveDistance, RotateRelative constructed.");
                                 } else {
                                     addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
                                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                                     addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));
                                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
                                     addSequential(rotateRelative);
+                                    log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
                                 }
                             } else {
                                 addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
@@ -162,6 +169,7 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new DriveDistance(43.5, .8));
                                 rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));
                                 addSequential(rotateRelative);
+                                log.info(getName() + ": SwitchBackOpp, Eject, SwitchBack, DriveDistance, RotateRelative constructed. Working side switched.");
                             }
                         } else {
                             if (switchSide == comparableWorkingSide) {
@@ -169,35 +177,43 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 switchWorkingSide();
                                 //addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD)); TODO untuned profile
+                                log.info(getName() + ": InitialSwitchBack, Eject, CubeSetupPickupOpp constructed. Working side switched");
                             } else {
                                 addSequential(new MoveOnPath("SwitchBackOpp" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 //addSequential(new MoveOnPath("CubeSetupPickupOpp" + posStr, MoveOnPath.Direction.BACKWARD)); TODO untuned profile
+                                log.info(getName() + ": SwitchBackOpp, Eject, CubeSetupPickupOpp constructed.");
                             }
                             addSequential(new DriveDistance(43.5, .8));
                             rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 0));
                             addSequential(rotateRelative);
+                            log.info("DriveDistance, RotateRelative constructed. In cube grabbing position!");
                         }
                         break;
                 case SCORE_SCALE:
                     addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                     if (switchSide == comparableWorkingSide) {
                         addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
+                        log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                     } else {
                         addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
                         switchWorkingSide();
+                        log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                     }
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                     addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
                     addSequential(new DriveDistance(-51.825, .8));
                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
                     addSequential(rotateRelative);
+                    log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");
                 }
                 break;
             case LEFT_MID:
             case RIGHT_MID:
                 String taskStr = autonTasks[0].toString();
-                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(4, taskStr.length()), MoveOnPath.Direction.FORWARD));  //TODO this doesnt work
+                addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                addSequential(new MoveOnPath("SwitchMid" + taskStr.substring(4, taskStr.length()), MoveOnPath.Direction.FORWARD));
+                log.info(getName() + ": Switch height (parallel), SwitchMid constructed. Set for cube drop (SWITCH)!");
                 break;
         }
 
@@ -214,6 +230,8 @@ public class AutonCommand extends CommandGroup {
                 }
                 addSequential(new GetCubeAuton());
             }
+
+            log.info(getName() + "RotateRelative, GetCubeAuton constructed. Set for cube pickup.");
 
             switch (taskToComplete) {
                 case SCORE_SCALE:

@@ -49,7 +49,7 @@ public class AutonBuilderController {
     private ToggleGroup radioGroup = new ToggleGroup();
 
     @FXML
-    private RadioButton leftRadioButton, middleLeftRadioButton, middleRightRadioButton, rightRadioButton;
+    private RadioButton leftRadioButton, middleRadioButton, rightRadioButton;
 
     @FXML
     private Slider sliderLLL, sliderLRL, sliderRLR, sliderRRR;
@@ -98,8 +98,7 @@ public class AutonBuilderController {
 
         //Add each button to the group so that only one can be selected.
         leftRadioButton.setToggleGroup(radioGroup);
-        middleLeftRadioButton.setToggleGroup(radioGroup);
-        middleRightRadioButton.setToggleGroup(radioGroup);
+        middleRadioButton.setToggleGroup(radioGroup);
         rightRadioButton.setToggleGroup(radioGroup);
 
         //Add a listener so that selecting a new starting position will automatically update the backend.
@@ -233,8 +232,7 @@ public class AutonBuilderController {
         publishMenuItem.setOnAction(event -> publishToNetworkTable());
 
         leftRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.LEFT));
-        middleLeftRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.LEFT_MID));
-        middleLeftRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.RIGHT_MID));
+        middleRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.MID));
         rightRadioButton.setOnAction(event -> backend.setStartingPosition(AutonPosition.RIGHT));
 
         tableLLL.setOnKeyPressed(this::handleKeyPressed);

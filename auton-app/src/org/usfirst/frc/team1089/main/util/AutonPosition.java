@@ -5,8 +5,7 @@ package org.usfirst.frc.team1089.main.util;
  */
 public enum AutonPosition {
     LEFT("Left"),
-    LEFT_MID("Mid Left"),
-    RIGHT_MID("Mid Right"),
+    MID("Mid"),
     RIGHT("Right");
 
     private final String POSITION;

@@ -17,9 +17,6 @@ import org.usfirst.frc.team1089.util.Recallable;
 public class AutonCommand extends CommandGroup {
     private static Logger log = LogManager.getLogger(AutonCommand.class);
     private AutonPosition workingSide;
-    //TODO may not need fieldSide
-    private FieldSide fieldSide;
-    private GameData.PlateSide comparableFieldSide;
     private GameData.PlateSide comparableWorkingSide; //Our Working Side, comparable to the side of the Plate
     private AutonTask[] autonTasks;
     private ScoringSide[] scoreSide;
@@ -52,57 +49,37 @@ public class AutonCommand extends CommandGroup {
                 scaleSide = GameData.getScaleSide(),
                 switchSide = GameData.getSwitchSide();
         workingSide = autonBuilder.getAutonPos();
+        posStr = workingSide.toString();
         switch (workingSide) {
             case LEFT:
-                posStr = "Left";
                 comparableWorkingSide = GameData.PlateSide.LEFT;
                 rotationFactor = 1;
                 break;
             case RIGHT:
-                posStr = "Right";
                 comparableWorkingSide = GameData.PlateSide.RIGHT;
                 rotationFactor = -1;
                 break;
-            case LEFT_MID:
-                posStr = "Left";
+            case MID:
+                if (switchSide == GameData.PlateSide.LEFT)
+                    posStr = "Left";
+                else
+                    posStr = "Right";
                 comparableWorkingSide = GameData.PlateSide.UNKNOWN;
-                rotationFactor = 0;
-                break;
-            case RIGHT_MID:
-                posStr = "Right";
-                comparableWorkingSide = GameData.PlateSide.UNKNOWN;
-                rotationFactor = 0;
-                break;
             default:
                 rotationFactor = 0;
-        }
-        fieldSide = autonBuilder.getFieldSide();
-        switch(fieldSide) {
-            case LEFT_SIDE:
-                comparableFieldSide = GameData.PlateSide.LEFT;
-                break;
-            case RIGHT_SIDE:
-                comparableFieldSide = GameData.PlateSide.RIGHT;
-                break;
-            default:
-                comparableFieldSide = null;
         }
 
         autonTasks = autonBuilder.getAutonTasks();
         scoreSide = autonBuilder.getScoreSide();
 
-        log.info(getName() + ": constructing with starting position " + posStr +" and final field side " + comparableFieldSide.toString());
+        log.info(getName() + ": constructing with starting position " + posStr + ", rotation factor " + rotationFactor);
 
         if(autonTasks[0] == AutonTask.AUTO_LINE) {
             log.info(getName() + "Moving to AutoLine!");
             switch(workingSide) {
-                case LEFT_MID:
+                case MID:
                     addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                    addSequential(new MoveOnPath("SwitchFrontLeft", MoveOnPath.Direction.FORWARD));
-                    break;
-                case RIGHT_MID:
-                    addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                    addSequential(new MoveOnPath("SwitchFrontRight", MoveOnPath.Direction.FORWARD));
+                    addSequential(new MoveOnPath("SwitchFront" + posStr, MoveOnPath.Direction.FORWARD));
                     break;
                 default:
                     addSequential(new DriveDistance(168, 0.8));
@@ -167,8 +144,7 @@ public class AutonCommand extends CommandGroup {
                     log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");
                 }
                 break;
-            case LEFT_MID:
-            case RIGHT_MID:
+            case MID:
                 addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                 addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
                 log.info(getName() + ": Switch height (parallel), SwitchMid constructed. Set for cube drop (SWITCH)!");
@@ -192,24 +168,25 @@ public class AutonCommand extends CommandGroup {
 
             switch (taskToComplete) {
                 case SCORE_SCALE:
-                    if (workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) {
+                    if (workingSide != AutonPosition.MID) {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                         rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 90));
                         addSequential(rotateRelative);
                         addSequential(new DriveDistance(43.5, .8));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addSequential(new DriveDistance(-43.5, .8));
-                        break;
+                        log.info(getName() + "Dropping cube number " + i + "into Scale.");
                     }
                     break;
                 case SCORE_SWITCH:
-                    if (workingSide != AutonPosition.LEFT_MID && workingSide != AutonPosition.RIGHT_MID) {
+                    if (workingSide != AutonPosition.MID) {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, -75));
                         addSequential(rotateRelative);
                         addSequential(new DriveDistance(30, .8));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addSequential(new DriveDistance(-30, .8));
+                        log.info(getName() + "Dropping cube number " + i + "into Switch.");
                     }
                     break;
             }
@@ -230,10 +207,14 @@ public class AutonCommand extends CommandGroup {
                 posStr = workingSide.toString();
                 rotationFactor = -1;
                 break;
+            default:
+                log.info("AutonCommand.switchWorkingSide() may throw errors, aborting!");
+                return;
         }
     }
 
     public AutonCommand() {
+        log.info("Constructing DriveDistance only AutonCommand, likely another kUnassigned exception.");
         addSequential(new DriveDistance(168, 0.8));
     }
 

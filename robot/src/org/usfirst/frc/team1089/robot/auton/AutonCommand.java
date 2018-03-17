@@ -133,7 +133,11 @@ public class AutonCommand extends CommandGroup {
                         log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                     } else {
                         addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
-                        switchWorkingSide();
+                        boolean continueAuto = switchWorkingSide();
+                        if(!continueAuto) {
+                            log.info(getName() + ".switchWorkingSide() may throw errors, aborting!");
+                            return;
+                        }
                         log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                     }
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
@@ -153,18 +157,21 @@ public class AutonCommand extends CommandGroup {
 
         for (int i = 1; i < autonTasks.length; i++) {
             AutonTask taskToComplete = autonTasks[i];                      //The task to execute
-            TaskConfig.ScoringSide sideToScoreOn = scoreSide[i];           //The side to score on
             TaskConfig.ScoringSide previousSide = scoreSide[i - 1];        //The side just scored on
 
             //GRAB CUBE
             if (previousSide != null) {
-                if (i != 0) {
+                if (i != 1) {
+                    if(rotateRelative == null) {
+                        log.info(getName() + ": Unsafe to run next Rotate, aborting!");
+                        return;
+                    }
                     addSequential(new RotateRelative(rotateRelative, Recallable.RecallMethod.REVERSE));
                 }
                 addSequential(new GetCubeAuton());
             }
 
-            log.info(getName() + "RotateRelative, GetCubeAuton constructed. Set for cube pickup.");
+            log.info(getName() + ": RotateRelative, GetCubeAuton constructed. Set for cube pickup.");
 
             switch (taskToComplete) {
                 case SCORE_SCALE:
@@ -175,7 +182,7 @@ public class AutonCommand extends CommandGroup {
                         addSequential(new DriveDistance(43.5, .8));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addSequential(new DriveDistance(-43.5, .8));
-                        log.info(getName() + "Dropping cube number " + i + "into Scale.");
+                        log.info(getName() + ": Dropping cube number " + i + "into Scale constructed.");
                     }
                     break;
                 case SCORE_SWITCH:
@@ -186,30 +193,29 @@ public class AutonCommand extends CommandGroup {
                         addSequential(new DriveDistance(30, .8));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addSequential(new DriveDistance(-30, .8));
-                        log.info(getName() + "Dropping cube number " + i + "into Switch.");
+                        log.info(getName() + ": Dropping cube number " + i + "into Switch constructed.");
                     }
                     break;
             }
         }
     }
 
-    private void switchWorkingSide() {
+    private boolean switchWorkingSide() {
         switch (workingSide) {
             case RIGHT:
                 workingSide = AutonPosition.LEFT;
                 comparableWorkingSide = GameData.PlateSide.LEFT;
                 posStr = workingSide.toString();
                 rotationFactor = 1;
-                break;
+                return true;
             case LEFT:
                 workingSide = AutonPosition.RIGHT;
                 comparableWorkingSide = GameData.PlateSide.RIGHT;
                 posStr = workingSide.toString();
                 rotationFactor = -1;
-                break;
+                return true;
             default:
-                log.info("AutonCommand.switchWorkingSide() may throw errors, aborting!");
-                return;
+                return false;
         }
     }
 

@@ -127,11 +127,13 @@ public class AutonCommand extends CommandGroup {
                         }
                         break;
                 case SCORE_SCALE:
-                    addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                     if (switchSide == comparableWorkingSide) {
+                        addParallel(new DelayableElevator(0, Elevator.ElevatorPosition.SCALE_HIGH));
                         addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                         log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                     } else {
+                        addSequential(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE, true));
+                        addParallel(new DelayableElevator(3.5, Elevator.ElevatorPosition.SCALE_HIGH));
                         addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
                         boolean continueAuto = switchWorkingSide();
                         if(!continueAuto) {
@@ -141,8 +143,9 @@ public class AutonCommand extends CommandGroup {
                         log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                     }
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
-                    addParallel(new UseElevator(Elevator.ElevatorPosition.FLOOR));
+                    addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
                     addSequential(new DriveDistance(-43.5, .8));
+
                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
                     addSequential(rotateRelative);
                     log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");

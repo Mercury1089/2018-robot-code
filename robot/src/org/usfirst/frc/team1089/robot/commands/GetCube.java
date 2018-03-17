@@ -14,19 +14,19 @@ import org.usfirst.frc.team1089.util.Recallable;
  * approach the cube.
  */
 public class GetCube extends CommandGroup {
-    private static Logger log = LogManager.getLogger(GetCube.class);
-    private Command angleOriginator, distanceOriginator;
+        private static Logger log = LogManager.getLogger(GetCube.class);
+        private Command angleOriginator, distanceOriginator;
 
-    public GetCube() {
-        angleOriginator = new RotateToTarget();
-        distanceOriginator = new DriveWithLIDAR(3.75, 0.3);
+        public GetCube() {
+            angleOriginator = new RotateToTarget();
+            distanceOriginator = new DriveWithLIDAR(3.75, 0.3);
 
-        log.info(getName() + " Beginning constructor");
-        addSequential(angleOriginator);
-        addParallel(new UseClaw(Claw.ClawState.GRAB));
-        addSequential(distanceOriginator);
-        log.info(getName() + " Created");
-    }
+            log.info(getName() + " Beginning constructor");
+            addSequential(angleOriginator);
+            addParallel(new UseClaw(Claw.ClawState.GRAB));
+            addSequential(distanceOriginator);
+            log.info(getName() + " Created");
+        }
 
     public Recallable<Double> getAngleOriginator() {
         return (Recallable<Double>) angleOriginator;

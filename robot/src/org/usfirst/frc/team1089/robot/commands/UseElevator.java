@@ -19,10 +19,13 @@ import java.util.concurrent.TimeUnit;
 public class UseElevator extends Command {
     private final Logger LOG = LogManager.getLogger(UseElevator.class);
     private final DelayableLogger SLOW_LOG = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
+    private final int ELEVATOR_THRESHOLD = 500;
 
     private Elevator.ElevatorPosition targetPos;
 
     private int counter = 0;
+
+    private boolean endable;
 
     /**
      * Constructs this command with the specified position to move to
@@ -32,9 +35,15 @@ public class UseElevator extends Command {
     public UseElevator(Elevator.ElevatorPosition pos) {
         requires(Robot.elevator);
         targetPos = pos;
+        endable = false;
 
         setName("UseElevator (" + pos + ")");
         LOG.info(getName() + " Constructed");
+    }
+
+    public UseElevator(Elevator.ElevatorPosition pos, boolean canEnd) {
+        this(pos);
+        endable = canEnd;
     }
 
     @Override
@@ -49,15 +58,9 @@ public class UseElevator extends Command {
     protected void execute() {
         SLOW_LOG.run(log -> log.debug(getName() + " executing"));
 
-        if (targetPos == Elevator.ElevatorPosition.FLOOR) {
-            if (Robot.elevator.isLimitSwitchClosed()) {
-                Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
-                LOG.info("Reached!");
-            }
-        }
-
-        double maxOut = Robot.elevator.getCurrentHeight() > 38000 ? 1.0 :
-                DriveTrain.MAX_SPEED - ((Robot.elevator.getCurrentHeight() - 38000) / (Elevator.MAX_HEIGHT - 38000)) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
+//
+//        double maxOut = Robot.elevator.getCurrentHeight() > 38000 ? 1.0 :
+//                DriveTrain.MAX_SPEED - ((Robot.elevator.getCurrentHeight() - 38000) / (Elevator.MAX_HEIGHT - 38000)) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
         Robot.driveTrain.setMaxOutput(1.0);
     }
 
@@ -73,6 +76,17 @@ public class UseElevator extends Command {
 
     @Override
     protected boolean isFinished() {
+        if (endable && ELEVATOR_THRESHOLD >= Math.abs(targetPos.encPos - Robot.elevator.getCurrentHeight())) {
+            LOG.info("Reached " + targetPos.toString());
+            return true;
+        }
+        if (targetPos == Elevator.ElevatorPosition.FLOOR) {
+            if (Robot.elevator.isLimitSwitchClosed()) {
+                Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
+                LOG.info("Reached!");
+                return true;
+            }
+        }
         return false;
     }
 }

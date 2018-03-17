@@ -77,13 +77,14 @@ public class AutonBuilder {
 
         ntInstance = NetworkTableInstance.getDefault();
         ntInstance.setServerTeam(1089);
+        ntInstance.startClient();
     }
 
     /**
      * Publish current task configs to the network table
      */
-    public void publishValues() {
-        ntInstance.startClient();
+    /*public void publishValues() {
+
         NetworkTable builderTable = ntInstance.getTable(TABLE_NAME);
         for (Map.Entry<String, List<TaskConfig>> entry : configMap.entrySet()) {
             String key = entry.getKey();
@@ -101,8 +102,7 @@ public class AutonBuilder {
             builderTable.getEntry(TASK_PREFIX + key).setStringArray(tasks);
             builderTable.getEntry(SIDE_PREFIX + key).setStringArray(sides);
         }
-        ntInstance.stopClient();
-    }
+    }*/
 
     /**
      * Save configuration to a comma separated value file (CSV)

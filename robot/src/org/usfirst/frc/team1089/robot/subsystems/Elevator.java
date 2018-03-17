@@ -79,8 +79,8 @@ public class Elevator extends Subsystem {
         elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);
         elevatorTalon.setSensorPhase(false);
 
-        elevatorTalon.configNominalOutputForward(.1, 10);
-        elevatorTalon.configNominalOutputReverse(-.1, 10);
+        elevatorTalon.configNominalOutputForward(.075, 10);
+        elevatorTalon.configNominalOutputReverse(-.075, 10);
         elevatorTalon.configPeakOutputForward(1, 10);
         elevatorTalon.configPeakOutputReverse(-1,10);
 

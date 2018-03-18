@@ -59,7 +59,7 @@ public class UseElevator extends Command {
         SLOW_LOG.run(log -> log.debug(getName() + " executing"));
 
 
-        double maxOut = Robot.elevator.getCurrentHeight() > 38000 ? 1.0 :
+        double maxOut = Robot.elevator.getCurrentHeight() < 38000 ? 1.0 :
                 DriveTrain.MAX_SPEED - ((Robot.elevator.getCurrentHeight() - 38000) / (Elevator.MAX_HEIGHT - 38000)) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
         Robot.driveTrain.setMaxOutput(maxOut);
     }

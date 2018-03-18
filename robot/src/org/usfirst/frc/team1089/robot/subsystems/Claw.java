@@ -4,6 +4,7 @@ import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
@@ -36,7 +37,7 @@ public class Claw extends Subsystem {
     private PixyI2C pixyCam;
     private Ultrasonic ultrasonic;
 
-    private double[] currentLEDOutput = new double[3];
+    private int[] currentLEDOutput = new int[3];
     private LinearDigitalFilter linearDF;
 
     private boolean hasCube;
@@ -99,7 +100,11 @@ public class Claw extends Subsystem {
     private void updateState() {
         boolean rumble = false;
 
-        if (hasCube()) { // Have cube?
+        if (RobotState.isDisabled()) { // Turn off LEDs when disabled
+            currentLEDOutput[0] = 0;
+            currentLEDOutput[1] = 0;
+            currentLEDOutput[2] = 0;
+        } else if (hasCube()) { // Have cube?
             // Listen from SmartDash
 
             // Fun colors to note:
@@ -112,22 +117,20 @@ public class Claw extends Subsystem {
             currentLEDOutput[0] = 0;
             currentLEDOutput[1] = 255;
             currentLEDOutput[2] = 0;
-            colorLED(0, 255, 0);
         } else if (pixyCam.inRange()) { // Cube is in range to auto pickup
             // White
             currentLEDOutput[0] = 0;
             currentLEDOutput[1] = 0;
             currentLEDOutput[2] = 255;
-            colorLED(0, 0, 255);
             rumble = true;
         } else {
             // None
             currentLEDOutput[0] = 0;
             currentLEDOutput[1] = 255;
             currentLEDOutput[2] = 255;
-            colorLED(0, 255, 255);
         }
 
+        colorLED(currentLEDOutput[0], currentLEDOutput[1], currentLEDOutput[2]);
         Robot.oi.rumbleController(rumble);
     }
 
@@ -144,7 +147,7 @@ public class Claw extends Subsystem {
         canifier.setLEDOutput((double) b / 255.0, CANifier.LEDChannel.LEDChannelC);
     }
 
-    public double[] getCurrentLEDOutput() {
+    public int[] getCurrentLEDOutput() {
         return currentLEDOutput;
     }
 

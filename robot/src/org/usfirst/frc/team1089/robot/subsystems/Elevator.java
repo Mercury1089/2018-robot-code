@@ -33,9 +33,10 @@ public class Elevator extends Subsystem {
         // TODO: Temporary Values
         SCALE_HIGH(75000.0),    // Scale at its highest point
         SCALE_LOW(58000.0),     // Scale at its lowest point
-        SWITCH(21000),        // Above switch fence
-        DRIVE_CUBE(5000.0),     //TODO temporary value for driving around
-        FLOOR(-2000.0);             // Elevator bottomed out
+        INNER_STAGE(38000),     // Height of the inner stage
+        SWITCH(21000),          // Above switch fence
+        DRIVE_CUBE(5000.0),     // Height for driving around cube
+        FLOOR(-2000.0);         // Elevator bottomed out
 
         public final double encPos;
 

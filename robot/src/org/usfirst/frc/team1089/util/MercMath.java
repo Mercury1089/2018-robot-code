@@ -29,6 +29,7 @@ public class MercMath {
 		return val;
 	}
 
+	// TODO: Make this work
 	/**
 	 * Rounds a floating-point value to a certain number of places past the decimals
 	 * @param val    the number to round
@@ -44,6 +45,20 @@ public class MercMath {
 //		val /= factor;
 
 		return val;
+	}
+
+	/**
+	 * Interpolates a value between a minimum and maximum value via a percentage
+	 *
+	 * @param percent percent to shift between
+	 * @param min minimum value
+	 * @param max maximum value
+	 * @return a value between min and max given a percent, with 0 being min, and 1 being max
+	 */
+	public static double lerp(double percent, double min, double max) {
+		percent = clamp(percent, 0, 1);
+
+		return percent * max - percent * min + min;
 	}
 
 	public static double centimetersToInches(double val) {

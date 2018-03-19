@@ -129,7 +129,7 @@ public class Elevator extends Subsystem {
      *
      * @return height of claw as read by the encoder, in ticks
      */
-    public double getCurrentHeight() {
+    public int getCurrentHeight() {
         return elevatorTalon.getSelectedSensorPosition(RobotMap.PID.PRIMARY_PID_LOOP);
     }
 }

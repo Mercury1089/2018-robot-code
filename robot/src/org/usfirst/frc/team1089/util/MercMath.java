@@ -50,15 +50,15 @@ public class MercMath {
 	/**
 	 * Interpolates a value between a minimum and maximum value via a percentage
 	 *
-	 * @param percent percent to shift between
-	 * @param min minimum value
-	 * @param max maximum value
-	 * @return a value between min and max given a percent, with 0 being min, and 1 being max
+	 * @param percent percent to use to interpolate between a and b
+	 * @param a some value
+	 * @param b some other value
+	 * @return a value between a and b given a percent, with 0 being min, and 1 being max
 	 */
-	public static double lerp(double percent, double min, double max) {
+	public static double lerp(double percent, double a, double b) {
 		percent = clamp(percent, 0, 1);
 
-		return percent * max - percent * min + min;
+		return percent * b - percent * a + a;
 	}
 
 	public static double centimetersToInches(double val) {

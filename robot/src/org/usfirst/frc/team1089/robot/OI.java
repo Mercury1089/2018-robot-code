@@ -3,16 +3,12 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
-import org.usfirst.frc.team1089.robot.auton.AutonBuilder;
-import org.usfirst.frc.team1089.robot.auton.AutonPosition;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
-import org.usfirst.frc.team1089.util.Recallable;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -82,7 +78,7 @@ public class OI {
 		left5 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN5);
 		//left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
         left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
-		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
+		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.ARCADE));
 		left5.whileHeld(new ManualClaw(Claw.ClawState.GRAB));
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
@@ -130,7 +126,7 @@ public class OI {
 		gamepad_b.whenPressed(new ManualElevator());
 		gamepad_y.whenPressed(new UseElevator(Elevator.ElevatorPosition.SWITCH));
 		gamepad_start.whenPressed(new GetCube());
-		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveTank));
+		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.TANK));
 		gamepad_lb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_rb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
 

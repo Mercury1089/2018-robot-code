@@ -9,8 +9,11 @@ import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.DelayableLogger;
+import org.usfirst.frc.team1089.util.MercMath;
 import org.usfirst.frc.team1089.util.TalonDrive;
 
+import javax.xml.bind.Element;
+import java.security.interfaces.ECKey;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,11 +25,10 @@ public class DriveWithJoysticks extends Command {
 	private static Logger log = LogManager.getLogger(DriveWithJoysticks.class);
 	private DelayableLogger everySecond = new DelayableLogger(log, 1_000, TimeUnit.MILLISECONDS);
 	private DriveType driveType;
-	//TODO: think of better naming convention for InfrequentLogger
 
 	public enum DriveType {
-		DriveTank,
-		DriveArcade
+		TANK,
+		ARCADE
 	}
 
 
@@ -50,11 +52,17 @@ public class DriveWithJoysticks extends Command {
 	@Override
 	protected void execute() {
 		if (tDrive != null) {
+			double percent = Robot.elevator.getCurrentHeight() - Elevator.ElevatorPosition.INNER_STAGE.encPos;
+			percent /= Elevator.MAX_HEIGHT - Elevator.ElevatorPosition.INNER_STAGE.encPos;
+
+			// Should be an ease-out type of thing?
+			tDrive.setMaxOutput(MercMath.lerp(Math.sqrt(percent), DriveTrain.MAX_SPEED, DriveTrain.MIN_SPEED));
+
 			switch (driveType) {
-				case DriveTank:
+				case TANK:
 					tDrive.tankDrive(Robot.oi.getY(DS_USB.LEFT_STICK), Robot.oi.getY(DS_USB.RIGHT_STICK));
 					break;
-				case DriveArcade:
+				case ARCADE:
 					tDrive.arcadeDrive(Robot.oi.getY(DS_USB.LEFT_STICK), -Robot.oi.getX(DS_USB.RIGHT_STICK), true);
 					break;
 			}

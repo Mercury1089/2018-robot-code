@@ -32,7 +32,6 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final double MAX_SPEED = 1.0;
     public static final double MIN_SPEED = .3;
 
-
     private WPI_TalonSRX tMasterLeft, tMasterRight;
     private BaseMotorController vFollowerLeft, vFollowerRight;
 
@@ -122,7 +121,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveWithJoysticks(DriveWithJoysticks.DriveType.DriveArcade));
+        setDefaultCommand(new DriveWithJoysticks(DriveWithJoysticks.DriveType.ARCADE));
     }
 
     /**

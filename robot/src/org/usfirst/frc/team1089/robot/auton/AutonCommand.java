@@ -25,7 +25,10 @@ public class AutonCommand extends CommandGroup {
     private final double
             CUBE_PICKUP_X_OFFSET = 38.825,
             CUBE_PICKUP_Y_CONSTANT_OFFSET = 12.25,
-            CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1;
+            CUBE_PICKUP_Y_CHANGING_OFFSET = 28.1,
+            SCALE_OFFSET = 43.5,
+            SWITCH_OFFSET = 30,
+            AUTO_LINE = 168;
 
     public AutonCommand(AutonBuilder autonBuilder) {
         // Add Commands here:
@@ -82,7 +85,7 @@ public class AutonCommand extends CommandGroup {
                     addSequential(new MoveOnPath("SwitchFront" + posStr, MoveOnPath.Direction.FORWARD));
                     break;
                 default:
-                    addSequential(new DriveDistance(168, 0.8));
+                    addSequential(new DriveDistance(AUTO_LINE, 1.0));
             }
             log.info(getName() + "AutoLine complete!");
             return;
@@ -106,7 +109,7 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(rotateRelative);
                                 log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
                             } else {
-                                addSequential(new DriveDistance(168, 1.0));
+                                addSequential(new DriveDistance(AUTO_LINE, 1.0));
                                 log.info("Unsafe to run profile, resorting to AutoLine!");
                                 return;
                             }
@@ -120,7 +123,7 @@ public class AutonCommand extends CommandGroup {
                                 log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
                                 log.info("Don't want to go to scale side from position, aborting!");
                             } else {
-                                addSequential(new DriveDistance(168, 1.0));
+                                addSequential(new DriveDistance(AUTO_LINE, 1.0));
                                 log.info("Unsafe to run profile, resorting to AutoLine!");
                             }
                             return;
@@ -128,7 +131,7 @@ public class AutonCommand extends CommandGroup {
                         break;
                 case SCORE_SCALE:
                     if (switchSide == comparableWorkingSide) {
-                        addParallel(new DelayableElevator(0, Elevator.ElevatorPosition.SCALE_HIGH));
+                        addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                         addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                         log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                     } else {
@@ -144,7 +147,7 @@ public class AutonCommand extends CommandGroup {
                     }
                     addSequential(new UseClaw(Claw.ClawState.EJECT));
                     addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
-                    addSequential(new DriveDistance(-43.5, .8));
+                    addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
 
                     rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
                     addSequential(rotateRelative);
@@ -182,10 +185,11 @@ public class AutonCommand extends CommandGroup {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
                         rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 90));
                         addSequential(rotateRelative);
-                        addSequential(new DriveDistance(43.5, .8));
+                        addSequential(new DriveDistance(SCALE_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addSequential(new DriveDistance(-43.5, .8));
-                        log.info(getName() + ": Dropping cube number " + i + "into Scale constructed.");
+                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
+                        addSequential(new DriveDistance(-SCALE_OFFSET, .8));
+                        log.info(getName() + ": Dropping cube number " + i + " into Scale constructed.");
                     }
                     break;
                 case SCORE_SWITCH:
@@ -193,10 +197,11 @@ public class AutonCommand extends CommandGroup {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                         rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, -75));
                         addSequential(rotateRelative);
-                        addSequential(new DriveDistance(30, .8));
+                        addSequential(new DriveDistance(SWITCH_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addSequential(new DriveDistance(-30, .8));
-                        log.info(getName() + ": Dropping cube number " + i + "into Switch constructed.");
+                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
+                        addSequential(new DriveDistance(-SWITCH_OFFSET, .8));
+                        log.info(getName() + ": Dropping cube number " + i + " into Switch constructed.");
                     }
                     break;
             }

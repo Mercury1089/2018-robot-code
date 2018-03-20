@@ -104,7 +104,7 @@
                 <TableView id="tableLLL" fx:id="tableLLL" editable="true" prefHeight="480.0" prefWidth="234.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
                     <columns>
                         <TableColumn fx:id="taskColLLL" prefWidth="116.66666412353516" resizable="false" sortable="false" text="Task" />
-                        <TableColumn fx:id="paramColLLL" prefWidth="116.33333587646484" resizable="false" sortable="false" text="Side" />
+                        <TableColumn fx:id="sideColLLL" prefWidth="116.33333587646484" resizable="false" sortable="false" text="Side" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -113,7 +113,7 @@
                 <TableView id="tableLRL" fx:id="tableLRL" editable="true" prefHeight="480.0" prefWidth="211.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
                     <columns>
                         <TableColumn fx:id="taskColLRL" prefWidth="115.33334350585938" resizable="false" sortable="false" text="Task" />
-                        <TableColumn fx:id="paramColLRL" prefWidth="117.0" resizable="false" sortable="false" text="Side" />
+                        <TableColumn fx:id="sideColLRL" prefWidth="117.0" resizable="false" sortable="false" text="Side" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -122,7 +122,7 @@
                 <TableView id="tableRLR" fx:id="tableRLR" editable="true" prefHeight="480.0" prefWidth="211.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="3">
                     <columns>
                         <TableColumn fx:id="taskColRLR" prefWidth="116.6666259765625" resizable="false" sortable="false" text="Task" />
-                        <TableColumn fx:id="paramColRLR" prefWidth="115.3333740234375" resizable="false" sortable="false" text="Side" />
+                        <TableColumn fx:id="sideColRLR" prefWidth="115.3333740234375" resizable="false" sortable="false" text="Side" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -131,7 +131,7 @@
                 <TableView id="tableRRR" fx:id="tableRRR" editable="true" prefHeight="480.0" prefWidth="211.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="3">
                     <columns>
                         <TableColumn fx:id="taskColRRR" prefWidth="116.66668701171875" resizable="false" sortable="false" text="Task" />
-                        <TableColumn fx:id="paramColRRR" prefWidth="116.33331298828125" resizable="false" sortable="false" text="Side" />
+                        <TableColumn fx:id="sideColRRR" prefWidth="116.33331298828125" resizable="false" sortable="false" text="Side" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

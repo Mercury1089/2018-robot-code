@@ -57,12 +57,6 @@ public class UseElevator extends Command {
     @Override
     protected void execute() {
         SLOW_LOG.run(log -> log.debug(getName() + " executing"));
-
-
-        double maxOut = Robot.elevator.getCurrentHeight() < Elevator.ElevatorPosition.INNER_STAGE.encPos ? DriveTrain.MAX_SPEED :
-                DriveTrain.MAX_SPEED - ((Robot.elevator.getCurrentHeight() - Elevator.ElevatorPosition.INNER_STAGE.encPos) /
-                        (Elevator.MAX_HEIGHT - Elevator.ElevatorPosition.INNER_STAGE.encPos)) * (DriveTrain.MAX_SPEED - DriveTrain.MIN_SPEED);
-        Robot.driveTrain.setMaxOutput(maxOut);
     }
 
     @Override

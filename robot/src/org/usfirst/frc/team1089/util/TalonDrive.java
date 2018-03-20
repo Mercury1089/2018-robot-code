@@ -39,7 +39,6 @@ public class TalonDrive {
 	 * @param max Max output value
 	 */
 	public void setMaxOutput(double max) {
-		SLOW_LOG.run(log -> log.info("Set max to " + max));
 		maxOutput = max;
 	}
 

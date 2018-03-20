@@ -156,8 +156,9 @@ public class AutonCommand extends CommandGroup {
                 break;
             case MID:
                 addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
-                log.info(getName() + ": Switch height (parallel), SwitchMid constructed. Set for cube drop (SWITCH)!");
+                addSequential(new MoveOnPath("SwitchFront" + posStr, MoveOnPath.Direction.FORWARD));
+                addSequential(new UseClaw(Claw.ClawState.EJECT));
+                log.info(getName() + ": Switch height (parallel), SwitchFront constructed. Set for cube drop (SWITCH)!");
                 break;
         }
 

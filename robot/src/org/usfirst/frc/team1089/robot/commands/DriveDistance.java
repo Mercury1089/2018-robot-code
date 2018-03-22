@@ -120,7 +120,7 @@ public class DriveDistance extends Command implements Recallable<Double> {
         Robot.driveTrain.resetEncoders();
 
         //The voltage setClawState on the Talons is global, so the talons must be reconfigured back to their original outputs.
-        Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
+        Robot.driveTrain.configVoltage(0, DriveTrainSettings.getMaxOutput());
 
         log.info("Final Distance: " + distanceTraveled);
     }

@@ -52,11 +52,14 @@ public class DriveWithJoysticks extends Command {
 	@Override
 	protected void execute() {
 		if (tDrive != null) {
-			double percent = Robot.elevator.getCurrentHeight() - Elevator.ElevatorPosition.INNER_STAGE.encPos;
-			percent /= Elevator.MAX_HEIGHT - Elevator.ElevatorPosition.INNER_STAGE.encPos;
+			if (Robot.elevator.getCurrentHeight() > Elevator.ElevatorPosition.INNER_STAGE.encPos) {
+				double percent = Robot.elevator.getCurrentHeight() - Elevator.ElevatorPosition.INNER_STAGE.encPos;
+				percent /= Elevator.MAX_HEIGHT - Elevator.ElevatorPosition.INNER_STAGE.encPos;
 
-			// Should be an ease-out type of thing?
-			tDrive.setMaxOutput(MercMath.lerp(Math.sqrt(percent), DriveTrain.MAX_SPEED, DriveTrain.MIN_SPEED));
+				// Should be an ease-out type of thing?
+				tDrive.setMaxOutput(MercMath.lerp(Math.sqrt(percent), DriveTrain.MAX_SPEED, DriveTrain.MIN_SPEED));
+			} else
+				tDrive.setMaxOutput(DriveTrain.MAX_SPEED);
 
 			switch (driveType) {
 				case TANK:

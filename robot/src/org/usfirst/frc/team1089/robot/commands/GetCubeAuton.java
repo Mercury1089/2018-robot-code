@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team1089.robot.subsystems.Elevator;
 import org.usfirst.frc.team1089.util.Recallable;
 
 /**
@@ -17,7 +18,8 @@ public class GetCubeAuton extends CommandGroup {
         log.info(getName() + " Beginning constructor");
         GetCube getCubeCmd = new GetCube();
         addSequential(getCubeCmd);
-        addSequential(new DriveDistance(getCubeCmd.getDistanceOriginator(), Recallable.RecallMethod.REVERSE, .5));
+        addParallel(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE));
+        addSequential(new DriveDistance(getCubeCmd.getDistanceOriginator(), Recallable.RecallMethod.REVERSE, 1.0));
         addSequential(new RotateRelative(getCubeCmd.getAngleOriginator(), Recallable.RecallMethod.REVERSE));
         log.info(getName() + " Created");
     }

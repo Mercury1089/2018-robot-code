@@ -119,12 +119,7 @@ public class RotateRelative extends PIDCommand implements Recallable<Double> {
 		} else if(Math.abs(output) < MIN_PERCENT_VBUS) {
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
 		}
-		log.info("Output after: " + output);
-		// TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
-		// and remove the negation on the next line.
-		log.info("Output after: " + output);
-		//TODO See if the NavX and Gyro's definition of a positive and negative angle match. If they do not match, then have the NavX class return the negated angle
-		//and remove the negation on the next line.
+
         Robot.driveTrain.pidWrite(-output);
 	}
 	
@@ -141,6 +136,6 @@ public class RotateRelative extends PIDCommand implements Recallable<Double> {
 
 	@Override
 	public CommandType getType() {
-		return CommandType.DISTANCE;
+		return CommandType.ROTATION;
 	}
 }

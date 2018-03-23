@@ -17,7 +17,7 @@ public class UseClaw extends Command {
 
     private Claw.ClawState targetState;
     private DelayableLogger exeLog = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
-    private final double minimumDistance = 8, maximumDistance = 4, timeThreshold = 850;
+    private final double minimumDistance = 8, maximumDistance = -4, timeThreshold = 850;
     private long timeMillis;
 
     public UseClaw(Claw.ClawState state) {
@@ -63,6 +63,6 @@ public class UseClaw extends Command {
         if (targetState == Claw.ClawState.GRAB)
             return Robot.claw.getLidar().getDistance() - minimumDistance <= 0;
 
-        return System.currentTimeMillis() - timeMillis > timeThreshold || maximumDistance - Robot.claw.getUltrasonic().getRange() <= 0;
+        return System.currentTimeMillis() - timeMillis > timeThreshold;
     }
 }

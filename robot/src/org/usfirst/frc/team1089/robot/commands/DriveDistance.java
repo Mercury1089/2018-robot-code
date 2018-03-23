@@ -28,6 +28,7 @@ public class DriveDistance extends Command implements Recallable<Double> {
     protected double distance;
     protected double percentVoltage; // Voltage is NOW from [-1, 1]
 
+    private double initialDistance;
     private double distanceTraveled = Double.NEGATIVE_INFINITY;
     private Recallable<Double> originator;
     private RecallMethod treatment;
@@ -50,6 +51,7 @@ public class DriveDistance extends Command implements Recallable<Double> {
         if (o.getType() == getType()) {
             originator = o;
             treatment = t;
+            log.info(getName() + " being recalled, with method " + treatment);
         } else {
             log.warn("Recallable type not equal! Looking for " + getType() + ", found " + o.getType() + ".");
         }
@@ -73,6 +75,8 @@ public class DriveDistance extends Command implements Recallable<Double> {
         setPIDF(pid[0], pid[1], pid[2], 0);
         Robot.driveTrain.configVoltage(volts[0], volts[1]);
 
+        initialDistance = Robot.driveTrain.getLeftEncPositionInFeet();
+
         updateDistance();
 
         log.info(getName() + " initialized");
@@ -85,8 +89,6 @@ public class DriveDistance extends Command implements Recallable<Double> {
         double leftError = Robot.driveTrain.getLeft().getClosedLoopError(PRIMARY_PID_LOOP);
         double rightError = Robot.driveTrain.getRight().getClosedLoopError(PRIMARY_PID_LOOP);
         boolean isOnTarget = (Math.abs(rightError) < MOVE_THRESHOLD && Math.abs(leftError) < MOVE_THRESHOLD);
-
-        SLOW_LOG.run(logger -> logger.info("leftError: " + leftError));
 
         if (isOnTarget) {
             onTargetCount++;
@@ -111,13 +113,11 @@ public class DriveDistance extends Command implements Recallable<Double> {
     protected void end() {
         Robot.driveTrain.stop();
 
+        // Get distance delta
+        distanceTraveled = initialDistance - Robot.driveTrain.getLeftEncPositionInFeet();
+
         // Convert the average encoder position to inches
-        distanceTraveled = Robot.driveTrain.getLeftEncPositionInFeet() * 12.0;
-
-        // Negate distanceTraveled since encoder position is read backwards
-        distanceTraveled *= -1;
-
-        Robot.driveTrain.resetEncoders();
+        distanceTraveled *= 12.0;
 
         //The voltage setClawState on the Talons is global, so the talons must be reconfigured back to their original outputs.
         Robot.driveTrain.configVoltage(0, DriveTrainSettings.getMaxOutput());
@@ -129,7 +129,6 @@ public class DriveDistance extends Command implements Recallable<Double> {
     // subsystems is scheduled to run
     protected void interrupted() {
         log.info("DriveDistance interrupted");
-        Robot.driveTrain.configVoltage(0, Robot.driveTrain.getTalonDrive().getMaxOutput());
         this.end();
     }
 
@@ -140,7 +139,6 @@ public class DriveDistance extends Command implements Recallable<Double> {
         double endPosL = 0, endPosR = 0;
 
         endPosL = MercMath.inchesToEncoderTicks(distance);
-        log.info(distance);
 
         // Per CTRE documentation, the encoder value need to increase when the Talon LEDs are green.
         // On Crossfire, the Talon LEDs are *red* when the robot is moving forward. For this reason, we need
@@ -181,7 +179,7 @@ public class DriveDistance extends Command implements Recallable<Double> {
         if (distanceTraveled > Double.NEGATIVE_INFINITY)
             return distanceTraveled;
 
-        return null;
+        return 0.0;
     }
 
     @Override

@@ -19,8 +19,7 @@ public class GetCube extends CommandGroup {
 
         public GetCube() {
             angleOriginator = new RotateToTarget();
-            distanceOriginator = new DriveWithLIDAR(3.75, 0.3);
-
+            distanceOriginator = new DriveWithLIDAR(8, 0.7);
             log.info(getName() + " Beginning constructor");
             addSequential(angleOriginator);
             addParallel(new UseClaw(Claw.ClawState.GRAB));

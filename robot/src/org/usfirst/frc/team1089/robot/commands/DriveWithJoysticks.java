@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class DriveWithJoysticks extends Command {
 	private TalonDrive tDrive;
 	private static Logger log = LogManager.getLogger(DriveWithJoysticks.class);
-	private DelayableLogger everySecond = new DelayableLogger(log, 1_000, TimeUnit.MILLISECONDS);
+	private DelayableLogger everySecond = new DelayableLogger(log, 10, TimeUnit.SECONDS);
 	private DriveType driveType;
 
 	public enum DriveType {
@@ -72,7 +72,6 @@ public class DriveWithJoysticks extends Command {
 		} else {
 			log.info("Talon Drive is not initialized!");
 		}
-		everySecond.run(log -> log.info(driveType.toString() + " driving"));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

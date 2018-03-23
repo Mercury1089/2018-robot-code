@@ -95,6 +95,7 @@ public class OI {
 
 		right1.whenPressed(new UseClaw(Claw.ClawState.EJECT));
 		right3.whenPressed(new UseClaw(Claw.ClawState.STOP));
+		right4.whileHeld(new ManualClaw(Claw.ClawState.EJECT));
 		right8.whenPressed(new CalibrateGyro());
 
 //TODO TESTING:
@@ -103,7 +104,7 @@ public class OI {
 
 		//right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		//right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-		right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
+		//right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
 		//right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 
 //TODO END TESTING
@@ -125,7 +126,7 @@ public class OI {
 		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE));
 		gamepad_b.whenPressed(new ManualElevator());
 		gamepad_y.whenPressed(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-		gamepad_start.whenPressed(new GetCube());
+		gamepad_start.whenPressed(new GetCubeAuton());
 		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.TANK));
 		gamepad_lb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_rb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));

@@ -77,9 +77,9 @@ public class AutonCommand extends CommandGroup {
 
         log.info(getName() + ": constructing with starting position " + posStr + ", rotation factor " + rotationFactor);
 
-        if(autonTasks[0] == AutonTask.AUTO_LINE) {
+        if (autonTasks[0] == AutonTask.AUTO_LINE) {
             log.info(getName() + "Moving to AutoLine!");
-            switch(workingSide) {
+            switch (workingSide) {
                 case MID:
                     addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
                     addSequential(new MoveOnPath("SwitchFront" + posStr, MoveOnPath.Direction.FORWARD));
@@ -129,29 +129,29 @@ public class AutonCommand extends CommandGroup {
                             return;
                         }
                         break;
-                case SCORE_SCALE:
-                    if (switchSide == comparableWorkingSide) {
-                        addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-                        addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
-                        log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
-                    } else {
-                        addSequential(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE, true));
-                        addParallel(new DelayableElevator(3.5, Elevator.ElevatorPosition.SCALE_HIGH));
-                        addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
-                        boolean continueAuto = switchWorkingSide();
-                        if(!continueAuto) {
-                            log.info(getName() + ".switchWorkingSide() may throw errors, aborting!");
-                            return;
+                    case SCORE_SCALE:
+                        if (scaleSide == comparableWorkingSide) {
+                            addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
+                            addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
+                            log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
+                        } else {
+                            addSequential(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE, true));
+                            addParallel(new DelayableElevator(3.5, Elevator.ElevatorPosition.SCALE_HIGH));
+                            addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
+                            boolean continueAuto = switchWorkingSide();
+                            if (!continueAuto) {
+                                log.info(getName() + ".switchWorkingSide() may throw errors, aborting!");
+                                return;
+                            }
+                            log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                         }
-                        log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
-                    }
-                    addSequential(new UseClaw(Claw.ClawState.EJECT));
-                    addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
-                    addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
+                        addSequential(new UseClaw(Claw.ClawState.EJECT));
+                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
+                        addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
 
-                    rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
-                    addSequential(rotateRelative);
-                    log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");
+                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
+                        addSequential(rotateRelative);
+                        log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");
                 }
                 break;
             case MID:
@@ -169,7 +169,7 @@ public class AutonCommand extends CommandGroup {
             //GRAB CUBE
             if (previousSide != null) {
                 if (i != 1) {
-                    if(rotateRelative == null) {
+                    if (rotateRelative == null) {
                         log.info(getName() + ": Unsafe to run next Rotate, aborting!");
                         return;
                     }
@@ -189,7 +189,7 @@ public class AutonCommand extends CommandGroup {
                         addSequential(new DriveDistance(SCALE_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
-                        addSequential(new DriveDistance(-SCALE_OFFSET, .8));
+                        addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
                         log.info(getName() + ": Dropping cube number " + i + " into Scale constructed.");
                     }
                     break;
@@ -234,10 +234,10 @@ public class AutonCommand extends CommandGroup {
     }
 
     private double getCubeTurnAngleScale(int cubesPickedUp, int rotationFactor, int addDeg) {
-        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
     }
 
     private double getCubeTurnAngleSwitch(int cubesPickedUp, int rotationFactor, int addDeg) {
-        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET/(CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
     }
 }

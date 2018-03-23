@@ -30,7 +30,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public static final int PRIMARY_PID_LOOP = 0;
 
     public static final double MAX_SPEED = 1.0;
-    public static final double MIN_SPEED = .3;
+    public static final double MIN_SPEED = .5;
 
     private WPI_TalonSRX tMasterLeft, tMasterRight;
     private BaseMotorController vFollowerLeft, vFollowerRight;
@@ -105,6 +105,9 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         // This allows us to measure the distance from any given point to any ending point.
         tMasterLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
         tMasterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PRIMARY_PID_LOOP, TIMEOUT_MS);
+
+        configVoltage(0, DriveTrainSettings.getMaxOutput());
+        setMaxOutput(DriveTrainSettings.getMaxOutput());
     }
 
     public void resetEncoders() {
@@ -157,7 +160,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
         }
     }
 
-    public double getLeftEncPositionInTicks() {
+    public int getLeftEncPositionInTicks() {
         return tMasterLeft.getSelectedSensorPosition(PRIMARY_PID_LOOP);
     }
 

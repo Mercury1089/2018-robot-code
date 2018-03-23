@@ -105,13 +105,10 @@ public class RotateToTarget extends PIDCommand implements Recallable<Double> {
 	@Override
 	protected void usePIDOutput(double output) {
 		final double OUTPUT_LOG = output;
-		if (getPIDController().onTarget()) {
-			SLOW_LOG.run(LOG -> LOG.log(Level.INFO, "Output before: " + OUTPUT_LOG));
+		if (getPIDController().onTarget())
 			output = 0;
-		} else if (Math.abs(output) < MIN_PERCENT_VBUS)
+		else if (Math.abs(output) < MIN_PERCENT_VBUS)
 			output = Math.signum(output) * MIN_PERCENT_VBUS;
-
-		LOG.info("Output after: " + output);
 
 		Robot.driveTrain.pidWrite(-output);
 	}
@@ -127,6 +124,7 @@ public class RotateToTarget extends PIDCommand implements Recallable<Double> {
 	@Override
 	public CommandType getType() {
 		return CommandType.ROTATION;
+
 	}
 }
 

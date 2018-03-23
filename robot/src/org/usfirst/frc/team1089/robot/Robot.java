@@ -65,8 +65,6 @@ public class Robot extends IterativeRobot {
 			CAN.DRIVETRAIN_SR
 		);
 
-	    driveTrain.getTalonDrive().setMaxOutput(DriveTrainSettings.getMaxOutput());
-
 		driveTrain.resetEncoders();
 
 		pdp = new PDP();

@@ -34,8 +34,8 @@ public class Elevator extends Subsystem {
         SCALE_HIGH(80000.0),    // Scale at its highest point
         SCALE_LOW(58000.0),     // Scale at its lowest point
         INNER_STAGE(38000),     // Height of the inner stage
-        SWITCH(21000),          // Above switch fence
-        DRIVE_CUBE(5000.0),     // Height for driving around cube
+        SWITCH(25000.0),          // Above switch fence
+        DRIVE_CUBE(7000.0),     // Height for driving around cube
         FLOOR(-2000.0);         // Elevator bottomed out
 
         public final double encPos;
@@ -80,8 +80,8 @@ public class Elevator extends Subsystem {
         elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);
         elevatorTalon.setSensorPhase(false);
 
-        elevatorTalon.configNominalOutputForward(.075, 10);
-        elevatorTalon.configNominalOutputReverse(-.075, 10);
+        elevatorTalon.configNominalOutputForward(.125, 10);
+        elevatorTalon.configNominalOutputReverse(-.125, 10);
         elevatorTalon.configPeakOutputForward(1, 10);
         elevatorTalon.configPeakOutputReverse(-1,10);
 

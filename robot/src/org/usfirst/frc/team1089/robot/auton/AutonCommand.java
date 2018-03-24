@@ -135,8 +135,7 @@ public class AutonCommand extends CommandGroup {
                             addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                         } else {
-                            addSequential(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE, true));
-                            addParallel(new DelayableElevator(3.5, Elevator.ElevatorPosition.SCALE_HIGH));
+                            addParallel(new DelayableElevator(3.5, Elevator.ElevatorPosition.SCALE_HIGH, true));
                             addSequential(new MoveOnPath("InitialScaleFrontOpp" + posStr, MoveOnPath.Direction.FORWARD));
                             boolean continueAuto = switchWorkingSide();
                             if (!continueAuto) {
@@ -146,7 +145,7 @@ public class AutonCommand extends CommandGroup {
                             log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                         }
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
+                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
                         addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
 
                         rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
@@ -188,7 +187,7 @@ public class AutonCommand extends CommandGroup {
                         addSequential(rotateRelative);
                         addSequential(new DriveDistance(SCALE_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
+                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
                         addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
                         log.info(getName() + ": Dropping cube number " + i + " into Scale constructed.");
                     }
@@ -200,7 +199,7 @@ public class AutonCommand extends CommandGroup {
                         addSequential(rotateRelative);
                         addSequential(new DriveDistance(SWITCH_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR));
+                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
                         addSequential(new DriveDistance(-SWITCH_OFFSET, .8));
                         log.info(getName() + ": Dropping cube number " + i + " into Switch constructed.");
                     }

@@ -80,6 +80,9 @@ public class Claw extends Subsystem {
 
         this.lidar = new LIDAR(canifier, CANifier.PWMChannel.valueOf(lidarPort), offset);
 
+        clawMotor_M.configPeakOutputForward(1.0, 0);
+        clawMotor_S.configPeakOutputForward(1.0, 0);
+
         setName("Claw");
         log.info("Initalized claw");
         clawMotor_M.setInverted(false);
@@ -185,7 +188,7 @@ public class Claw extends Subsystem {
     }
 
     public boolean hasCube() {
-        return lidar.getDistance() <= 5;
+        return lidar.getDistance() <= 6;
     }
 
     public boolean getEjecting() {

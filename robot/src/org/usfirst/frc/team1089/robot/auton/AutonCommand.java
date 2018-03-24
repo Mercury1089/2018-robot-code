@@ -104,10 +104,12 @@ public class AutonCommand extends CommandGroup {
                             if (switchSide == comparableWorkingSide) {
                                 addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));  //TODO tune this
-                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
-                                addSequential(rotateRelative);
-                                log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
+                                if (autonTasks.length != 1) {
+                                    addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));  //TODO tune this
+                                    rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
+                                    addSequential(rotateRelative);
+                                    log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
+                                }
                             } else {
                                 addSequential(new DriveDistance(AUTO_LINE, 1.0));
                                 log.info("Unsafe to run profile, resorting to AutoLine!");
@@ -117,9 +119,9 @@ public class AutonCommand extends CommandGroup {
                             if (switchSide == comparableWorkingSide) {
                                 addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
-                                addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));
+                                //addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));
                                 rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
-                                addSequential(rotateRelative);
+                                //addSequential(rotateRelative);
                                 log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
                                 log.info("Don't want to go to scale side from position, aborting!");
                             } else {
@@ -142,6 +144,8 @@ public class AutonCommand extends CommandGroup {
                                 log.info(getName() + ".switchWorkingSide() may throw errors, aborting!");
                                 return;
                             }
+
+                            addSequential(new RotateRelative(70));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                         }
                         addSequential(new UseClaw(Claw.ClawState.EJECT));

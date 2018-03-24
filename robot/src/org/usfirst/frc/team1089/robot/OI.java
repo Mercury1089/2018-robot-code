@@ -126,7 +126,7 @@ public class OI {
 		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE));
 		gamepad_b.whenPressed(new ManualElevator());
 		gamepad_y.whenPressed(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-		gamepad_start.whenPressed(new GetCubeAuton());
+		gamepad_start.whenPressed(new GetCube());
 		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.TANK));
 		gamepad_lb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_rb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));

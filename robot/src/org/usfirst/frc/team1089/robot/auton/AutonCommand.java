@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.robot.auton;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team1089.robot.auton.TaskConfig.*;
@@ -144,15 +145,16 @@ public class AutonCommand extends CommandGroup {
                                 log.info(getName() + ".switchWorkingSide() may throw errors, aborting!");
                                 return;
                             }
-
+                            addSequential(new WaitCommand(1.5));
                             addSequential(new RotateRelative(70));
+                            addSequential(new DriveDistance(20, 1.0));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                         }
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
                         addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
 
-                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90));
+                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90), 1.5);
                         addSequential(rotateRelative);
                         log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");
                 }
@@ -199,8 +201,6 @@ public class AutonCommand extends CommandGroup {
                 case SCORE_SWITCH:
                     if (workingSide != AutonPosition.MID) {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                        rotateRelative = new RotateRelative(getCubeTurnAngleSwitch(i, rotationFactor, -75));
-                        addSequential(rotateRelative);
                         addSequential(new DriveDistance(SWITCH_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));

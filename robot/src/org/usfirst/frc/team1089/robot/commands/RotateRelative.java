@@ -13,7 +13,7 @@ import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
  */
 public class RotateRelative extends PIDCommand implements Recallable<Double> {
 	private static Logger log = LogManager.getLogger(RotateRelative.class);
-	private final double MIN_PERCENT_VBUS;
+	private double MIN_PERCENT_VBUS;
 	private final int ONTARGET_THRESHOLD = 3;
 
 	private double targetHeading;
@@ -47,6 +47,11 @@ public class RotateRelative extends PIDCommand implements Recallable<Double> {
 
         log.info("RotateRelative constructed");
     }
+
+	public RotateRelative(double targetHeading, double minPercVBus) {
+		this(targetHeading);
+		MIN_PERCENT_VBUS = minPercVBus;
+	}
 
 	public RotateRelative(Recallable<Double> o, RecallMethod t) {
 		this(0);

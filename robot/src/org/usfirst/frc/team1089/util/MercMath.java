@@ -37,14 +37,9 @@ public class MercMath {
 	 * @return the value, truncated to the setClawState amount of places
 	 */
 	public static double roundFloat(double val, int places) {
-//		double factor = Math.pow(10, places);
-//		val *= factor;
-//
-//		val = (int)(val + 0.5);
-//
-//		val /= factor;
+		double factor = Math.pow(10.0, places);
 
-		return val;
+		return Math.round(val * factor) / factor;
 	}
 
 	/**

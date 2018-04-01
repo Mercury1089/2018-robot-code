@@ -16,10 +16,6 @@ targetCompatibility = JavaVersion.VERSION_1_8
 //wpiext.ctreVersion = '5.2.2.0'
 
 configurations {
-    trajectory {
-        description = "Trajectory files"
-    }
-
     outlineViewer {
         description = "Outline viewer binaries"
     }
@@ -34,7 +30,6 @@ dependencies {
     compile pathfinder()
     outlineViewer 'edu.wpi.first.wpilib:OutlineViewer:2.0.6'
     nativeLib fileTree(dir: 'lib', include: '*.so')
-    trajectory fileTree(dir: 'trajectories', include: '**/*_detailed.csv')
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -60,7 +55,9 @@ deploy {
         fileCollectionArtifact('trajectoryCollectionArtifact') {
             targets << 'roborio'
             directory = 'trajectories'
-            files = project.configurations.trajectory
+            files = fileTree(dir: "${buildDir}\\trajectories", exclude: "**/*_source_detailed.*")
+
+            dependsOn('generateTrajectories')
 
             predeploy << {
                 execute 'rm -rf /home/lvuser/trajectories'
@@ -103,6 +100,22 @@ task runOutlineViewer(type: Exec) {
     // Exec task fields
     workingDir = "${projectDir}"
     commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}
+
+task clearTrajectories(type: Delete) {
+    group = 'other'
+    description = "Deletes trajectories build folder"
+    delete "${buildDir}\\trajectories"
+}
+
+task generateTrajectories(type: Exec) {
+    group = 'build'
+    description = "Generates all the trajectories from the project files"
+    dependsOn "clearTrajectories"
+
+    workingDir = "${projectDir}\\"
+    commandLine 'java', '-jar', "${projectDir}\\trajectories\\motion-profile-generator.jar", "--no-gui",
+                "-i", "trajectories", "-o", "build\\trajectories"
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

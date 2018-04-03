@@ -93,7 +93,7 @@ public class DriveTrainSettings extends Config {
     }
 
     /**
-     * Gets the minimum percent VBus value for RotateRelative PID
+     * Gets the minimum percent VBus value for DegreeRotate PID
      *
      * @return min output, represented as percent value [0.0, 1.0]
      */
@@ -122,7 +122,7 @@ public class DriveTrainSettings extends Config {
     }
 
     /**
-     * Gets the absolute tolerance for RotateRelative PID
+     * Gets the absolute tolerance for DegreeRotate PID
      *
      * @return max degree delta from target heading
      */
@@ -133,7 +133,7 @@ public class DriveTrainSettings extends Config {
     }
 
     /**
-     * Gets the PID values for RotateRelative
+     * Gets the PID values for DegreeRotate
      *
      * @return double array containing PID values
      */

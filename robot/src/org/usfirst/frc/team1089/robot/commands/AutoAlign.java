@@ -1,17 +1,12 @@
 package org.usfirst.frc.team1089.robot.commands;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.usfirst.frc.team1089.robot.Robot;
-import org.usfirst.frc.team1089.util.config.DriveTrainSettings;
-
 /**
  * Autonomous alignment command that uses {@link org.usfirst.frc.team1089.robot.sensors.PiVision PiVision}
  * to align to a target.
  *
  * @deprecated see {@link org.usfirst.frc.team1089.robot.sensors.PiVision PiVision}
  */
-public class AutoAlign extends RotateRelative {
+public class AutoAlign extends DegreeRotate {
 //    private final double ANGLE_THRESHOLD;
 //    private static Logger LOG = LogManager.getLogger(AutoAlign.class);
 //    public AutoAlign() {

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.pattern.RelativeTimePatternConverter;
 import org.usfirst.frc.team1089.robot.auton.TaskConfig.*;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
@@ -92,7 +93,7 @@ public class AutonCommand extends CommandGroup {
             return;
         }
 
-        RotateRelative rotateRelative = null;//History RotateRelative that will be used to return to pickup position
+        DegreeRotate degreeRotate = null;//History DegreeRotate that will be used to return to pickup position
 
         switch (workingSide) {
             case LEFT:
@@ -107,9 +108,9 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 if (autonTasks.length != 1) {
                                     addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));  //TODO tune this
-                                    rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
-                                    addSequential(rotateRelative);
-                                    log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
+                                    degreeRotate = new DegreeRotate(getCubeTurnAngleScale(0, -rotationFactor, -90), DegreeRotate.RotationType.RELATIVE);
+                                    addSequential(degreeRotate);
+                                    log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, DegreeRotate constructed.");
                                 }
                             } else {
                                 addSequential(new DriveDistance(AUTO_LINE, 1.0));
@@ -121,9 +122,9 @@ public class AutonCommand extends CommandGroup {
                                 addSequential(new MoveOnPath("SwitchMid" + posStr, MoveOnPath.Direction.FORWARD));
                                 addSequential(new UseClaw(Claw.ClawState.EJECT));
                                 //addSequential(new MoveOnPath("InitialCubeSetupPickup" + posStr, MoveOnPath.Direction.BACKWARD));
-                                rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, -rotationFactor, -90));
-                                //addSequential(rotateRelative);
-                                log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, RotateRelative constructed.");
+                                degreeRotate = new DegreeRotate(getCubeTurnAngleScale(0, -rotationFactor, -90), DegreeRotate.RotationType.RELATIVE);
+                                //addSequential(degreeRotate);
+                                log.info(getName() + ": SwitchMid, Eject, InitialCubeSetupPickup, DegreeRotate constructed.");
                                 log.info("Don't want to go to scale side from position, aborting!");
                             } else {
                                 addSequential(new DriveDistance(AUTO_LINE, 1.0));
@@ -146,7 +147,7 @@ public class AutonCommand extends CommandGroup {
                                 return;
                             }
                             addSequential(new WaitCommand(1.5));
-                            addSequential(new RotateRelative(70));
+                            addSequential(new DegreeRotate(70, DegreeRotate.RotationType.RELATIVE));
                             addSequential(new DriveDistance(20, 1.0));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                         }
@@ -154,9 +155,9 @@ public class AutonCommand extends CommandGroup {
                         addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
                         addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
 
-                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(0, rotationFactor, 90), 1.5);
-                        addSequential(rotateRelative);
-                        log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, RotateRelative constructed. Set for cube pickup.");
+                        degreeRotate = new DegreeRotate(getCubeTurnAngleScale(0, rotationFactor, 90), DegreeRotate.RotationType.RELATIVE,  1.5);
+                        addSequential(degreeRotate);
+                        log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, DegreeRotate constructed. Set for cube pickup.");
                 }
                 break;
             case MID:
@@ -174,23 +175,23 @@ public class AutonCommand extends CommandGroup {
             //GRAB CUBE
             if (previousSide != null) {
                 if (i != 1) {
-                    if (rotateRelative == null) {
+                    if (degreeRotate == null) {
                         log.info(getName() + ": Unsafe to run next Rotate, aborting!");
                         return;
                     }
-                    addSequential(new RotateRelative(rotateRelative, Recallable.RecallMethod.REVERSE));
+                    addSequential(new DegreeRotate(degreeRotate, Recallable.RecallMethod.REVERSE));
                 }
                 addSequential(new GetCubeAuton());
             }
 
-            log.info(getName() + ": RotateRelative, GetCubeAuton constructed. Set for cube pickup.");
+            log.info(getName() + ": DegreeRotate, GetCubeAuton constructed. Set for cube pickup.");
 
             switch (taskToComplete) {
                 case SCORE_SCALE:
                     if (workingSide != AutonPosition.MID) {
                         addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-                        rotateRelative = new RotateRelative(getCubeTurnAngleScale(i, -rotationFactor, 90));
-                        addSequential(rotateRelative);
+                        degreeRotate = new DegreeRotate(getCubeTurnAngleScale(i, -rotationFactor, 90), DegreeRotate.RotationType.RELATIVE);
+                        addSequential(degreeRotate);
                         addSequential(new DriveDistance(SCALE_OFFSET, 1.0));
                         addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));

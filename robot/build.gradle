@@ -115,7 +115,7 @@ task generateTrajectories(type: Exec) {
 
     workingDir = "${projectDir}\\"
     commandLine 'java', '-jar', "${projectDir}\\trajectories\\motion-profile-generator.jar", "--no-gui",
-                "-i", "trajectories", "-o", "build\\trajectories"
+                "-i", "trajectories", "-o", "build\\trajectories", "-x", "traj"
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

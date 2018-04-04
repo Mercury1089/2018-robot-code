@@ -17,8 +17,6 @@ public class ManualClaw extends Command {
 
     private Claw.ClawState targetState;
     private DelayableLogger exeLog = new DelayableLogger(LOG, 1, TimeUnit.SECONDS);
-    private final double minimumDistance = 8, maximumDistance = 4, timeThreshold = 1200;
-    private long timeMillis;
 
     public ManualClaw(Claw.ClawState state) {
         LOG.info(getName() + "Beginning constructor");
@@ -32,7 +30,6 @@ public class ManualClaw extends Command {
     protected void initialize() {
         LOG.info(getName() + " initialized");
         Robot.claw.setEjecting(targetState == Claw.ClawState.EJECT);
-        timeMillis = System.currentTimeMillis();
     }
 
     @Override

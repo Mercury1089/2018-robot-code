@@ -136,6 +136,7 @@ public class AutonCommand extends CommandGroup {
                     case SCORE_SCALE:
                         if (scaleSide == comparableWorkingSide) {
                             addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
+                            addParallel(new DelayableClaw(3.25, Claw.ClawState.EJECT));
                             addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                         } else {
@@ -148,13 +149,12 @@ public class AutonCommand extends CommandGroup {
                             }
                             addSequential(new WaitCommand(1.5));
                             addSequential(new DegreeRotate(70, DegreeRotate.RotationType.RELATIVE));
-                            addSequential(new DriveDistance(20, 1.0));
+                            addSequential(new DriveDistance(15, 1.0));
+                            addSequential(new UseClaw(Claw.ClawState.EJECT));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFrontOpp. Set for cube drop (SCALE).");
                         }
-                        addSequential(new UseClaw(Claw.ClawState.EJECT));
                         addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
                         addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
-
                         degreeRotate = new DegreeRotate(getCubeTurnAngleScale(0, rotationFactor, 90), DegreeRotate.RotationType.RELATIVE,  1.5);
                         addSequential(degreeRotate);
                         log.info(getName() + ": Eject, Floor height (parallel), DriveDistance, DegreeRotate constructed. Set for cube pickup.");
@@ -162,8 +162,8 @@ public class AutonCommand extends CommandGroup {
                 break;
             case MID:
                 addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                addParallel(new DelayableClaw(3000, Claw.ClawState.EJECT));
                 addSequential(new MoveOnPath("SwitchFront" + posStr, MoveOnPath.Direction.FORWARD));
-                addSequential(new UseClaw(Claw.ClawState.EJECT));
                 log.info(getName() + ": Switch height (parallel), SwitchFront constructed. Set for cube drop (SWITCH)!");
                 break;
         }
@@ -238,10 +238,10 @@ public class AutonCommand extends CommandGroup {
     }
 
     private double getCubeTurnAngleScale(int cubesPickedUp, int rotationFactor, int addDeg) {
-        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+        return rotationFactor * (addDeg + Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))) - 10);
     }
 
     private double getCubeTurnAngleSwitch(int cubesPickedUp, int rotationFactor, int addDeg) {
-        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))));
+        return rotationFactor * (addDeg - Math.toDegrees(Math.atan(CUBE_PICKUP_X_OFFSET / (CUBE_PICKUP_Y_CHANGING_OFFSET * cubesPickedUp + CUBE_PICKUP_Y_CONSTANT_OFFSET))) - 10);
     }
 }

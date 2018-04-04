@@ -76,10 +76,13 @@ public class OI {
         left3 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN3);
         left4 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN4);
 		left5 = new JoystickButton(leftStick, RobotMap.JOYSTICK_BUTTONS.BTN5);
-		//left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+
         left1.whenPressed(new UseClaw(Claw.ClawState.GRAB));
+        left2.whenPressed(new UseElevator(Elevator.ElevatorPosition.CUBE_LEVEL_2));	//For grabbing cubes from PCZ
+        left3.whenPressed(new UseElevator(Elevator.ElevatorPosition.CUBE_LEVEL_3)); //For grabbing cubes from PCZ
 		left4.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.ARCADE));
 		left5.whileHeld(new ManualClaw(Claw.ClawState.GRAB));
+
 		// Right stick button binds
 		right1 = new JoystickButton(rightStick,1);
 		right2 = new JoystickButton(rightStick, 2);

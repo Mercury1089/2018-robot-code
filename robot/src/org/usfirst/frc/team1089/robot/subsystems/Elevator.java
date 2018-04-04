@@ -31,12 +31,14 @@ public class Elevator extends Subsystem {
      */
     public enum ElevatorPosition {
         // TODO: Temporary Values
-        SCALE_HIGH(80000.0),    // Scale at its highest point
-        SCALE_LOW(58000.0),     // Scale at its lowest point
-        INNER_STAGE(38000),     // Height of the inner stage
-        SWITCH(25000.0),          // Above switch fence
-        DRIVE_CUBE(7000.0),     // Height for driving around cube
-        FLOOR(-2000.0);         // Elevator bottomed out
+        SCALE_HIGH(80000.0),        // Scale at its highest point
+        SCALE_LOW(58000.0),         // Scale at its lowest point
+        INNER_STAGE(38000.0),       // Height of the inner stage
+        SWITCH(25000.0),            // Above switch fence
+        CUBE_LEVEL_3(21000.0),      // Top cube of three stacked
+        CUBE_LEVEL_2(10500.0),      // Top cube of two stacked
+        DRIVE_CUBE(7000.0),         // Height for driving around cube
+        FLOOR(-2000.0);             // Elevator bottomed out
 
         public final double encPos;
 

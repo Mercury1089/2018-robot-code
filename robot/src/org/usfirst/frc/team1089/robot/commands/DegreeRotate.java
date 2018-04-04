@@ -82,11 +82,11 @@ public class DegreeRotate extends PIDCommand implements Recallable<Double> {
 				targetHeading *= -1;
 		}
 
-	    getPIDController().setInputRange(-180, 180);
+	    getPIDController().setInputRange(-36000, 36000);
     	getPIDController().setOutputRange(outputRange[0], outputRange[1]);
 
     	//Set the controller to continuous AFTER setInputRange()
-        getPIDController().setContinuous(false);
+        getPIDController().setContinuous(true);
         getPIDController().setAbsoluteTolerance(1.5);
 
         if (rotationType == RotationType.ABSOLUTE) {

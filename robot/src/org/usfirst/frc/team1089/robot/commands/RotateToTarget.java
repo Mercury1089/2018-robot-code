@@ -42,7 +42,6 @@ public class RotateToTarget extends PIDCommand implements Recallable<Double> {
 
 		LOG.info(getName() + " Beginning constructor");
 		requires(Robot.driveTrain);
-		requires(Robot.claw);
 
 		filter = LinearDigitalFilter.movingAverage(Robot.claw.getPixyCam(), 5);
 		gyro = Robot.driveTrain.getGyro();
@@ -56,7 +55,6 @@ public class RotateToTarget extends PIDCommand implements Recallable<Double> {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		filter.reset();
-		gyro.reset();
 
 		double[] outputRange = DriveTrainSettings.getOutputRange("rotateRelative");
 
@@ -65,7 +63,7 @@ public class RotateToTarget extends PIDCommand implements Recallable<Double> {
 		getPIDController().setOutputRange(outputRange[0], outputRange[1]);
 
 		//Set the controller to continuous AFTER setInputRange()
-		getPIDController().setContinuous(false);
+		getPIDController().setContinuous(true);
 		getPIDController().setAbsoluteTolerance(5);
 
 		getPIDController().setSetpoint(0);

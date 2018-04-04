@@ -35,6 +35,9 @@ public class SensorsSettings extends Config {
             case "EQUATIONB":
             case "EQUATION_B":
                 return LIDAR.PWMOffset.EQUATION_B;
+            case "EQUATIONC":
+            case "EQUATION_C":
+                return LIDAR.PWMOffset.EQUATION_C;
             default:
                 return LIDAR.PWMOffset.DEFAULT;
         }

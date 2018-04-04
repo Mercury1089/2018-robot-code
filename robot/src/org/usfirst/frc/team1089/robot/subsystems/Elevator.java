@@ -35,8 +35,8 @@ public class Elevator extends Subsystem {
         SCALE_LOW(58000.0),         // Scale at its lowest point
         INNER_STAGE(38000.0),       // Height of the inner stage
         SWITCH(25000.0),            // Above switch fence
-        CUBE_LEVEL_3(21000.0),      // Top cube of three stacked
-        CUBE_LEVEL_2(10500.0),      // Top cube of two stacked
+        CUBE_LEVEL_3(25000),      // Top cube of three stacked
+        CUBE_LEVEL_2(14000.0),      // Top cube of two stacked
         DRIVE_CUBE(7000.0),         // Height for driving around cube
         FLOOR(-2000.0);             // Elevator bottomed out
 

@@ -107,7 +107,7 @@ public class OI {
 
 		//right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
 		//right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-		//right10.whenPressed(new MoveOnPath("InitialScaleFrontRight", MoveOnPath.Direction.FORWARD));
+		right10.whenPressed(new DegreeRotate(90, DegreeRotate.RotationType.RELATIVE));
 		//right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
 
 //TODO END TESTING

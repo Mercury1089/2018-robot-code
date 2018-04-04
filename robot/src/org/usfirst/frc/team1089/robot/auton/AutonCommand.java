@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.pattern.RelativeTimePatternConverter;
+import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.auton.TaskConfig.*;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
@@ -136,7 +137,7 @@ public class AutonCommand extends CommandGroup {
                     case SCORE_SCALE:
                         if (scaleSide == comparableWorkingSide) {
                             addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-                            addParallel(new DelayableClaw(3.25, Claw.ClawState.EJECT));
+                            addParallel(new DelayableClaw(3.05, Claw.ClawState.EJECT));
                             addSequential(new MoveOnPath("InitialScaleFront" + posStr, MoveOnPath.Direction.FORWARD));
                             log.info(getName() + ": added Scale height parallel to InitialScaleFront. Set for cube drop (SCALE).");
                         } else {
@@ -188,26 +189,22 @@ public class AutonCommand extends CommandGroup {
 
             switch (taskToComplete) {
                 case SCORE_SCALE:
-                    if (workingSide != AutonPosition.MID) {
-                        addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
-                        degreeRotate = new DegreeRotate(getCubeTurnAngleScale(i, -rotationFactor, 90), DegreeRotate.RotationType.RELATIVE);
-                        addSequential(degreeRotate);
-                        addSequential(new DriveDistance(SCALE_OFFSET, 1.0));
-                        addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
-                        addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
-                        log.info(getName() + ": Dropping cube number " + i + " into Scale constructed.");
-                    }
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
+                    degreeRotate = new DegreeRotate(110, DegreeRotate.RotationType.RELATIVE);
+                    addSequential(degreeRotate);
+                    addSequential(new DriveDistance(SCALE_OFFSET, 1.0));
+                    addSequential(new UseClaw(Claw.ClawState.EJECT));
+                    addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
+                    addSequential(new DriveDistance(-SCALE_OFFSET, 1.0));
+                    log.info(getName() + ": Dropping cube number " + i + " into Scale constructed.");
                     break;
                 case SCORE_SWITCH:
-                    if (workingSide != AutonPosition.MID) {
-                        addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-                        addSequential(new DriveDistance(SWITCH_OFFSET, 1.0));
-                        addSequential(new UseClaw(Claw.ClawState.EJECT));
-                        addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
-                        addSequential(new DriveDistance(-SWITCH_OFFSET, .8));
-                        log.info(getName() + ": Dropping cube number " + i + " into Switch constructed.");
-                    }
+                    addParallel(new UseElevator(Elevator.ElevatorPosition.SWITCH));
+                    addSequential(new DriveDistance(SWITCH_OFFSET, 1.0));
+                    addSequential(new UseClaw(Claw.ClawState.EJECT));
+                    addParallel(new DelayableElevator(0.7, Elevator.ElevatorPosition.FLOOR, false));
+                    addSequential(new DriveDistance(-SWITCH_OFFSET, .8));
+                    log.info(getName() + ": Dropping cube number " + i + " into Switch constructed.");
                     break;
             }
         }

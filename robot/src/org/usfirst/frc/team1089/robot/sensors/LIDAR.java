@@ -19,6 +19,7 @@ public class LIDAR  implements PIDSource {
     public enum PWMOffset {
         EQUATION_A(-5.55, 1.0),
         EQUATION_B(-4.67, 1.02),
+        EQUATION_C(-1.85, 1.01),
         DEFAULT(0, 0);
 
         private final double CONSTANT, COEFFICIENT;

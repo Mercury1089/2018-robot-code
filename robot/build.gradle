@@ -19,6 +19,10 @@ configurations {
     outlineViewer {
         description = "Outline viewer binaries"
     }
+
+    profileGenerator {
+        description = "Endoman123's Motion Profile Generator"
+    }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
@@ -28,6 +32,7 @@ dependencies {
     compile ctre()
     compile navx()
     compile pathfinder()
+    profileGenerator 'com.github.endoman123:motion-profile-generator:v1.4.0-RC2'
     outlineViewer 'edu.wpi.first.wpilib:OutlineViewer:2.0.6'
     nativeLib fileTree(dir: 'lib', include: '*.so')
 }
@@ -82,8 +87,13 @@ task runProfileGenerator(type: Exec) {
     group = 'other'
     description = "Executes the motion profile generator app"
 
+    def config = project.configurations.profileGenerator
+
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "motion-profile-generator" })
+
+
     workingDir = "${projectDir}\\trajectories\\"
-    commandLine 'java', '-jar', "${projectDir}\\trajectories\\motion-profile-generator.jar"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
 }
 
 task runOutlineViewer(type: Exec) {
@@ -94,7 +104,6 @@ task runOutlineViewer(type: Exec) {
     def config = project.configurations.outlineViewer
     def byteOut = new ByteArrayOutputStream()
 
-    // Get shuffleboard dependency from wpiTools config
     Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "OutlineViewer" })
 
     // Exec task fields
@@ -113,8 +122,12 @@ task generateTrajectories(type: Exec) {
     description = "Generates all the trajectories from the project files"
     dependsOn "clearTrajectories"
 
+    def config = project.configurations.profileGenerator
+
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "motion-profile-generator" })
+
     workingDir = "${projectDir}\\"
-    commandLine 'java', '-jar', "${projectDir}\\trajectories\\motion-profile-generator.jar", "--no-gui",
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}", "--no-gui",
                 "-i", "trajectories", "-o", "build\\trajectories", "-x", "traj"
 }
 

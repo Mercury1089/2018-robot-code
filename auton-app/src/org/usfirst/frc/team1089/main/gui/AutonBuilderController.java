@@ -101,6 +101,7 @@ public class AutonBuilderController {
         middleRadioButton.setToggleGroup(radioGroup);
         rightRadioButton.setToggleGroup(radioGroup);
 
+        rightRadioButton.setSelected(true);
         //Add a listener so that selecting a new starting position will automatically update the backend.
         radioGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             RadioButton selectedButton = ((RadioButton) newValue);

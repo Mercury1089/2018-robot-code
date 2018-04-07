@@ -60,7 +60,7 @@ public class AutonBuilder {
 
     public AutonBuilder() {
         //Left is the default, gets updated later.
-        startingPosition = AutonPosition.LEFT;
+        startingPosition = AutonPosition.RIGHT;
 
         // Initialize HashMap
         configMap = new HashMap<>();

@@ -2,6 +2,7 @@
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.apache.logging.log4j.LogManager;
@@ -56,6 +57,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		int matchNumber = DriverStation.getInstance().getMatchNumber();
+
+		log.info("-------------------ROBOT INIT-------------------");
+
 		elevator = new Elevator(CAN.ELEVATOR_M, CAN.ELEVATOR_S);
 
 	    driveTrain = new DriveTrain(
@@ -104,6 +109,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		log.info("-------------------AUTON INIT-------------------");
 		GameData.updateGameData();
 
 		try {
@@ -183,7 +189,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		
+		log.info("-------------------TELEOP INIT-------------------");
 	}
 
 	/**

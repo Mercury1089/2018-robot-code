@@ -97,6 +97,7 @@ public class OI {
 		right11 = new JoystickButton(rightStick, 11);
 
 		right1.whenPressed(new UseClaw(Claw.ClawState.EJECT));
+		right2.whenPressed(new UseClaw(Claw.ClawState.SLOW_EJECT));
 		right3.whenPressed(new UseClaw(Claw.ClawState.STOP));
 		right4.whileHeld(new ManualClaw(Claw.ClawState.EJECT));
 		right8.whenPressed(new CalibrateGyro());

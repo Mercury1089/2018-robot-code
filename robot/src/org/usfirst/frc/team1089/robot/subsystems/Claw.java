@@ -45,7 +45,7 @@ public class Claw extends Subsystem {
     private boolean ejecting;
 
     public enum ClawState {
-        GRAB(1.0), EJECT(-1.0), STOP(0.0);
+        GRAB(1.0), EJECT(-1.0), STOP(0.0), SLOW_EJECT(-0.7);
         public final double SPEED;
 
         ClawState(double speed) {
@@ -120,10 +120,11 @@ public class Claw extends Subsystem {
             currentLEDOutput[0] = 0;
             currentLEDOutput[1] = 255;
             currentLEDOutput[2] = 0;
-        } else if (Math.abs(pixyCam.pidGet()) <= 3) { // If displacement is within 3 pixels of center
+        } else if (Math.abs(pixyCam.pidGet()) <= 20) { // If displacement is within 3 pixels of center
             currentLEDOutput[0] = 255;
             currentLEDOutput[1] = 0;
             currentLEDOutput[2] = 255;
+            rumble = true;
         } else if (pixyCam.inRange()) { // Cube is in range to auto pickup
             // Yellow
             currentLEDOutput[0] = 255;

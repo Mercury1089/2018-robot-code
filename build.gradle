@@ -20,6 +20,10 @@ allprojects {
         maven {
             url 'http://first.wpi.edu/FRC/roborio/maven/release'
         }
+
+        maven {
+            url 'https://jitpack.io'
+        }
     }
 }
 

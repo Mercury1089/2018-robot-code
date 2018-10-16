@@ -1,0 +1,140 @@
+apply plugin: "jaci.openrio.gradle.GradleRIO"
+
+import jaci.openrio.gradle.GradleRIOPlugin
+import jaci.openrio.gradle.frc.FRCJavaArtifact
+import jaci.openrio.gradle.frc.RoboRIO
+import jaci.openrio.gradle.wpi.WPIExtension
+
+def TEAM = 1089
+def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
+def wpiext = project.extensions.getByType(WPIExtension)
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+//wpiext.wpilibVersion = '2018.3.3'
+//wpiext.ctreVersion = '5.2.2.0'
+
+configurations {
+    outlineViewer {
+        description = "Outline viewer binaries"
+    }
+
+    profileGenerator {
+        description = "Endoman123's Motion Profile Generator"
+    }
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix
+// and NavX.
+dependencies {
+    compile wpilib()
+    compile ctre()
+    compile navx()
+    compile pathfinder()
+    profileGenerator 'com.github.endoman123:motion-profile-generator:v1.4.0-RC2'
+    outlineViewer 'edu.wpi.first.wpilib:OutlineViewer:2.0.6'
+    nativeLib fileTree(dir: 'lib', include: '*.so')
+}
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        target('roborio', RoboRIO) {
+            team = TEAM
+        }
+    }
+    artifacts {
+        artifact('robotArtifact', FRCJavaArtifact) {
+            targets << "roborio"
+            //after('configCollectionArtifact')
+            //after('trajectoryCollectionArtifact')
+        }
+
+        fileCollectionArtifact('configCollectionArtifact') {
+            targets << 'roborio'
+            files = project.configurations.config
+        }
+
+        fileCollectionArtifact('trajectoryCollectionArtifact') {
+            targets << 'roborio'
+            directory = 'trajectories'
+            files = fileTree(dir: "${buildDir}\\trajectories", exclude: "**/*_source_detailed.*")
+
+            dependsOn('generateTrajectories')
+
+            predeploy << {
+                execute 'rm -rf /home/lvuser/trajectories'
+            }
+        }
+    }
+}
+
+// Overwrite this task b/c the default GradleRIO
+// task doesn't function as it should.
+task shuffleboard(overwrite: true) {
+    group = null
+    description = "A task that doesn't work like it should. Please see :shuffleboard " +
+            "for functioning tasks."
+
+    doLast {
+        System.out.println("Please see :shuffleboard for functioning tasks.")
+    }
+}
+
+/*task runProfileGenerator(type: Exec) {
+    group = 'other'
+    description = "Executes the motion profile generator app"
+
+    def config = project.configurations.profileGenerator
+
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "motion-profile-generator" })
+
+
+    workingDir = "${projectDir}\\trajectories\\"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}*/
+
+task runOutlineViewer(type: Exec) {
+    group = 'gradlerio'
+    description = "Runs the outline viewer to see network table values"
+
+    // Use outlineViewer configuration
+    def config = project.configurations.outlineViewer
+    def byteOut = new ByteArrayOutputStream()
+
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "OutlineViewer" })
+
+    // Exec task fields
+    workingDir = "${projectDir}"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}
+
+task clearTrajectories(type: Delete) {
+    group = 'other'
+    description = "Deletes trajectories build folder"
+    delete "${buildDir}\\trajectories"
+}
+
+task generateTrajectories(type: Exec) {
+    group = 'build'
+    description = "Generates all the trajectories from the project files"
+    dependsOn "clearTrajectories"
+
+    def config = project.configurations.profileGenerator
+
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "motion-profile-generator" })
+
+    workingDir = "${projectDir}\\"
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}", "--no-gui",
+                "-i", "trajectories", "-o", "build\\trajectories", "-x", "traj"
+}
+
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
+}

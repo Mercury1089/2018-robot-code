@@ -1,0 +1,58 @@
+// Note 'apply false' for each plugin. This ensures they aren't applied to the root project (here),
+// but it makes the plugins available for subprojects.
+plugins {
+    // GradleRIO is used for code intended to go on robots, which is why it's only applied to the 'robot' project.
+    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06" apply false
+
+    // EmbeddedTools is the backing library for GradleRIO, and includes everything that's non-frc specific, which
+    // is why we use it for our coprocessor project.
+    id "jaci.gradle.EmbeddedTools" version "2018.02.04" apply false
+}
+
+// allprojects = root project + subprojects
+// IDE plugins should be applied to the entire project.
+allprojects {
+    apply plugin: "idea"
+    apply plugin: "eclipse"
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://first.wpi.edu/FRC/roborio/maven/release'
+        }
+
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}
+
+// Apply java plugin only to subprojects
+// Also apply restructure.
+subprojects {
+    apply plugin: "java"
+
+    sourceSets.main.java {
+        srcDirs = ['src']; include '**/*.java'
+    }
+
+    sourceSets.main.resources {
+        srcDirs = ['src']; exclude '**/*.java'
+    }
+    configurations {
+        config {
+            description = 'File configs'
+        }
+    }
+
+    dependencies {
+        compile 'org.apache.logging.log4j:log4j-api:2.10.0'
+        compile 'org.apache.logging.log4j:log4j-core:2.10.0'
+        compile fileTree(dir: 'lib', include: '*.jar')
+        config fileTree(dir: 'config', include: '*.properties')
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4.1'
+}

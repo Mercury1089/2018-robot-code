@@ -1,0 +1,85 @@
+import jaci.openrio.gradle.wpi.dependencies.WPIToolsPlugin
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+jar.baseName = 'MercuryWidgets'
+
+def shuffleboardLogDir = "/shuffleboard"
+
+// Hacky shuffleboard fix
+configurations {
+    shuffleboard {
+        description = 'Shuffleboard app, automatically updated from Maven'
+    }
+}
+
+dependencies {
+    compile 'edu.wpi.first.shuffleboard:api:1.2.1'
+    shuffleboard 'edu.wpi.first.shuffleboard:app:1.2.1'
+}
+
+task runShuffleboard(type: Exec) {
+    group = "Shuffleboard"
+    description = "Launch Shuffleboard"
+
+    // Use the shuffleboard config that is set up in the root project
+    // to get the latest version of shuffleboard
+    def config = project.configurations.getByName("shuffleboard")
+    def byteOut = new ByteArrayOutputStream()
+
+    // Get shuffleboard dependency from wpiTools config
+    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.group == "edu.wpi.first.shuffleboard" })
+
+    doFirst {
+        println("Running Shuffleboard from " + jarfiles.first().absolutePath)
+        println("Home dir: ${WPIToolsPlugin.shuffleboardDirectory()}")
+        println()
+    }
+
+    // Exec task fields
+    workingDir = WPIToolsPlugin.shuffleboardDirectory()
+    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
+}
+
+task debugShuffleboard(type: Exec) {
+    group = "Shuffleboard"
+    description = "Launch Shuffleboard with logging"
+
+    // Init byte array out stream
+    // This will store exec output
+    def byteOut = new ByteArrayOutputStream()
+
+    // Copy task fields from runShuffleboard
+    workingDir = runShuffleboard.workingDir
+    commandLine = runShuffleboard.commandLine
+
+    // Override output with byteOut
+    standardOutput = byteOut
+    errorOutput = byteOut
+
+    doFirst {
+        System.out.println("NOTICE: Logging!")
+        System.out.println("If you do not need to debug, you should be using :robot:shuffleboard!")
+    }
+
+    // Do logging after task finishes
+    // i.e.: Shuffleboard is closed
+    doLast {
+        def date = new Date().format('yyy-MM-dd HH-mm-ss.SSS')
+        def logDir = new File("${rootProject.projectDir}/.log", shuffleboardLogDir)
+
+        if (!logDir.exists())
+            logDir.mkdirs()
+
+        def file = new File(logDir, "shuffleboard-${date}.log")
+
+        def fileOut = new FileOutputStream(file)
+
+        byteOut.writeTo(fileOut)
+
+        fileOut.close()
+
+        System.out.println("Log exported to ${file.toString()}.")
+    }
+}

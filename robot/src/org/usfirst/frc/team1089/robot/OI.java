@@ -9,6 +9,7 @@ import org.usfirst.frc.team1089.robot.RobotMap.DS_USB;
 import org.usfirst.frc.team1089.robot.commands.*;
 import org.usfirst.frc.team1089.robot.subsystems.Claw;
 import org.usfirst.frc.team1089.robot.subsystems.Elevator;
+import org.usfirst.frc.team1089.robot.subsystems.Elevator.ElevatorPosition;
 import org.usfirst.frc.team1089.util.ShuffleDash;
 
 /**
@@ -102,18 +103,6 @@ public class OI {
 		right4.whileHeld(new ManualClaw(Claw.ClawState.EJECT));
 		right8.whenPressed(new CalibrateGyro());
 
-//TODO TESTING:
-
-        //left4.whenPressed(new GetCube());
-
-		//right6.whenPressed(new MoveOnPath("SwitchMidRight", MoveOnPath.Direction.FORWARD));
-		//right7.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-		right10.whenPressed(new DegreeRotate(90, DegreeRotate.RotationType.RELATIVE));
-		//right11.whenPressed(new MoveOnPath("InitialCubeSetupPickupRight", MoveOnPath.Direction.BACKWARD));
-
-//TODO END TESTING
-
-
 		// Gamepad button binds
 		gamepad_a = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.A);
 		gamepad_b = new JoystickButton(gamepad, RobotMap.GAMEPAD_BUTTONS.B);
@@ -130,16 +119,14 @@ public class OI {
 		gamepad_x.whenPressed(new UseElevator(Elevator.ElevatorPosition.DRIVE_CUBE));
 		gamepad_b.whenPressed(new ManualElevator());
 		gamepad_y.whenPressed(new UseElevator(Elevator.ElevatorPosition.SWITCH));
-		gamepad_start.whenPressed(new GetCube());
-		gamepad_back.whenPressed(new DriveWithJoysticks(DriveWithJoysticks.DriveType.TANK));
+		gamepad_start.whenPressed(new UseElevator(Elevator.ElevatorPosition.CLIMB));
+		gamepad_back.whenPressed(new GetCube());
 		gamepad_lb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_LOW));
 		gamepad_rb.whenPressed(new UseElevator(Elevator.ElevatorPosition.SCALE_HIGH));
 
 		log.info("OI initialized");
 
 		shuffleboard = new ShuffleDash();
-
-
 	}
 	
 	/**

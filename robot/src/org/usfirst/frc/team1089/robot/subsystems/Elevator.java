@@ -35,9 +35,10 @@ public class Elevator extends Subsystem {
         SCALE_LOW(58000.0),         // Scale at its lowest point
         INNER_STAGE(38000.0),       // Height of the inner stage
         SWITCH(25000.0),            // Above switch fence
-        CUBE_LEVEL_3(25000),      // Top cube of three stacked
+        CUBE_LEVEL_3(25000),        // Top cube of three stacked
         CUBE_LEVEL_2(14000.0),      // Top cube of two stacked
         DRIVE_CUBE(7000.0),         // Height for driving around cube
+        CLIMB(5000.0),              // Position to raise to when climbing
         FLOOR(-2000.0);             // Elevator bottomed out
 
         public final double encPos;
@@ -133,5 +134,14 @@ public class Elevator extends Subsystem {
      */
     public int getCurrentHeight() {
         return elevatorTalon.getSelectedSensorPosition(RobotMap.PID.PRIMARY_PID_LOOP);
+    }
+
+
+    public void toggleClimbState() {
+        double[] pid = ManipulatorSettings.getClimbingPID();
+
+        elevatorTalon.config_kP(DriveTrain.PRIMARY_PID_LOOP, pid[0], 10);
+        elevatorTalon.config_kI(DriveTrain.PRIMARY_PID_LOOP, pid[1], 10);
+        elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);
     }
 }

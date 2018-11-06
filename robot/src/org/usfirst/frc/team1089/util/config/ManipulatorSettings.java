@@ -34,4 +34,22 @@ public class ManipulatorSettings extends Config {
 
         return pid;
     }
+
+    /**
+     * Gets the PID values for the elevator while climbing
+     *
+     * @return double array containing PID values
+     */
+    public static double[] getClimbingPID() {
+        String[] vals = parseArrayValue("climb.PID", ",");
+        double[] pid = {0.1, 0, 0};
+
+        if (vals.length == 3) {
+            pid[0] = Double.parseDouble(vals[0]);
+            pid[1] = Double.parseDouble(vals[1]);
+            pid[2] = Double.parseDouble(vals[2]);
+        }
+
+        return pid;
+    }
 }

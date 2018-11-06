@@ -48,6 +48,9 @@ public class UseElevator extends Command {
 
     @Override
     protected void initialize() {
+        if(targetPos == Elevator.ElevatorPosition.CLIMB)
+            Robot.elevator.toggleClimbState();
+
         Robot.elevator.getElevatorTalon().set(ControlMode.Position, targetPos.encPos);
         Robot.elevator.setPosition(targetPos);
 

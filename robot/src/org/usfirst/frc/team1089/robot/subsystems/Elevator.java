@@ -31,26 +31,35 @@ public class Elevator extends Subsystem {
      */
     public enum ElevatorPosition {
         // TODO: Temporary Values
-        SCALE_HIGH(80000.0),        // Scale at its highest point
-        SCALE_LOW(58000.0),         // Scale at its lowest point
-        INNER_STAGE(38000.0),       // Height of the inner stage
-        SWITCH(25000.0),            // Above switch fence
-        CUBE_LEVEL_3(25000),        // Top cube of three stacked
-        CUBE_LEVEL_2(14000.0),      // Top cube of two stacked
-        DRIVE_CUBE(7000.0),         // Height for driving around cube
-        CLIMB(5000.0),              // Position to raise to when climbing
-        FLOOR(-2000.0);             // Elevator bottomed out
+        SCALE_HIGH(80000.0, 0.075, 0, 0),        // Scale at its highest point
+        SCALE_LOW(58000.0, 0.075, 0, 0),         // Scale at its lowest point
+        INNER_STAGE(38000.0, 0.075, 0, 0),       // Height of the inner stage
+        SWITCH(25000.0, 0.075, 0, 0),            // Above switch fence
+        CUBE_LEVEL_3(25000, 0.075, 0, 0),        // Top cube of three stacked
+        CUBE_LEVEL_2(14000.0, 0.075, 0, 0),      // Top cube of two stacked
+        DRIVE_CUBE(7000.0, 0.075, 0, 0),         // Height for driving around cube
+        CLIMB(5000.0, 0.150, 0, 0),              // Position to raise to when climbing
+        FLOOR(-2000.0, 0.075, 0, 0);             // Elevator bottomed out
 
         public final double encPos;
+        public final double pVal;
+        public final double iVal;
+        public final double dVal;
+
 
         /**
          * Creates an elevator position, storing the encoder ticks
-         * representing the height that the elevator should be at.
+         * representing the height that the elevator should be at,
+         * as well as the P value to use to reach that level.
          *
          * @param ep encoder position, in ticks
+         * @param kp p value between 0 and 1
          */
-        ElevatorPosition(double ep) {
+        ElevatorPosition(double ep, double kp, double ki, double kd) {
             encPos = ep;
+            pVal = kp;
+            iVal = ki;
+            dVal = kd;
         }
     }
 
@@ -74,13 +83,14 @@ public class Elevator extends Subsystem {
         elevatorVictorFollower.setNeutralMode(NeutralMode.Brake);
 
         elevatorVictorFollower.follow(elevatorTalon);
-
+/*
         double[] pid = ManipulatorSettings.getElevatorPID();
 
         // TODO: get proper values when elevator is made.
         elevatorTalon.config_kP(DriveTrain.PRIMARY_PID_LOOP, pid[0], 10);
         elevatorTalon.config_kI(DriveTrain.PRIMARY_PID_LOOP, pid[1], 10);
         elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);
+*/
         elevatorTalon.setSensorPhase(false);
 
         elevatorTalon.configNominalOutputForward(.125, 10);
@@ -122,8 +132,13 @@ public class Elevator extends Subsystem {
      * Sets the {@link ElevatorPosition} for the elevator.
      *
      * @param ep the new ElevatorPosition to set
+     * @param pid the pid values
      */
     public void setPosition(ElevatorPosition ep) {
+        elevatorTalon.config_kP(DriveTrain.PRIMARY_PID_LOOP, ep.pVal, 10);
+        elevatorTalon.config_kI(DriveTrain.PRIMARY_PID_LOOP, ep.iVal, 10);
+        elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, ep.dVal, 10);
+
         position = ep;
     }
 
@@ -137,11 +152,11 @@ public class Elevator extends Subsystem {
     }
 
 
-    public void toggleClimbState() {
+    /*public void toggleClimbState() {
         double[] pid = ManipulatorSettings.getClimbingPID();
 
         elevatorTalon.config_kP(DriveTrain.PRIMARY_PID_LOOP, pid[0], 10);
         elevatorTalon.config_kI(DriveTrain.PRIMARY_PID_LOOP, pid[1], 10);
         elevatorTalon.config_kD(DriveTrain.PRIMARY_PID_LOOP, pid[2], 10);
-    }
+    }*/
 }
